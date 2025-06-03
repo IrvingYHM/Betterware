@@ -1,0 +1,22 @@
+/* App.css */
+
+  
+
+  
+  .privacy-policy h2 {
+    color: #333;
+  }
+  
+  .privacy-policy strong {
+    font-weight: bold;
+  }
+  
+  .privacy-policy ul {
+    list-style-type: square;
+    margin-left: 20px;
+  }
+  
+  .privacy-policy p {
+    margin-bottom: 15px;
+  }
+  

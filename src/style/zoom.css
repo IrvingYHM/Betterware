@@ -1,0 +1,4 @@
+.zoom {
+    transform: scale(1.1); /* Aumenta el tamaño al 110% */
+    transition: transform 0.5s; /* Agrega una transición suave */
+  }

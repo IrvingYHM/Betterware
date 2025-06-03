@@ -1,0 +1,2093 @@
+[
+  {
+    "antecedents": ["OptiLux Pro", "NovaLens", "SunGuard Elite\n"],
+    "consequents": [
+      "ViewEase Ultra\n",
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "EyeMaster",
+      "Lentsa reyescar"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["NovaLens", "OptiLux Pro", "SightMaster Flex\n"],
+    "consequents": [
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "VisionClear Pro",
+      "EyeMaster",
+      "Lentsa reyescar"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiFocus Precision\n",
+      "VisionPro HD",
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "consequents": ["Lentsa reyescar", "NovaLens", "CrystalView"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["OptiLux Pro", "NovaLens", "SunGuard Elite\n"],
+    "consequents": [
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "EyeMaster",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "VisionPro HD",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "consequents": [
+      "SightMaster Flex\n",
+      "Lentsa reyescar",
+      "NovaLens",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "VisionPro HD",
+      "EyeMaster"
+    ],
+    "consequents": [
+      "SightMaster Flex\n",
+      "NovaLens",
+      "OptiLux Pro",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiFocus Precision\n",
+      "SightMaster Flex\n",
+      "NovaLens",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "VisionPro HD",
+      "EyeMaster",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionPro HD",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["Lentsa reyescar", "EyeMaster", "SunGuard Elite\n"],
+    "consequents": [
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "NovaLens",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiFocus Precision\n",
+      "VisionPro HD",
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "OptiLux Pro"
+    ],
+    "consequents": ["EyeMaster", "NovaLens", "CrystalView"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "consequents": [
+      "OptiFocus Precision\n",
+      "NovaLens",
+      "SunGuard Elite\n",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiFocus Precision\n",
+      "VisionPro HD",
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "consequents": ["EyeMaster", "NovaLens", "OptiLux Pro"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "NovaLens",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "consequents": [
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SunGuard Elite\n",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "ViewEase Ultra\n"
+    ],
+    "consequents": [
+      "VisionPro HD",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SightMaster Flex\n",
+      "NovaLens",
+      "OptiLux Pro",
+      "ViewEase Ultra\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "VisionPro HD",
+      "EyeMaster"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "CrystalView"
+    ],
+    "consequents": [
+      "OptiLux Pro",
+      "NovaLens",
+      "SunGuard Elite\n",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SightMaster Flex\n",
+      "Lentsa reyescar",
+      "NovaLens",
+      "ViewEase Ultra\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "VisionPro HD",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["NovaLens", "OptiLux Pro", "SightMaster Flex\n"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "VisionClear Pro",
+      "EyeMaster",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["VisionClear Pro", "Lentsa reyescar", "EyeMaster"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "SightMaster Flex\n",
+      "NovaLens",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "VisionPro HD",
+      "EyeMaster",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["EyeMaster", "NovaLens", "OptiLux Pro"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "VisionPro HD",
+      "EyeMaster",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "consequents": ["NovaLens", "OptiLux Pro", "SightMaster Flex\n"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "VisionPro HD",
+      "SightMaster Flex\n",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "consequents": ["EyeMaster", "NovaLens", "OptiLux Pro"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "OptiFocus Precision\n",
+      "NovaLens",
+      "CrystalView"
+    ],
+    "consequents": [
+      "SunGuard Elite\n",
+      "VisionPro HD",
+      "SightMaster Flex\n",
+      "EyeMaster",
+      "Lentsa reyescar"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["Lentsa reyescar", "NovaLens", "CrystalView"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "VisionPro HD",
+      "SightMaster Flex\n",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "consequents": ["Lentsa reyescar", "NovaLens", "CrystalView"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["EyeMaster", "NovaLens", "CrystalView"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["Lentsa reyescar", "EyeMaster", "NovaLens"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["NovaLens", "OptiLux Pro", "SightMaster Flex\n"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["VisionClear Pro", "NovaLens", "CrystalView"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "EyeMaster",
+      "Lentsa reyescar",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["VisionClear Pro", "Lentsa reyescar", "EyeMaster"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "NovaLens",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "EyeMaster",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "OptiFocus Precision\n",
+      "SunGuard Elite\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["Lentsa reyescar", "NovaLens", "CrystalView"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["EyeMaster", "NovaLens", "OptiLux Pro"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["VisionClear Pro", "NovaLens", "CrystalView"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "SightMaster Flex\n",
+      "EyeMaster",
+      "Lentsa reyescar",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "CrystalView",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SunGuard Elite\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "CrystalView",
+      "NovaLens",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "OptiLux Pro",
+      "VisionClear Pro",
+      "EyeMaster",
+      "SunGuard Elite\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "CrystalView",
+      "NovaLens",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "OptiLux Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SunGuard Elite\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "NovaLens",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["Lentsa reyescar", "EyeMaster", "NovaLens", "OptiLux Pro"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "NovaLens",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "EyeMaster",
+      "Lentsa reyescar"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "NovaLens",
+      "CrystalView"
+    ],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["VisionClear Pro", "EyeMaster", "NovaLens", "CrystalView"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "Lentsa reyescar",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["VisionClear Pro", "EyeMaster", "NovaLens", "OptiLux Pro"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "CrystalView"
+    ],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "NovaLens",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "NovaLens"
+    ],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SunGuard Elite\n"
+    ],
+    "consequents": [
+      "CrystalView",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["VisionPro HD", "NovaLens", "OptiLux Pro", "CrystalView"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "EyeMaster",
+      "Lentsa reyescar"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiLux Pro",
+      "NovaLens",
+      "SunGuard Elite\n",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "VisionPro HD",
+      "NovaLens",
+      "CrystalView"
+    ],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "VisionClear Pro"
+    ],
+    "consequents": [
+      "EyeMaster",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["NovaLens", "VisionPro HD", "EyeMaster", "CrystalView"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["NovaLens", "VisionPro HD", "EyeMaster", "OptiLux Pro"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["Lentsa reyescar", "EyeMaster", "NovaLens", "CrystalView"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["EyeMaster", "NovaLens", "OptiLux Pro", "CrystalView"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "Lentsa reyescar"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SunGuard Elite\n",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "OptiLux Pro",
+      "NovaLens",
+      "SunGuard Elite\n",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiFocus Precision\n",
+      "VisionPro HD",
+      "SightMaster Flex\n",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "consequents": [
+      "OptiLux Pro",
+      "NovaLens",
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["OptiLux Pro", "NovaLens", "SunGuard Elite\n"],
+    "consequents": [
+      "ViewEase Ultra\n",
+      "OptiFocus Precision\n",
+      "VisionPro HD",
+      "VisionClear Pro",
+      "EyeMaster",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["Lentsa reyescar", "NovaLens", "SunGuard Elite\n"],
+    "consequents": [
+      "ViewEase Ultra\n",
+      "OptiFocus Precision\n",
+      "VisionPro HD",
+      "VisionClear Pro",
+      "EyeMaster",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiFocus Precision\n",
+      "VisionPro HD",
+      "SightMaster Flex\n",
+      "EyeMaster",
+      "Lentsa reyescar",
+      "OptiLux Pro"
+    ],
+    "consequents": ["VisionClear Pro", "NovaLens", "CrystalView"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["Lentsa reyescar", "EyeMaster", "SunGuard Elite\n"],
+    "consequents": [
+      "ViewEase Ultra\n",
+      "OptiFocus Precision\n",
+      "VisionPro HD",
+      "VisionClear Pro",
+      "NovaLens",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "EyeMaster",
+      "NovaLens",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "Lentsa reyescar",
+      "OptiLux Pro",
+      "SunGuard Elite\n",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiLux Pro",
+      "NovaLens",
+      "SunGuard Elite\n",
+      "CrystalView"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "NovaLens",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "VisionClear Pro",
+      "EyeMaster"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "OptiLux Pro",
+      "SunGuard Elite\n",
+      "CrystalView"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "EyeMaster",
+      "NovaLens",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "VisionPro HD",
+      "EyeMaster",
+      "ViewEase Ultra\n"
+    ],
+    "consequents": [
+      "Lentsa reyescar",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "SightMaster Flex\n"
+    ],
+    "consequents": ["VisionClear Pro", "EyeMaster", "NovaLens", "OptiLux Pro"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SunGuard Elite\n",
+      "CrystalView"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiLux Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SunGuard Elite\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "CrystalView",
+      "NovaLens",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiLux Pro",
+      "VisionClear Pro",
+      "EyeMaster",
+      "SunGuard Elite\n"
+    ],
+    "consequents": [
+      "Lentsa reyescar",
+      "CrystalView",
+      "NovaLens",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "Lentsa reyescar",
+      "OptiFocus Precision\n",
+      "EyeMaster",
+      "SunGuard Elite\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["VisionClear Pro", "Lentsa reyescar", "EyeMaster"],
+    "consequents": [
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "SightMaster Flex\n",
+      "NovaLens",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "EyeMaster"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": ["VisionClear Pro", "Lentsa reyescar", "EyeMaster"],
+    "consequents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "NovaLens",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "CrystalView"
+    ],
+    "consequents": [
+      "SightMaster Flex\n",
+      "NovaLens",
+      "OptiLux Pro",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiFocus Precision\n",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SunGuard Elite\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "CrystalView",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "OptiFocus Precision\n",
+      "EyeMaster"
+    ],
+    "consequents": [
+      "OptiLux Pro",
+      "NovaLens",
+      "SunGuard Elite\n",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "OptiFocus Precision\n",
+      "VisionPro HD",
+      "CrystalView"
+    ],
+    "consequents": [
+      "SunGuard Elite\n",
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "EyeMaster",
+      "NovaLens"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "CrystalView",
+      "NovaLens",
+      "OptiLux Pro",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "CrystalView",
+      "NovaLens",
+      "OptiLux Pro",
+      "ViewEase Ultra\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "EyeMaster",
+      "Lentsa reyescar"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "CrystalView",
+      "NovaLens",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiLux Pro",
+      "VisionPro HD",
+      "NovaLens",
+      "SunGuard Elite\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "ViewEase Ultra\n"
+    ],
+    "consequents": [
+      "CrystalView",
+      "NovaLens",
+      "OptiLux Pro",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SightMaster Flex\n",
+      "NovaLens",
+      "OptiLux Pro",
+      "ViewEase Ultra\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "OptiLux Pro",
+      "NovaLens",
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "VisionPro HD",
+      "EyeMaster"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "ViewEase Ultra\n",
+      "VisionClear Pro",
+      "EyeMaster",
+      "Lentsa reyescar",
+      "CrystalView"
+    ],
+    "consequents": ["NovaLens", "OptiLux Pro", "SightMaster Flex\n"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "NovaLens",
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "VisionPro HD",
+      "EyeMaster",
+      "OptiLux Pro"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "ViewEase Ultra\n",
+      "SightMaster Flex\n",
+      "NovaLens",
+      "OptiLux Pro",
+      "CrystalView"
+    ],
+    "consequents": ["VisionClear Pro", "Lentsa reyescar", "EyeMaster"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "OptiLux Pro",
+      "NovaLens",
+      "SunGuard Elite\n"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "VisionPro HD",
+      "EyeMaster",
+      "ViewEase Ultra\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "VisionClear Pro",
+      "VisionPro HD",
+      "EyeMaster",
+      "ViewEase Ultra\n"
+    ],
+    "consequents": [
+      "Lentsa reyescar",
+      "OptiLux Pro",
+      "NovaLens",
+      "SunGuard Elite\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "NovaLens",
+      "CrystalView"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "Lentsa reyescar",
+      "EyeMaster",
+      "SightMaster Flex\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "Lentsa reyescar"
+    ],
+    "consequents": ["EyeMaster", "NovaLens", "CrystalView"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "OptiFocus Precision\n",
+      "NovaLens",
+      "SightMaster Flex\n"
+    ],
+    "consequents": [
+      "OptiLux Pro",
+      "VisionClear Pro",
+      "EyeMaster",
+      "SunGuard Elite\n"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "Lentsa reyescar",
+      "OptiFocus Precision\n",
+      "EyeMaster",
+      "VisionPro HD"
+    ],
+    "consequents": [
+      "SunGuard Elite\n",
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "NovaLens",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "SightMaster Flex\n",
+      "NovaLens",
+      "CrystalView"
+    ],
+    "consequents": ["VisionClear Pro", "Lentsa reyescar", "EyeMaster"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "SightMaster Flex\n",
+      "EyeMaster",
+      "Lentsa reyescar"
+    ],
+    "consequents": ["VisionClear Pro", "NovaLens", "CrystalView"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "VisionPro HD",
+      "OptiFocus Precision\n",
+      "SightMaster Flex\n",
+      "VisionClear Pro",
+      "CrystalView"
+    ],
+    "consequents": ["Lentsa reyescar", "EyeMaster", "NovaLens"],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  },
+  {
+    "antecedents": [
+      "SunGuard Elite\n",
+      "ViewEase Ultra\n",
+      "SightMaster Flex\n",
+      "EyeMaster",
+      "Lentsa reyescar"
+    ],
+    "consequents": [
+      "VisionClear Pro",
+      "VisionPro HD",
+      "NovaLens",
+      "CrystalView"
+    ],
+    "antecedent support": 0.01,
+    "consequent support": 0.01,
+    "support": 0.01,
+    "confidence": 1.0,
+    "lift": 100.0,
+    "leverage": 0.0099,
+    "conviction": null,
+    "zhangs_metric": 1.0
+  }
+]
