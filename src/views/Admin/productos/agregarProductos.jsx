@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Fot from "../../../components/Footer";
 import Barra from "../../../components/Navegacion/barraAdmin";
@@ -6,57 +6,78 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
+// Función para decodificar JWT
+function parseJwt(token) {
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+
+  return JSON.parse(jsonPayload);
+}
+
 const CreateProductForm = () => {
   const [formData, setFormData] = useState({
-    vchNombreProducto: '',
-    vchDescripcion: '',
-    Existencias: '',
-    IdCategoria: '',
-    IdMarca: '',
-    Precio: '',
+    vchNombreProducto: "",
+    vchDescripcion: "",
+    Existencias: "",
+    IdCategoria: "",
+    Precio: "",
     EnOferta: false,
-    PrecioOferta: '',
-    image: null
+    PrecioOferta: "",
+    image: null,
+    IdEmpleado: "",
   });
-  
+
+  const [categories, setCategories] = useState([]);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [idEmpleado, setIdEmpleado] = useState(""); //idEmpleado logueado
   const navigate = useNavigate();
 
-  const [previewImage, setPreviewImage] = useState(null);
+  useEffect(() => {
+    // Verificar el tipo de usuario al cargar la página
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = parseJwt(token);
+      setIdEmpleado(decodedToken.empleadoId);
+    }
+  }, []);
 
-  const categories = [
-    { id: "1", name: "Cocina" },
-    { id: "2", name: "Hogar" },
-    { id: "3", name: "Recamara" },
-    { id: "4", name: "Limpieza" },
-    { id: "5", name: "Baño" },
-    { id: "6", name: "Contigo" },
-    { id: "7", name: "Bienestar" },
-  ];
-
-  const brands = [
-    { id: "1", name: "Betterware" },
-  ];
+  //Obtener categorías desde la API
+  useEffect(() => {
+    axios
+      .get("https://backbetter-production.up.railway.app/categoria/")
+      .then((response) => {
+        setCategories(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener categorías:", error);
+        toast.error("Error al cargar categorías");
+      });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setFormData({
-      ...formData,
-      image: file
-    });
+    setFormData({ ...formData, image: file });
 
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
+      reader.onloadend = () => setPreviewImage(reader.result);
       reader.readAsDataURL(file);
     } else {
       setPreviewImage(null);
@@ -65,50 +86,34 @@ const CreateProductForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const form = new FormData();
-    form.append('vchNombreProducto', formData.vchNombreProducto);
-    form.append('vchDescripcion', formData.vchDescripcion);
-    form.append('Existencias', formData.Existencias);
-    form.append('IdCategoria', formData.IdCategoria);
-    form.append('IdMarca', formData.IdMarca);
-    form.append('Precio', formData.Precio);
-    form.append('EnOferta', formData.EnOferta);
-    form.append('PrecioOferta', formData.PrecioOferta);
-    form.append('image', formData.image);
+    form.append("vchNombreProducto", formData.vchNombreProducto);
+    form.append("vchDescripcion", formData.vchDescripcion);
+    form.append("Existencias", formData.Existencias);
+    form.append("IdCategoria", formData.IdCategoria);
+    form.append("Precio", formData.Precio);
+    form.append("IdEmpleado", idEmpleado);
+    form.append("image", formData.image);
+
+    form.append("EnOferta", formData.EnOferta);
+
+    if (formData.EnOferta) {
+      form.append("PrecioOferta", formData.PrecioOferta);
+    }
 
     try {
-      const response = await axios.post(
-        "https://backopt-production.up.railway.app/productos/Crear_productos/",
+      await axios.post(
+        "https://backbetter-production.up.railway.app/productos_Better/Crear_productos",
         form,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
-      console.log(response.data);
-      // Limpiar el formulario después de la creación exitosa
-      setFormData({
-        vchNombreProducto: "",
-        vchDescripcion: "",
-        Existencias: "",
-        IdCategoria: "",
-        IdMarca: "",
-        Precio: "",
-        EnOferta: false,
-        PrecioOferta: "",
-        image: null,
-      });
-      setPreviewImage(null);
-      toast.success("Producto creado exitosamente");
 
-      // Redirección después de éxito
-      setTimeout(() => {
-        navigate("/Productos");
-      }, 1500);
+      toast.success("Producto agregado exitosamente");
+      setTimeout(() => navigate("/Productos"), 3000);
     } catch (error) {
       console.error(error);
-      toast.error('Error al crear el producto');
+      toast.error("Error al agregar el producto");
     }
   };
 
@@ -116,86 +121,77 @@ const CreateProductForm = () => {
     <div className="min-h-screen flex flex-col">
       <Barra />
       <div className="flex-grow container mx-auto px-2 sm:px-4 lg:px-6 py-28">
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
-          <h2 className="text-2xl font-bold mb-6 text-center">Crear Producto</h2>
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-6 rounded-lg shadow-md max-w-xl mx-auto"
+        >
+          <h2 className="text-2xl font-bold mb-8 text-center">
+            Nuevo Producto
+          </h2>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Nombre del Producto:</label>
+            <label className="block font-bold mb-2">Nombre del Producto:</label>
             <input
               type="text"
               name="vchNombreProducto"
               value={formData.vchNombreProducto}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Descripción:</label>
-            <input
+            <label className="block font-bold mb-2">Descripción:</label>
+            <textarea
               type="text"
               name="vchDescripcion"
               value={formData.vchDescripcion}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              rows={3}
+              required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Existencias:</label>
+            <label className="block font-bold mb-2">Existencias:</label>
             <input
               type="number"
               name="Existencias"
               value={formData.Existencias}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Categoría:</label>
+            <label className="block font-bold mb-2">Categoría:</label>
             <select
               name="IdCategoria"
               value={formData.IdCategoria}
               onChange={handleChange}
               className="mt-1 p-2 border rounded-md w-full"
+              required
             >
-              <option disabled value="">
-                Selecciona la categoría
-              </option>
+              <option value="">Selecciona la categoría</option>
               {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
+                <option key={category.IdCategoria} value={category.IdCategoria}>
+                  {category.NombreCategoria}
                 </option>
               ))}
             </select>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Marca:</label>
-            <select
-              name="IdMarca"
-              value={formData.IdMarca}
-              onChange={handleChange}
-              className="mt-1 p-2 border rounded-md w-full"
-            >
-              <option disabled value="">
-                Selecciona la marca
-              </option>
-              {brands.map((brand) => (
-                <option key={brand.id} value={brand.id}>
-                  {brand.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Precio:</label>
+            <label className="block font-bold mb-2">Precio:</label>
             <input
               type="number"
               name="Precio"
               value={formData.Precio}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              required
             />
           </div>
           <div className="mb-4 flex items-center">
-            <label className="block text-gray-700 font-bold mb-2 mr-4">En Oferta:</label>
+            <label className="block font-bold mb-2 mr-4">En Oferta:</label>
             <input
               type="checkbox"
               name="EnOferta"
@@ -205,7 +201,7 @@ const CreateProductForm = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Precio de Oferta:</label>
+            <label className="block font-bold mb-2">Precio de Oferta:</label>
             <input
               type="number"
               name="PrecioOferta"
@@ -216,31 +212,36 @@ const CreateProductForm = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2">Imagen del Producto:</label>
+            <label className="block font-bold mb-2">Imagen del Producto:</label>
             <input
               type="file"
               name="image"
               onChange={handleFileChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+              required
             />
           </div>
           {previewImage && (
-            <div className="mb-4">
-              <img src={previewImage} alt="Preview" className="w-full h-auto rounded-lg" />
+            <div className="mb-4 flex justify-self-center">
+              <img
+                src={previewImage}
+                alt="Preview"
+                className="w-60 h-auto rounded-lg"
+              />
             </div>
           )}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700"
+            className="bg-blue-500 text-white font-semibold flex justify-self-center mt-6 p-2 px-4 rounded-lg hover:bg-blue-700 md:text-2xl"
           >
-            Crear Producto
+            Agregar Producto
           </button>
         </form>
       </div>
       <Fot />
       <ToastContainer
         position="top-center"
-        autoClose={1500}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         rtl={false}

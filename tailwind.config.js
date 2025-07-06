@@ -31,6 +31,11 @@ export default {
       translate: {
         90: "22.5rem",
       },
+      maxWidth: {
+        "8xl": "90rem", // 1440px
+        "9xl": "100rem", // 1600px
+        "10xl": "120rem", // 1920px
+      },
     },
   },
   plugins: [],

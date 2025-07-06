@@ -1,4 +1,4 @@
-import Products from './lente';
+import Products from './producto';
 
 function App() {
     return(

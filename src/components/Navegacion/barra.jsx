@@ -399,7 +399,7 @@ function Barra() {
         </div>
       </nav>
 
-      <div className="flex fixed mt-20 items-center justify-center w-full top-0 bg-betterware py-1.5 lg:text-base z-50">
+      <div className="flex fixed mt-20 items-center justify-center w-full top-0 bg-betterware py-1.5 lg:text-base z-40">
         <Link
           to="/inicio"
           className="hover:border-b-2 border-blue-700 font-bold flex items-center mr-5"
@@ -418,7 +418,7 @@ function Barra() {
           className="hover:border-b-2 border-blue-700 font-bold flex items-center mr-5"
         >
           <FaBook size={20} className="mr-1" />
-          Catalogos
+          Catálogos
         </Link>
         <Link
           to="/unete-al-equipo"

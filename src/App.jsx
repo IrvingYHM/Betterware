@@ -3,11 +3,16 @@ import { useState, useEffect } from "react";
 /* import Barra from "./components/BarraNavegacion"; */
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Inicio from "./views/inicio";
-import Lentes from "../src/views/Lente/inicio";
+import Lentes from "./views/Productos/inicio";
 import LenteS from "./views/lentesS";
-import InicioAd from "../src/views/Admin/inicioadmin";
 import Catalogos from "./views/Catalogos/Catalogos";
 import Unete from "./views/Unete_Equipo/Unete";
+
+//admin
+import InicioAd from "../src/views/Admin/inicioadmin";
+import CatalogosAd from "./views/Admin/Catalogos/CatalogosAd";
+import NuevoCatalog from "./views/Admin/Catalogos/NuevoCatalogo";
+import TopVentas from "./views/Admin/Retos/TopVentas";
 
 /* import Accesorios from "./views/accesorios"; */
 import Accesorios from "../src/views/accesorios"
@@ -16,7 +21,7 @@ import Cookies from "./views/cookies";
 import IniciarS from "./views/iniciarS";
 import IniciarSEmpleado from "./views/Admin/Empleados/iniciarSEmpleado";
 import TerminoC from "./views/terminosC";
-import Carrito from "./views/Lente/carrito";
+import Carrito from "./views/Productos/carrito";
 
 
 /* import Carrito from "../src/components/err/NotFound"; */
@@ -33,6 +38,7 @@ import AdminCitas from "./views/Admin/Citas/verCitas";
 import Configuracion from "./views/Perfil/configuracion"
 
 import Barra from "./components/Navegacion/barra";
+
 //Seccion productos del administrador
 import Productos from "./views/Admin/productos/productos";
 import ProductosEncontrados from "./views/bus/ProductosEncontrados";
@@ -42,10 +48,9 @@ import EditarProducto from './views/Admin/productos/modificarProducto'
 
 //import Piepa from './components/foother';
 import Opcion from "./views/Rec2/Opcion";
-import { CartProvider } from "./views/Lente/context/cart";
-/* import inicioAd from './views/Admin/inicioadmin'; */
+import { CartProvider } from "./views/Productos/context/cart";
 
-import DetalleProducto from "./views/Lente/DetalleProducto";
+import DetalleProducto from "./views/Productos/DetalleProducto";
 import VerDireccion from './views/Perfil/verDireccion'
 import CambiarContraseñaPerfil from './views/Perfil/CambiarContra'
 import { AuthProvider } from "./views/AuthContext";
@@ -55,12 +60,12 @@ import Matematicas2 from './views/Calculadora/Matematicas';
 import Matematicas3 from './views/Respaldo/Mate';
 import Menu from './views/Perfil/Menu';
 import ClienteAd from './views/Admin/Clientes/Clientes';
-import EmpleadoAd from './views/Admin/Empleados/Empleados';
+import AfiliadosAd from './views/Admin/Empleados/Empleados';
 import AgEmpleado from './views/Admin/Empleados/Registro/RegistroPage';
 import EditarEmpleado from './views/Admin/Empleados/editarEmpleado';
 import CambiarContra from './views/Perfil/cambioCon'
 import Pedidos from './views/Perfil/Pedidos';
-import PaginaSuccess from './views/Lente/SuccessPage'//cuando se realiza el pago de mercadopago
+import PaginaSuccess from './views/Productos/SuccessPage'//cuando se realiza el pago de mercadopago
 import Stripe from './views/Metodopago/stripe'
 
 
@@ -88,7 +93,6 @@ function App() {
             <Routes>
               <Route path="/" element={<Inicio />} />
               <Route path="/inicio" element={<Inicio />} />
-              <Route path="/inicioAd" element={<InicioAd />} />
               <Route path="/Menu" element={<Menu />} />
               <Route path="/configuracion" element={<Configuracion />} />
               <Route path="/lentes" element={<Lentes />} />
@@ -169,7 +173,6 @@ function App() {
               {/* Rutas para productos */}
 
               <Route path="/" element={<App />} />
-              <Route path="/Productos" element={<Productos />} />
               <Route
                 path="/productos-encontrados"
                 element={<ProductosEncontrados />}
@@ -179,11 +182,6 @@ function App() {
                 element={<Noencontrados />}
               />
 
-              <Route path="/ProductosAg" element={<AgregarProductos />} />
-              <Route
-                path="/ModificarProducto/:id"
-                element={<EditarProducto />}
-              />
               <Route path="/VerDireccion" element={<VerDireccion />} />
               <Route
                 path="/CambiarContraseñaPerfil"
@@ -194,11 +192,20 @@ function App() {
               <Route path="/PaginaSuccess" element={<PaginaSuccess />} />
 
               {/*Rutas para Admin  */}
+              <Route path="/ProductosAg" element={<AgregarProductos />} />
+              <Route
+                path="/ModificarProducto/:id"
+                element={<EditarProducto />}
+              />
+              <Route path="/Productos" element={<Productos />} />
               <Route path="/ClientesAd" element={<ClienteAd />} />
-              <Route path="/EmpleadoAd" element={<EmpleadoAd />} />
+              <Route path="/AfiliadosAd" element={<AfiliadosAd />} />
               <Route path="/AgEmpleado" element={<AgEmpleado />} />
-              <Route path="/inicioAd" element={<inicioAd />} />
+              <Route path="/inicioAd" element={<InicioAd />} />
               <Route path="/editarEmpleado/:id" element={<EditarEmpleado />} />
+              <Route path="/CatalogosAd" element={<CatalogosAd />} />
+              <Route path="/nuevo-catalogo" element={<NuevoCatalog />} />
+              <Route path="/nuevo-top-ventas" element={<TopVentas />} />
 
               {/* RUta de matematicas */}
               <Route path="/Matematicas" element={<Matematicas />} />

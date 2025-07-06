@@ -23,7 +23,7 @@ async function getCachedProductos() {
 // Función principal para obtener productos, usando cache si no hay conexión
 export async function obtenerProductos() {
   try {
-    const response = await fetch("https://backopt-production.up.railway.app/productos/Productos", {
+    const response = await fetch("https://backbetter-production.up.railway.app/productos_Better/Productos", {
       headers: {
         'ngrok-skip-browser-warning': 'true',  // Ignora advertencias de navegador de ngrok
         'Content-Type': 'application/json',    // Tipo de contenido

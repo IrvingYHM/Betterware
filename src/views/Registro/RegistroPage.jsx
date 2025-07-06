@@ -31,7 +31,7 @@ const RegistroPage = () => {
   return (
     <RegistroProvider>
       <Barra/>
-      <div className="py-24">
+      <div className="mb-10 mt-36">
         <div className={`max-w-${maxWidth} mx-auto bg-white rounded-xl shadow-lg overflow-hidden`}>
           <div className="bg-slate-200">
             <div className="flex justify-center -mb-20 py-3">

@@ -48,7 +48,7 @@ function Unete() {
         </div>
       </section>
 
-      <section className="py-16 px-4 flex justify-center bg-gray-100">
+      <section className="py-16 px-4 flex justify-center">
         <div className="bg-cyan-100 rounded-2xl shadow-2xl p-10 max-w-3xl w-full">
           <h2 className="text-3xl font-bold text-center text-teal-700 mb-2">
             Afíliate como Asociado
