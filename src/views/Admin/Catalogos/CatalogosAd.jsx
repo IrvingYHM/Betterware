@@ -26,8 +26,7 @@ function CatalogosAd() {
   /* if (loading) return <Loader mensaje="Cargando catálogos..." />; */
 
   return (
-    <div className="mt-28">
-      <Barra />
+    <div className="mt-16">
       {loading ? (
         <Loader />
       ) : (
@@ -77,7 +76,6 @@ function CatalogosAd() {
         limit={1}
         className="toast-container"
       />
-      <Fot />
     </div>
   );
 }

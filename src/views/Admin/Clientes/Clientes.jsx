@@ -30,8 +30,7 @@ function App() {
   }, []);
 
   return (
-    <div className="flex-center mt-28">
-      <BarraAd />
+    <div className="flex-center mt-16">
       {loading ? (
         <Loader mensaje="Cargando información de los clientes..." /> //MUESTRA EL LOADER SI ESTÁ CARGANDO
       ) : (
@@ -150,7 +149,6 @@ function App() {
         limit={1}
         className="toast-container"
       />
-      <Fot />
     </div>
   );
 }

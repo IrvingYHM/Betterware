@@ -11,15 +11,8 @@ import Barra from "../../components/Navegacion/barraAdmin";
 function inicioAdmin() {
   return (
     <>
-      {/*       <Navbar /> */}
-
-      <Barra />
-      <script
-        src="//code.tidio.co/lr3byfcdvywtakcwkxqmh0yvvnggymum.js"
-        async
-      ></script>
       <div className="flex flex-col lg:flex-row mt-16 px-4 lg:px-12 gap-6">
-        <div className="w-full lg:w-3/4 my-16">
+        <div className="w-full lg:w-3/4">
           <Slider />
           <br />
 
@@ -96,8 +89,6 @@ function inicioAdmin() {
         </div>
         <Scrool />
       </div>
-
-      <Fot />
     </>
   );
 }

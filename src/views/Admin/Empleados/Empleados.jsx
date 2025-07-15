@@ -63,8 +63,7 @@ function App() {
   if (error) return <p>Error: {error}</p>; */
 
   return (
-    <div className="flex-center mt-28">
-      <Barra />
+    <div className="flex-center mt-16">
       {loading ? (
         <Loader mensaje="Cargando información de los afiliados..." /> //MUESTRA EL LOADER SI ESTÁ CARGANDO
       ) : (
@@ -152,7 +151,6 @@ function App() {
         limit={1}
         className="toast-container"
       />
-      <Fot />
     </div>
   );
 }

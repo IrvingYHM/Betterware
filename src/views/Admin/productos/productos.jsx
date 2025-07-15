@@ -48,8 +48,7 @@ function ProductsList() {
 
   return (
     <>
-      <Barra />
-      <div className="max-w-8xl mx-auto px-4 mt-32 mb-10">
+      <div className="max-w-8xl mx-auto px-4 mt-16 mb-10">
         {loading ? (
           <div className="flex flex-wrap justify-center gap-6">
             {Array.from({ length: 12 }).map((_, index) => (
@@ -176,8 +175,6 @@ function ProductsList() {
         limit={1}
         className="toast-container"
       />
-
-      <Fot />
     </>
   );  
 }

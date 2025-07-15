@@ -166,8 +166,7 @@ function Retos() {
   };
 
   return (
-    <div className="min-h-screen mt-32">
-      <Barra />
+    <div className="min-h-screen mt-16">
       <div className="container mx-auto px-4 mb-10 flex flex-col gap-10">
         <div className="flex flex-col lg:flex-row gap-6">
           {renderTop(topVentas, "Ventas")}
@@ -180,7 +179,6 @@ function Retos() {
 
         </div>
       </div>
-      <Fot />
     </div>
   );
 }
