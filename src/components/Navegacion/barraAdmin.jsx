@@ -239,7 +239,7 @@ function Barra() {
                 Afiliados
               </Link>
               <Link
-                to="/nuevo-top-ventas"
+                to="/retos"
                 className="hover:border-b-2 border-blue-700 font-bold flex items-center"
               >
                 Retos

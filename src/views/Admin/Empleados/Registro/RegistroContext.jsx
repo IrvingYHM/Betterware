@@ -9,10 +9,6 @@ const initialState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case "UPDATE_INFO_PERSONAL":
-      return { ...state, info: action.payload };
-    case "UPDATE_RCORREO":
-      return { ...state, correo: action.payload };
-    case "UPDATE_CONTRASEÑA":
       return {
         ...state,
         info: {
@@ -20,8 +16,27 @@ const reducer = (state, action) => {
           ...action.payload,
         },
       };
+    case "UPDATE_RCORREO":
+      return {
+        ...state,
+        correo: {
+          ...state.correo,
+          ...action.payload,
+        },
+      };
+    case "UPDATE_CONTRASEÑA":
+      return {
+        ...state,
+        contrasena: action.payload, // Aquí solo el string
+      };
     case "UPDATE_DIRECCION":
-      return { ...state, direccion: action.payload };
+      return {
+        ...state,
+        direccion: {
+          ...state.direccion,
+          ...action.payload,
+        },
+      };
     default:
       return state;
   }

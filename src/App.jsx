@@ -12,7 +12,11 @@ import Unete from "./views/Unete_Equipo/Unete";
 import InicioAd from "../src/views/Admin/inicioadmin";
 import CatalogosAd from "./views/Admin/Catalogos/CatalogosAd";
 import NuevoCatalog from "./views/Admin/Catalogos/NuevoCatalogo";
+import Retos from "./views/Admin/Retos/Retos";
+import ImagenesForm from "./views/Admin/Retos/ImagenesForm";
 import TopVentas from "./views/Admin/Retos/TopVentas";
+import TopReferidos from "./views/Admin/Retos/TopReferidos";
+import Dashboard from "./views/Admin/Dashboard";
 
 /* import Accesorios from "./views/accesorios"; */
 import Accesorios from "../src/views/accesorios"
@@ -205,7 +209,11 @@ function App() {
               <Route path="/editarEmpleado/:id" element={<EditarEmpleado />} />
               <Route path="/CatalogosAd" element={<CatalogosAd />} />
               <Route path="/nuevo-catalogo" element={<NuevoCatalog />} />
+              <Route path="/retos" element={<Retos />} />
+              <Route path="/imagen-reto/:tipo" element={<ImagenesForm />} />
               <Route path="/nuevo-top-ventas" element={<TopVentas />} />
+              <Route path="/nuevo-top-referidos" element={<TopReferidos />} />
+              <Route path="/dashboard" element={<Dashboard />} />
 
               {/* RUta de matematicas */}
               <Route path="/Matematicas" element={<Matematicas />} />

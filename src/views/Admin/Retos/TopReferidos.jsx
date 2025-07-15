@@ -28,12 +28,12 @@ const obtenermesAnteriorYaño = () => {
   };
 };  
 
-function TopVendedorForm() {
-  const [numVentas, setNumVentas] = useState("");
+function TopReferidosForm() {
+  const [numReferidos, setNumReferidos] = useState("");
   const [empleados, setEmpleados] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState(null);
-  const [topVendedores, setTopVendedores] = useState([]);
+  const [topReferidos, setTopReferidos] = useState([]);
   const [{ month, year }] = useState(obtenermesAnteriorYaño());
 
   useEffect(() => {
@@ -44,10 +44,10 @@ function TopVendedorForm() {
 
     axios
       .get(
-        `https://backbetter-production.up.railway.app/top-vendedor?month=${month}&year=${year}`
+        `https://backbetter-production.up.railway.app/top-referidos?month=${month}&year=${year}`
       )
-      .then((res) => setTopVendedores(res.data))
-      .catch(() => toast.error("Error al cargar top vendedores"));
+      .then((res) => setTopReferidos(res.data))
+      .catch(() => toast.error("Error al cargar top Referidos"));
   }, []);
 
   const normalizar = (texto) =>
@@ -61,42 +61,42 @@ function TopVendedorForm() {
     return normalizar(nombreCompleto).includes(normalizar(busqueda));
   });
 
-  const topDelmonth = topVendedores.filter((t) => t.month === month && t.year === year);
+  const topDelmonth = topReferidos.filter((t) => t.month === month && t.year === year);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!empleadoSeleccionado || !numVentas) {
-      toast.error("Selecciona un empleado y registra el número de ventas");
+    if (!empleadoSeleccionado || !numReferidos) {
+      toast.error("Selecciona un empleado y registra el número de Referidos");
       return;
     }
 
     try {
       await axios.post(
-        "https://backbetter-production.up.railway.app/top-vendedor/nuevo-top",
+        "https://backbetter-production.up.railway.app/top-referidos/nuevo-top",
         {
           intClvEmpleado: empleadoSeleccionado.intClvEmpleado,
           month,
           year,
-          numVentas,
+          numReferidos,
         }
       );
 
-      toast.success("Registro agregado al Top de ventas");
+      toast.success("Registro agregado al Top de Referidos");
       setBusqueda("");
       setEmpleadoSeleccionado(null);
-      setNumVentas("");
+      setNumReferidos("");
 
       // Refrescar el top
       const res = await axios.get(
-        `https://backbetter-production.up.railway.app/top-vendedor?month=${month}&year=${year}`
+        `https://backbetter-production.up.railway.app/top-referidos?month=${month}&year=${year}`
       );
-      setTopVendedores(res.data);
+      setTopReferidos(res.data);
     } catch (error) {
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Ocurrió un error al registrar el top vendedor");
+        toast.error("Ocurrió un error al registrar el top referidos");
       }
     }
   };
@@ -112,7 +112,7 @@ function TopVendedorForm() {
             className="w-full lg:w-1/2 bg-white shadow-md p-6 rounded-lg"
           >
             <h2 className="text-2xl font-bold mb-6 text-center">
-              Agregar Top Vendedor ({month} {year})
+              Agregar Top referidos ({month} {year})
             </h2>
 
             <div className="mb-4">
@@ -158,12 +158,12 @@ function TopVendedorForm() {
 
             <div className="mb-4">
               <label className="font-semibold block mb-1">
-                Número de ventas:
+                Número de Referidos:
               </label>
               <input
                 type="number"
-                value={numVentas}
-                onChange={(e) => setNumVentas(e.target.value)}
+                value={numReferidos}
+                onChange={(e) => setNumReferidos(e.target.value)}
                 className="w-full border px-3 py-2 rounded-md"
                 required
               />
@@ -173,29 +173,29 @@ function TopVendedorForm() {
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
-              Registrar en Top Ventas
+              Registrar en Top Referidos
             </button>
           </form>
 
-          {/* Listado de top vendedores */}
+          {/* Listado de top Referidos */}
           <div className="w-full lg:w-1/2 bg-white shadow-md p-6 rounded-lg">
             <h2 className="text-xl font-bold mb-4 text-center">
-              Top Vendedores - {month} {year}
+              Top Referidos - {month} {year}
             </h2>
             {topDelmonth.length === 0 ? (
               <p className="text-gray-600 text-center">No hay registros aún.</p>
             ) : (
               <ul className="divide-y divide-gray-200">
                 {topDelmonth
-                  .sort((a, b) => b.numVentas - a.numVentas)
-                  .map((vendedor, index) => (
-                    <li key={vendedor.idTopVendedor} className="py-3">
+                  .sort((a, b) => b.numReferidos - a.numReferidos)
+                  .map((referidos, index) => (
+                    <li key={referidos.idTopReferidos} className="py-3">
                       <span className="font-semibold mr-2">#{index + 1}</span>
-                      {vendedor.empleado?.vchNombre}{" "}
-                      {vendedor.empleado?.vchAPaterno}{" "}
-                      {vendedor.empleado?.vchAMaterno} -{" "}
+                      {referidos.empleado?.vchNombre}{" "}
+                      {referidos.empleado?.vchAPaterno}{" "}
+                      {referidos.empleado?.vchAMaterno} -{" "}
                       <span className="text-blue-600 font-bold">
-                        {vendedor.numVentas} ventas
+                        {referidos.numReferidos} Referidos
                       </span>
                     </li>
                   ))}
@@ -206,20 +206,20 @@ function TopVendedorForm() {
       </div>
 
       <Fot />
-        <ToastContainer
-            position="top-center"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            limit={1}
-            className="toast-container"
-        />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        limit={1}
+        className="toast-container"
+      />
     </div>
   );
 }
 
-export default TopVendedorForm;
+export default TopReferidosForm;

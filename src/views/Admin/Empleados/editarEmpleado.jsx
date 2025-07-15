@@ -12,208 +12,229 @@ function EditarEmpleado() {
     vchNombre: "",
     vchAPaterno: "",
     vchAMaterno: "",
+    vchCURP: "",
     vchCorreo: "",
     dtFechaNacimiento: "",
+    vchLugarNacimiento: "",
     vchTelefono: "",
     chrSexo: "",
     EstadoEmp: "",
+    TipoEmp: "",
     vchPreguntaSecreta: "",
     vchRespuestaSecreta: ""
   });
 
-  // Cargar datos del empleado al montar el componente
   useEffect(() => {
     if (id) {
-      fetch(
-        `https://backopt-production.up.railway.app/empleados/empleado/${id}`
-      )
+      fetch(`https://backbetter-production.up.railway.app/empleados/empleado/${id}`)
         .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error al obtener el empleado");
-          }
+          if (!response.ok) throw new Error("Error al obtener el empleado");
           return response.json();
         })
-        .then((data) => {
-          setEmpleado(data);
-        })
+        .then((data) => setEmpleado(data))
         .catch((error) => console.log(error));
     }
   }, [id]);
 
-  // Manejar cambios en los campos del formulario
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  // Solo permite editar el estado
+  const handleEstadoChange = (e) => {
     setEmpleado((prevEmpleado) => ({
       ...prevEmpleado,
-      [name]: value
+      EstadoEmp: e.target.value,
     }));
   };
 
-  // Manejar envío del formulario
+  // Solo envía el estado y el id (opcionalmente otros campos requeridos por tu backend)
   const handleSubmit = (e) => {
     e.preventDefault();
     fetch(
-      `https://backopt-production.up.railway.app/empleados/empleado/${id}`,
+      `https://backbetter-production.up.railway.app/empleados/estado/${id}`,
       {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(empleado),
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          EstadoEmp: empleado.EstadoEmp,
+        }),
       }
     )
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error al actualizar el empleado");
-        }
-        toast.success("Empleado actualizado con éxito");
-        navigate("/EmpleadoAd");
+        if (!response.ok) throw new Error("Error al actualizar el empleado");
+        toast.success("Estado actualizado con éxito");
+        setTimeout(() => navigate("/AfiliadosAd"), 3000);
       })
-      .catch((error) => {
-        toast.error("Error al actualizar el empleado");
-      });
+      .catch(() => toast.error("Error al actualizar el empleado"));
   };
 
-  // Manejar baja del empleado
-  const handleDeactivate = () => {
-    fetch(`https://backopt-production.up.railway.app/empleado/${id}/baja`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error al dar de baja al empleado");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        toast.success("Empleado dado de baja con éxito");
-        navigate("/EmpleadoAd");
-      })
-      .catch((error) => {
-        toast.error("Error al dar de baja al empleado");
-      });
-  };
-  
   return (
     <div>
-    <div className="flex flex-col items-center my-32">
-      <Barra/>
-      <ToastContainer />
-      <h2 className="text-2xl font-bold mb-4">Editar Empleado</h2>
-      <form onSubmit={handleSubmit} className="w-full max-w-lg">
-        {/* Campos del formulario */}
-        <div className="mb-4">
-          <label className="block text-gray-700">Nombre:</label>
-          <input
-            type="text"
-            name="vchNombre"
-            value={empleado.vchNombre}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Apellido Paterno:</label>
-          <input
-            type="text"
-            name="vchAPaterno"
-            value={empleado.vchAPaterno}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Apellido Materno:</label>
-          <input
-            type="text"
-            name="vchAMaterno"
-            value={empleado.vchAMaterno}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Correo Electrónico:</label>
-          <input
-            type="email"
-            name="vchCorreo"
-            value={empleado.vchCorreo}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Fecha de Nacimiento:</label>
-          <input
-            type="date"
-            name="dtFechaNacimiento"
-            value={empleado.dtFechaNacimiento}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Teléfono:</label>
-          <input
-            type="text"
-            name="vchTelefono"
-            value={empleado.vchTelefono}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Sexo:</label>
-          <input
-            type="text"
-            name="chrSexo"
-            value={empleado.chrSexo}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Pregunta Secreta:</label>
-          <input
-            type="text"
-            name="vchPreguntaSecreta"
-            value={empleado.vchPreguntaSecreta}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Respuesta Secreta:</label>
-          <input
-            type="text"
-            name="vchRespuestaSecreta"
-            value={empleado.vchRespuestaSecreta}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="flex justify-between items-center">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Actualizar Empleado
-          </button>
-          <button
-            type="button"
-            onClick={handleDeactivate}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Dar de Baja
-          </button>
-        </div>
-      </form>
-    </div>
-    <Fot/>
-
+      <div className="flex flex-col items-center my-32">
+        <Barra />
+        <h2 className="text-2xl font-bold mb-4">Detalle del Afiliado</h2>
+        <form onSubmit={handleSubmit} className="w-full max-w-lg">
+          {/* Datos personales: solo lectura */}
+          <div className="mb-4">
+            <label className="block text-gray-700">Nombre:</label>
+            <input
+              type="text"
+              name="vchNombre"
+              value={empleado.vchNombre}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Apellido Paterno:</label>
+            <input
+              type="text"
+              name="vchAPaterno"
+              value={empleado.vchAPaterno}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Apellido Materno:</label>
+            <input
+              type="text"
+              name="vchAMaterno"
+              value={empleado.vchAMaterno}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">CURP:</label>
+            <input
+              type="text"
+              name="vchCURP"
+              value={empleado.vchCURP}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Correo Electrónico:</label>
+            <input
+              type="email"
+              name="vchCorreo"
+              value={empleado.vchCorreo}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Fecha de Nacimiento:</label>
+            <input
+              type="date"
+              name="dtFechaNacimiento"
+              value={empleado.dtFechaNacimiento?.slice(0, 10) || ""}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Lugar de Nacimiento:</label>
+            <input
+              type="text"
+              name="vchLugarNacimiento"
+              value={empleado.vchLugarNacimiento}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Teléfono:</label>
+            <input
+              type="text"
+              name="vchTelefono"
+              value={empleado.vchTelefono}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Sexo:</label>
+            <input
+              type="text"
+              name="chrSexo"
+              value={empleado.chrSexo}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Tipo de Empleado:</label>
+            <input
+              type="text"
+              name="TipoEmp"
+              value={empleado.TipoEmp}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Pregunta Secreta:</label>
+            <input
+              type="text"
+              name="vchPreguntaSecreta"
+              value={empleado.vchPreguntaSecreta}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Respuesta Secreta:</label>
+            <input
+              type="text"
+              name="vchRespuestaSecreta"
+              value={empleado.vchRespuestaSecreta}
+              readOnly
+              className="w-full px-3 py-2 border rounded bg-gray-100"
+            />
+          </div>
+          {/* Estado del empleado: editable */}
+          <div className="mb-6">
+            <label className="block text-gray-700 font-bold">
+              Estado del Afiliado:
+            </label>
+            <select
+              name="EstadoEmp"
+              value={empleado.EstadoEmp || ""}
+              onChange={handleEstadoChange}
+              className="w-full px-3 py-2 border rounded"
+              required
+            >
+              <option value="">Selecciona un estado</option>
+              <option value="Aceptado">Aceptado</option>
+              <option value="Rechazado">Rechazado</option>
+              <option value="En espera">En espera</option>
+              <option value="Desactivado">Desactivado</option>
+            </select>
+          </div>
+          <div className="flex justify-end items-center">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              Guardar Estado
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        limit={1}
+        className="toast-container"
+      />
+      <Fot />
     </div>
   );
 }

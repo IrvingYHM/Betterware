@@ -8,7 +8,7 @@ import imagen3 from "../../img/Productos/Escurridor-Max-Resist.webp";
 import Scrool from '../../components/scroll';
 import Barra from "../../components/Navegacion/barraAdmin";
 
-function App() {
+function inicioAdmin() {
   return (
     <>
       {/*       <Navbar /> */}
@@ -102,4 +102,4 @@ function App() {
   );
 }
 
-export default App;
+export default inicioAdmin;

@@ -71,42 +71,20 @@ function App() {
         <>
           <div className=" mb-10">
             <h1 className="sm:text-2xl md:text-base lg:text-2xl text-cyan-950 font-bold mb-4 text-center">
-              Empleados
+              Afiliados
             </h1>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mx-10">
               <table className="w-full text-sm text-left rtl:text-right">
-                <thead className="text-xs text-white uppercase bg-blue-500 dark:bg-blue-700 dark:text-gray-400">
+                <thead className="text-xs text-white uppercase bg-blue-500 dark:bg-blue-700">
                   <tr>
-                    <th scope="col" className="px-2 py-3 text-center">
-                      ID
-                    </th>
-                    <th scope="col" className="px-2 py-3">
-                      NOMBRE COMPLETO
-                    </th>
-                    <th scope="col" className="px-2 py-3">
-                      CORREO ELECTRÓNICO
-                    </th>
-                    <th scope="col" className="px-2 py-3">
-                      FECHA DE NACIMIENTO
-                    </th>
-                    <th scope="col" className="px-2 py-3">
-                      TELÉFONO
-                    </th>
-                    <th scope="col" className="px-2 py-3">
-                      SEXO
-                    </th>
-                    <th scope="col" className="px-2 py-3">
-                      ESTADO EMPLEADO
-                    </th>
-                    <th scope="col" className="px-2 py-3">
-                      PREGUNTA SECRETA
-                    </th>
-                    <th scope="col" className="px-2 py-3">
-                      RESPUESTA SECRETA
-                    </th>
-                    <th scope="col" className="px-2 py-3">
-                      ACCIÓN
-                    </th>
+                    <th className="px-2 py-3 text-center">ID</th>
+                    <th className="px-2 py-3">NOMBRE COMPLETO</th>
+                    <th className="px-2 py-3">CORREO ELECTRÓNICO</th>
+                    <th className="px-2 py-3">CURP</th>
+                    <th className="px-2 py-3">TELÉFONO</th>
+                    <th className="px-2 py-3">TIPO</th>
+                    <th className="px-2 py-3">ESTADO</th>
+                    <th className="px-2 py-3">ACCIÓN</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -115,7 +93,7 @@ function App() {
                       key={empleado.intClvEmpleado}
                       className="bg-black border-b dark:bg-white dark:border-black hover:bg-gray-50 dark:hover:bg-gray-300"
                     >
-                      <td className="px-2 py-4 font-medium whitespace-nowrap">
+                      <td className="px-2 py-4 font-medium whitespace-nowrap text-center">
                         {empleado.intClvEmpleado}
                       </td>
                       <td className="px-2 py-4 font-medium whitespace-nowrap">
@@ -125,22 +103,16 @@ function App() {
                         {empleado.vchCorreo}
                       </td>
                       <td className="px-2 py-4 font-medium whitespace-nowrap">
-                        {empleado.dtFechaNacimiento}
+                        {empleado.vchCURP}
                       </td>
                       <td className="px-2 py-4 font-medium whitespace-nowrap">
                         {empleado.vchTelefono}
                       </td>
                       <td className="px-2 py-4 font-medium whitespace-nowrap">
-                        {empleado.chrSexo}
+                        {empleado.TipoEmp}
                       </td>
                       <td className="px-2 py-4 font-medium whitespace-nowrap">
                         {empleado.EstadoEmp}
-                      </td>
-                      <td className="px-2 py-4 font-medium whitespace-nowrap">
-                        {empleado.vchPreguntaSecreta}
-                      </td>
-                      <td className="px-2 py-4 font-medium whitespace-nowrap">
-                        {empleado.vchRespuestaSecreta}
                       </td>
                       <td className="px-2 py-4 flex items-center">
                         <Link
