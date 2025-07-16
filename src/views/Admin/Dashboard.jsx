@@ -6,6 +6,7 @@ import {
   Users, 
   UserPlus, 
   Trophy,
+  UserCheck,
   Bell,
   Search,
   Plus,
@@ -20,6 +21,7 @@ import Clientes from './Clientes/Clientes';
 import Afiliados from './Empleados/Afiliados';
 import Retos from './Retos/Retos';
 import InicioAdmin from './inicioadmin';
+import Unete from './Unete_Equipo/Unete';
 
 const Dashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -28,14 +30,14 @@ const Dashboard = () => {
 
   // Paleta de colores extraída del logo Betterware
   const colors = {
-    primary: '#00B4D8',      // Azul turquesa principal
-    secondary: '#0077B6',    // Azul más oscuro
-    accent: '#90E0EF',       // Azul claro
-    light: '#CAF0F8',        // Azul muy claro
-    dark: '#03045E',         // Azul marino
-    success: '#06FFA5',      // Verde aguamarina
-    warning: '#FFB700',      // Amarillo dorado
-    danger: '#FF006E'        // Rosa fucsia
+    primary: "#028da0", // Azul turquesa principal
+    secondary: "#0077B6", // Azul más oscuro
+    accent: "#90E0EF", // Azul claro
+    light: "#CAF0F8", // Azul muy claro
+    dark: "#03045E", // Azul marino
+    success: "#06FFA5", // Verde aguamarina
+    warning: "#FFB700", // Amarillo dorado
+    danger: "#FF006E", // Rosa fucsia
   };
 
   const menuSections = [
@@ -44,7 +46,8 @@ const Dashboard = () => {
     { id: 'catalogos', label: 'Catálogos', icon: BookOpen, color: colors.accent },
     { id: 'clientes', label: 'Clientes', icon: Users, color: colors.warning },
     { id: 'afiliados', label: 'Afiliados', icon: UserPlus, color: colors.danger },
-    { id: 'retos', label: 'Retos', icon: Trophy, color: colors.success }
+    { id: 'retos', label: 'Retos', icon: Trophy, color: colors.success },
+    { id: 'unete', label: 'Únete Equipo', icon: UserCheck, color: colors.dark }
   ];
   
   return (
@@ -159,6 +162,7 @@ const Dashboard = () => {
                   {activeSection === 'clientes' && 'Base de datos y análisis de clientes'}
                   {activeSection === 'afiliados' && 'Red de afiliados y comisiones'}
                   {activeSection === 'retos' && 'Retos activos y gamificación'}
+                  {activeSection === 'unete' && 'Únete al equipo Betterware'}
                 </p>
               </div>
 
@@ -220,6 +224,12 @@ const Dashboard = () => {
           {activeSection === 'retos' && (
             <div className="-mt-6 -mx-6">
               <Retos />
+            </div>
+          )}
+          
+          {activeSection === 'unete' && (
+            <div className="-mt-6 -mx-6">
+              <Unete />
             </div>
           )}
 

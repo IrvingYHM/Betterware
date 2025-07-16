@@ -8,9 +8,11 @@ import { FaShoppingCart } from "react-icons/fa";
 import { AiFillShopping } from 'react-icons/ai';
 import { IoLogOutSharp } from "react-icons/io5";
 import { FaBook } from "react-icons/fa6";
+import { MdGroups } from "react-icons/md";
 import Busqueda from "./Busqueda";
 import { FaUser } from "react-icons/fa6";
 import { AiFillSetting } from "react-icons/ai";
+import { FaTrophy } from "react-icons/fa";
 import ProductosEncontrados from "../../views/bus/ProductosEncontrados";
 import ImageUser from "../../img/user/user-01.png";
 import { FaRegCalendarAlt } from "react-icons/fa";
@@ -275,22 +277,10 @@ function Barra() {
             {usuarioLogueado && userType === "empleado" && (
               <div className="flex space-x-4">
                 <Link
-                  to="/Productos"
+                  to="/dashboard"
                   className="hover:border-b-2 border-blue-700 font-bold flex items-center"
                 >
-                  Productos
-                </Link>
-                <Link
-                  to="/ClientesAd"
-                  className="hover:border-b-2 border-blue-700 font-bold flex items-center"
-                >
-                  Clientes
-                </Link>
-                <Link
-                  to="/EmpleadoAd"
-                  className="hover:border-b-2 border-blue-700 font-bold flex items-center"
-                >
-                  Empleados
+                  Dashboard
                 </Link>
               </div>
             )}
@@ -421,10 +411,17 @@ function Barra() {
           Catálogos
         </Link>
         <Link
+          to="/retos"
+          className="hover:border-b-2 border-blue-700 font-bold flex items-center mr-5"
+        >
+          <FaTrophy size={20} className="mr-1" />
+          Retos
+        </Link>
+        <Link
           to="/unete-al-equipo"
           className="hover:border-b-2 border-blue-700 font-bold flex items-center mr-5"
         >
-          <FaBook size={20} className="mr-1" />
+          <MdGroups size={24} className="mr-1" />
           Únete a mi equipo
         </Link>
       </div>
