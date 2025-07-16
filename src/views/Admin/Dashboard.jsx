@@ -17,7 +17,7 @@ import {
 import ProductsList from './productos/productos';
 import CatalogosAd from './Catalogos/CatalogosAd';
 import Clientes from './Clientes/Clientes';
-import Empleados from './Empleados/Empleados';
+import Afiliados from './Empleados/Afiliados';
 import Retos from './Retos/Retos';
 import InicioAdmin from './inicioadmin';
 
@@ -141,7 +141,7 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className={`transition-all duration-500 ${sidebarCollapsed ? 'ml-20' : 'ml-72'}`}>
         {/* Header */}
-        <header className="bg-white/95 backdrop-blur-sm shadow-lg border-b border-gray-200 sticky top-0 z-30">
+        <header className="bg-betterware_claro/95 backdrop-blur-sm shadow-lg border-b border-betterware sticky top-0 z-30">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
@@ -174,7 +174,7 @@ const Dashboard = () => {
                 </div>
                 
                 {/* Notificaciones */}
-                <button className="p-3 text-gray-500 hover:text-blue-600 relative transition-all duration-300 rounded-xl hover:bg-blue-50">
+                <button className="p-3 hover:text-blue-600 relative transition-all duration-300 rounded-xl hover:bg-blue-50">
                   <Bell className="w-5 h-5" />
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
                 </button>
@@ -187,38 +187,38 @@ const Dashboard = () => {
         <div className="p-6 space-y-8">          
           {/* Contenido dinámico basado en la sección activa */}
           {activeSection === 'inicio' && (
-            <div className="-mt-8 -mx-6">
+            <div className="-mt-6 -mx-6">
               <InicioAdmin />
             </div>
           )}
 
           {/* Renderizar componentes específicos según la sección activa */}
           {activeSection === 'productos' && (
-            <div className="-mt-8 -mx-6">
+            <div className="-mt-6 -mx-6">
               <ProductsList />
             </div>
           )}
           
           {activeSection === 'catalogos' && (
-            <div className="-mt-8 -mx-6">
+            <div className="-mt-6 -mx-6">
               <CatalogosAd />
             </div>
           )}
           
           {activeSection === 'clientes' && (
-            <div className="-mt-8 -mx-6">
+            <div className="-mt-6 -mx-6">
               <Clientes />
             </div>
           )}
           
           {activeSection === 'afiliados' && (
-            <div className="-mt-8 -mx-6">
-              <Empleados />
+            <div className="-mt-6 -mx-6">
+              <Afiliados />
             </div>
           )}
           
           {activeSection === 'retos' && (
-            <div className="-mt-8 -mx-6">
+            <div className="-mt-6 -mx-6">
               <Retos />
             </div>
           )}

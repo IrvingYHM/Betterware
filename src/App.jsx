@@ -64,7 +64,7 @@ import Matematicas2 from './views/Calculadora/Matematicas';
 import Matematicas3 from './views/Respaldo/Mate';
 import Menu from './views/Perfil/Menu';
 import ClienteAd from './views/Admin/Clientes/Clientes';
-import AfiliadosAd from './views/Admin/Empleados/Empleados';
+import AfiliadosAd from './views/Admin/Empleados/Afiliados';
 import AgEmpleado from './views/Admin/Empleados/Registro/RegistroPage';
 import EditarEmpleado from './views/Admin/Empleados/editarEmpleado';
 import CambiarContra from './views/Perfil/cambioCon'

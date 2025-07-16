@@ -48,7 +48,7 @@ function ProductsList() {
 
   return (
     <>
-      <div className="max-w-8xl mx-auto px-4 mt-16 mb-10">
+      <div className="max-w-8xl mx-auto px-4 mt-6 mb-10">
         {loading ? (
           <div className="flex flex-wrap justify-center gap-6">
             {Array.from({ length: 12 }).map((_, index) => (

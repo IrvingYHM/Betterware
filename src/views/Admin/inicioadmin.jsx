@@ -11,7 +11,7 @@ import Barra from "../../components/Navegacion/barraAdmin";
 function inicioAdmin() {
   return (
     <>
-      <div className="flex flex-col lg:flex-row mt-16 px-4 lg:px-12 gap-6">
+      <div className="flex flex-col lg:flex-row mt-6 px-4 lg:px-12 gap-6">
         <div className="w-full lg:w-3/4">
           <Slider />
           <br />
