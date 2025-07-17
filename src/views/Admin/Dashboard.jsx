@@ -13,6 +13,7 @@ import {
   ChevronRight,
   ChevronLeft,
 } from 'lucide-react';
+import { LiaUsersSolid } from "react-icons/lia";
 
 // Importar componentes de la carpeta admin
 import ProductsList from './productos/productos';
@@ -47,7 +48,7 @@ const Dashboard = () => {
     { id: 'clientes', label: 'Clientes', icon: Users, color: colors.warning },
     { id: 'afiliados', label: 'Afiliados', icon: UserPlus, color: colors.danger },
     { id: 'retos', label: 'Retos', icon: Trophy, color: colors.success },
-    { id: 'unete', label: 'Únete Equipo', icon: UserCheck, color: colors.dark }
+    { id: 'unete', label: 'Únete Equipo', icon: LiaUsersSolid, color: colors.dark }
   ];
   
   return (
