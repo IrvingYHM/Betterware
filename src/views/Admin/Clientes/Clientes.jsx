@@ -120,9 +120,6 @@ function Clientes() {
                       Fecha de Nacimiento
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">
-                      Seguridad
-                    </th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">
                       Estado
                     </th>
                     <th className="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wider">
@@ -175,16 +172,6 @@ function Clientes() {
                         {new Date(cliente.dtFechaNacimiento).toLocaleDateString(
                           "es-MX"
                         )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          <div className="text-xs text-gray-500 mb-1">
-                            Pregunta:
-                          </div>
-                          <div className="truncate max-w-32">
-                            {cliente.vchPreguntaSecreta}
-                          </div>
-                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
