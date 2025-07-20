@@ -21,7 +21,7 @@ import CatalogosAd from './Catalogos/CatalogosAd';
 import Clientes from './Clientes/Clientes';
 import Afiliados from './Empleados/Afiliados';
 import Retos from './Retos/Retos';
-import InicioAdmin from './inicioadmin';
+import InicioAdmin from './Inicio/inicioadmin';
 import Unete from './Unete_Equipo/Unete';
 
 const Dashboard = () => {

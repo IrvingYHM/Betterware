@@ -178,7 +178,7 @@ function Barra() {
               <AiOutlineHome size={24} className="mr-2" /> Inicio
             </Link>
             <Link
-              to="/lentes"
+              to="/productos"
               className="p-4 w-full hover:border-b-2 border-blue-700 font-bold flex items-center"
             >
               <IoIosGlasses size={24} className="mr-2" />
@@ -397,7 +397,7 @@ function Barra() {
           <AiOutlineHome size={20} className="mr-1" /> Inicio
         </Link>
         <Link
-          to="/lentes"
+          to="/productos"
           className="hover:border-b-2 border-blue-700 font-bold flex items-center mr-5"
         >
           <AiFillShopping size={20} className="mr-1" />

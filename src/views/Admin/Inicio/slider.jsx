@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
+import { Settings } from "lucide-react";
+import SliderForm from "./SliderForm";
 
 function Slider() {
   const [slides, setSlides] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Traer las imágenes del slider desde tu API
   useEffect(() => {
@@ -50,7 +53,7 @@ function Slider() {
   const handleImageClick = () => {
     const slide = slides[currentIndex];
     if (slide && slide.UrlDestino) {
-      window.location.href = slide.UrlDestino;
+      window.open(slide.UrlDestino, "_blank");
     }
   };
 
@@ -98,7 +101,19 @@ function Slider() {
             ></div>
           ))}
         </div>
+
+        {/* Botón de gestión */}
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="absolute top-4 right-4 bg-betterware text-white p-2 rounded-full hover:bg-betterware_claro transition-colors duration-300 z-10 opacity-0 group-hover:opacity-100"
+          title="Gestionar imágenes del slider"
+        >
+          <Settings className="w-5 h-5" />
+        </button>
       </div>
+
+      {/* Modal */}
+      <SliderForm isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   );
 }

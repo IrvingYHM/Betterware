@@ -1,47 +1,370 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import portada from "../../../img/Anuncios/Afiliate/Equipo-Betterware.jpg";
 import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
-import { CheckCircle, Play } from "lucide-react";
-import { useState } from "react";
+import { CheckCircle, Play, Edit, Save, X, Upload, Plus, Trash2 } from "lucide-react";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Unete() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [currentData, setCurrentData] = useState(null);
+  
+  // Form data for editing
+  const [formData, setFormData] = useState({
+    Titulo: "Comienza tu Negocio HOY mismo con Betterware",
+    Subtitulo: "¡La oportunidad de tu vida te está esperando! Afíliate GRATIS y disfruta grandes beneficios.",
+    Beneficios: [
+      "Afiliación sin costo.",
+      "Trámite totalmente en línea, solo necesitas tu identificación.",
+      "Recibes catálogos gratis cada mes.",
+      "Descuento hasta del 26% en todas tus compras.",
+      "Acumulas puntos Betterware que puedes canjear por increíbles premios.",
+      "Participas por bonos especiales de bienvenida durante tu arranque.",
+      "Acceso a productos Betterware a precio de regalo.",
+    ],
+    TextoBoton: "¡Únete Ya!",
+    Imagen: null,
+    newImage: null
+  });
+  const [imagePreview, setImagePreview] = useState(null);
+  const [showImageUpload, setShowImageUpload] = useState(false);
 
-  const beneficios = [
-    "Afiliación sin costo.",
-    "Trámite totalmente en línea, solo necesitas tu identificación.",
-    "Recibes catálogos gratis cada mes.",
-    "Descuento hasta del 26% en todas tus compras.",
-    "Acumulas puntos Betterware que puedes canjear por increíbles premios.",
-    "Participas por bonos especiales de bienvenida durante tu arranque.",
-    "Acceso a productos Betterware a precio de regalo.",
-  ];
+  // Safely parse beneficios with fallback
+  const getBeneficios = () => {
+    try {
+      if (currentData && currentData.Beneficios) {
+        const parsed = JSON.parse(currentData.Beneficios);
+        return Array.isArray(parsed) ? parsed : formData.Beneficios;
+      }
+      return Array.isArray(formData.Beneficios) ? formData.Beneficios : [];
+    } catch (error) {
+      console.error('Error parsing beneficios:', error);
+      return formData.Beneficios;
+    }
+  };
+  
+  const beneficios = getBeneficios();
+
+  // Load data on component mount
+  useEffect(() => {
+    fetchUneteData();
+  }, []);
+
+  const fetchUneteData = async () => {
+    try {
+      const response = await axios.get('https://backbetter-production.up.railway.app/unete-equipo/');
+      if (response.data && response.data.length > 0) {
+        const data = response.data[0];
+        setCurrentData(data);
+        
+        // Safely parse beneficios
+        let parsedBeneficios = [];
+        try {
+          parsedBeneficios = JSON.parse(data.Beneficios || '[]');
+          if (!Array.isArray(parsedBeneficios)) {
+            parsedBeneficios = formData.Beneficios;
+          }
+        } catch (parseError) {
+          console.error('Error parsing beneficios from API:', parseError);
+          parsedBeneficios = formData.Beneficios;
+        }
+        
+        setFormData({
+          Titulo: data.Titulo || formData.Titulo,
+          Subtitulo: data.Subtitulo || formData.Subtitulo,
+          Beneficios: parsedBeneficios,
+          TextoBoton: data.TextoBoton || formData.TextoBoton,
+          Imagen: data.Imagen,
+          newImage: null
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching unete data:', error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('La imagen debe ser menor a 5MB');
+        return;
+      }
+      
+      if (!file.type.startsWith('image/')) {
+        toast.error('Por favor selecciona un archivo de imagen válido');
+        return;
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        newImage: file
+      }));
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+        setShowImageUpload(false); // Cerrar el modal después de seleccionar
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const addBeneficio = () => {
+    setFormData(prev => ({
+      ...prev,
+      Beneficios: [...prev.Beneficios, ""]
+    }));
+  };
+
+  const removeBeneficio = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      Beneficios: prev.Beneficios.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateBeneficio = (index, value) => {
+    setFormData(prev => ({
+      ...prev,
+      Beneficios: prev.Beneficios.map((item, i) => i === index ? value : item)
+    }));
+  };
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const form = new FormData();
+      form.append('Titulo', formData.Titulo);
+      form.append('Subtitulo', formData.Subtitulo);
+      form.append('Beneficios', JSON.stringify(formData.Beneficios));
+      form.append('TextoBoton', formData.TextoBoton);
+      
+      if (formData.newImage) {
+        form.append('Imagen', formData.newImage);
+      }
+
+      let response;
+      if (currentData) {
+        // Update existing
+        response = await axios.put(
+          `https://backbetter-production.up.railway.app/unete-equipo/actualizar-UneteEquipo/${currentData.IdUnete}`,
+          form,
+          { headers: { 'Content-Type': 'multipart/form-data' } }
+        );
+      } else {
+        // Create new
+        response = await axios.post(
+          'https://backbetter-production.up.railway.app/unete-equipo/agregar-UneteEquipo',
+          form,
+          { headers: { 'Content-Type': 'multipart/form-data' } }
+        );
+      }
+
+      setCurrentData(response.data);
+      setIsEditing(false);
+      setImagePreview(null);
+      toast.success('Contenido actualizado exitosamente');
+      await fetchUneteData();
+    } catch (error) {
+      console.error('Error saving data:', error);
+      toast.error('Error al guardar los cambios');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cancelEdit = () => {
+    setIsEditing(false);
+    setImagePreview(null);
+    setShowImageUpload(false);
+    if (currentData) {
+      setFormData({
+        Titulo: currentData.Titulo,
+        Subtitulo: currentData.Subtitulo,
+        Beneficios: JSON.parse(currentData.Beneficios || '[]'),
+        TextoBoton: currentData.TextoBoton,
+        Imagen: currentData.Imagen,
+        newImage: null
+      });
+    }
+  };
+
+  const currentTitle = currentData?.Titulo || formData.Titulo;
+  const currentSubtitle = currentData?.Subtitulo || formData.Subtitulo;
+  const currentButtonText = currentData?.TextoBoton || formData.TextoBoton;
+  const currentImage = currentData?.Imagen || portada;
 
   return (
     <>
+      {/* Admin Edit Button */}
+      <div className="fixed top-28 right-4 z-50">
+        {!isEditing ? (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg transition-all duration-300"
+            title="Editar contenido"
+          >
+            <Edit className="w-5 h-5" />
+          </button>
+        ) : (
+          <div className="flex gap-2">
+            <button
+              onClick={handleSave}
+              disabled={loading}
+              className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 disabled:opacity-50"
+              title="Guardar cambios"
+            >
+              {loading ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              ) : (
+                <Save className="w-5 h-5" />
+              )}
+            </button>
+            <button
+              onClick={cancelEdit}
+              disabled={loading}
+              className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 disabled:opacity-50"
+              title="Cancelar edición"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+      </div>
+
       <section className="relative w-full h-[600px]">
         <img
-          src={portada}
+          src={imagePreview || currentImage}
           alt="Equipo Betterware"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/40" />
+        {isEditing && (
+          <div className="absolute top-4 left-4 z-20">
+            <button
+              onClick={() => setShowImageUpload(!showImageUpload)}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-300 flex items-center gap-2"
+              title="Cambiar imagen de fondo"
+            >
+              <Upload className="w-5 h-5" />
+              <span className="font-semibold">Cambiar Imagen</span>
+            </button>
+          </div>
+        )}
+
+        {isEditing && showImageUpload && (
+          <div className="absolute inset-0 flex items-center justify-center z-30">
+            {/* Overlay para resaltar la opción de cambio de imagen */}
+            <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+
+            {/* Botón centrado para cambiar imagen */}
+            <div className="relative z-10 text-center">
+              <label className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-xl cursor-pointer shadow-2xl transition-all duration-300 flex items-center gap-3 text-lg font-semibold hover:scale-105">
+                <Upload className="w-6 h-6" />
+                <span>Seleccionar Nueva Imagen</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="sr-only"
+                />
+              </label>
+
+              {/* Información adicional */}
+              <div className="mt-4 text-white">
+                <p className="text-sm opacity-80">
+                  PNG, JPG, WEBP • Máximo 5MB
+                </p>
+                {formData.newImage && (
+                  <p className="mt-2 text-green-300 font-medium">
+                    ✓ Nueva imagen seleccionada: {formData.newImage.name}
+                  </p>
+                )}
+              </div>
+
+              {/* Botón para cerrar */}
+              <button
+                onClick={() => setShowImageUpload(false)}
+                className="mt-4 bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-all duration-300"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        )}
+        {!isEditing && <div className="absolute inset-0 bg-black/40" />}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-            Comienza tu Negocio <span className="text-orange-400">HOY</span>{" "}
-            mismo con <span className="text-cyan-300">Betterware</span>
-          </h1>
-          <p className="text-lg md:text-xl text-white mb-6 max-w-2xl">
-            ¡La oportunidad de tu vida te está esperando! <br />
-            Afíliate <strong>GRATIS</strong> y disfruta grandes beneficios.
-          </p>
-          <Link
-            to="/AgEmpleado"
-            className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300"
-          >
-            ¡Únete Ya!
-          </Link>
+          {isEditing ? (
+            <>
+              <input
+                type="text"
+                name="Titulo"
+                value={formData.Titulo}
+                onChange={handleInputChange}
+                className="text-4xl md:text-5xl font-extrabold text-center bg-transparent border-2 border-white text-white mb-4 p-2 rounded"
+                placeholder="Título principal"
+              />
+              <textarea
+                name="Subtitulo"
+                value={formData.Subtitulo}
+                onChange={handleInputChange}
+                className="text-lg md:text-xl text-center bg-transparent border-2 border-white text-white mb-6 p-2 rounded max-w-2xl resize-none"
+                placeholder="Subtítulo"
+                rows={3}
+              />
+              <input
+                type="text"
+                name="TextoBoton"
+                value={formData.TextoBoton}
+                onChange={handleInputChange}
+                className="bg-orange-500 text-white font-bold py-3 px-8 rounded-full text-lg border-2 border-orange-400"
+                placeholder="Texto del botón"
+              />
+            </>
+          ) : (
+            <>
+              <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+                {currentTitle.split(" ").map((word, index) => {
+                  if (word.toLowerCase() === "hoy") {
+                    return (
+                      <span key={index} className="text-orange-400">
+                        {word}{" "}
+                      </span>
+                    );
+                  }
+                  if (word.toLowerCase() === "betterware") {
+                    return (
+                      <span key={index} className="text-cyan-300">
+                        {word}{" "}
+                      </span>
+                    );
+                  }
+                  return word + " ";
+                })}
+              </h1>
+              <p className="text-lg md:text-xl text-white mb-6 max-w-2xl">
+                {currentSubtitle}
+              </p>
+              <Link
+                to="/AgEmpleado"
+                className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300"
+              >
+                {currentButtonText}
+              </Link>
+            </>
+          )}
         </div>
       </section>
 
@@ -55,11 +378,50 @@ function Unete() {
           </p>
 
           <div className="space-y-4">
-            <p className="text-lg font-semibold">Beneficios de ser Asociado:</p>
-            {beneficios.map((item, index) => (
+            <div className="flex items-center gap-2">
+              <p className="text-lg font-semibold">
+                Beneficios de ser Asociado:
+              </p>
+              {isEditing && (
+                <button
+                  onClick={addBeneficio}
+                  className="bg-green-500 hover:bg-green-600 text-white p-1 rounded-full"
+                  title="Agregar beneficio"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            {(isEditing
+              ? Array.isArray(formData.Beneficios)
+                ? formData.Beneficios
+                : []
+              : Array.isArray(beneficios)
+              ? beneficios
+              : []
+            ).map((item, index) => (
               <div key={index} className="flex items-start gap-3">
                 <CheckCircle className="text-green-500 w-6 h-6 mt-1" />
-                <p className="text-lg">{item}</p>
+                {isEditing ? (
+                  <div className="flex-1 flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={item}
+                      onChange={(e) => updateBeneficio(index, e.target.value)}
+                      className="flex-1 p-2 border border-gray-300 rounded-lg"
+                      placeholder="Describe el beneficio"
+                    />
+                    <button
+                      onClick={() => removeBeneficio(index)}
+                      className="bg-red-500 hover:bg-red-600 text-white p-1 rounded-full"
+                      title="Eliminar beneficio"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-lg">{item}</p>
+                )}
               </div>
             ))}
           </div>
@@ -107,6 +469,19 @@ function Unete() {
           </Dialog.Panel>
         </div>
       </Dialog>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        limit={1}
+        className="toast-container"
+      />
     </>
   );
 }

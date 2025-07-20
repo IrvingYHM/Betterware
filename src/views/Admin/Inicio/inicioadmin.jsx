@@ -1,12 +1,10 @@
 import { useState } from "react";
 /* import Navbar from "../components/BarraNavegacion"; */
-import Slider from "../../home/slider";
-import Fot from "../../components/Footer";
-import imagen from "../../img/Productos/Agua-Fresh.webp";
-import imagen2 from "../../img/Productos/Better-Tostador.webp";
-import imagen3 from "../../img/Productos/Escurridor-Max-Resist.webp";
-import Scrool from '../../components/scroll';
-import Barra from "../../components/Navegacion/barraAdmin";
+import Slider from "../Inicio/slider";
+import imagen from "../../../img/Productos/Agua-Fresh.webp";
+import imagen2 from "../../../img/Productos/Better-Tostador.webp";
+import imagen3 from "../../../img/Productos/Escurridor-Max-Resist.webp";
+import Scrool from '../../../components/scroll';
 
 function inicioAdmin() {
   return (

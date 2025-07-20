@@ -10,7 +10,7 @@ import Retos from "./views/Retos/Retos";
 import Unete from "./views/Unete_Equipo/Unete";
 
 //admin
-import InicioAd from "../src/views/Admin/inicioadmin";
+import InicioAd from "../src/views/Admin/Inicio/inicioadmin";
 import CatalogosAd from "./views/Admin/Catalogos/CatalogosAd";
 import NuevoCatalog from "./views/Admin/Catalogos/NuevoCatalogo";
 import RetosAdmin from "./views/Admin/Retos/Retos";
@@ -100,7 +100,7 @@ function App() {
               <Route path="/inicio" element={<Inicio />} />
               <Route path="/Menu" element={<Menu />} />
               <Route path="/configuracion" element={<Configuracion />} />
-              <Route path="/lentes" element={<Lentes />} />
+              <Route path="/productos" element={<Lentes />} />
               <Route path="/catalogos" element={<Catalogos />} />
               <Route path="/retos" element={<Retos />} />
               <Route path="/unete-al-equipo" element={<Unete />} />
