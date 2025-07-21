@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
-import portada from "../../../img/Anuncios/Afiliate/Equipo-Betterware.jpg";
 import { Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
-import { CheckCircle, Play, Edit, Save, X, Upload, Plus, Trash2 } from "lucide-react";
+import {
+  CheckCircle,
+  Play,
+  Edit,
+  Save,
+  X,
+  Upload,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,86 +20,82 @@ function Unete() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentData, setCurrentData] = useState(null);
-  
-  // Form data for editing
+
   const [formData, setFormData] = useState({
-    Titulo: "Comienza tu Negocio HOY mismo con Betterware",
-    Subtitulo: "¡La oportunidad de tu vida te está esperando! Afíliate GRATIS y disfruta grandes beneficios.",
-    Beneficios: [
-      "Afiliación sin costo.",
-      "Trámite totalmente en línea, solo necesitas tu identificación.",
-      "Recibes catálogos gratis cada mes.",
-      "Descuento hasta del 26% en todas tus compras.",
-      "Acumulas puntos Betterware que puedes canjear por increíbles premios.",
-      "Participas por bonos especiales de bienvenida durante tu arranque.",
-      "Acceso a productos Betterware a precio de regalo.",
-    ],
-    TextoBoton: "¡Únete Ya!",
+    Titulo: "",
+    Subtitulo: "",
+    Beneficios: [],
+    TextoBoton: "",
+    ColorTitulo: "#ffffff",
+    ColorSubtitulo: "#ffffff",
     Imagen: null,
-    newImage: null
+    newImage: null,
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [showImageUpload, setShowImageUpload] = useState(false);
 
-  // Safely parse beneficios with fallback
-  const getBeneficios = () => {
-    try {
-      if (currentData && currentData.Beneficios) {
-        const parsed = JSON.parse(currentData.Beneficios);
-        return Array.isArray(parsed) ? parsed : formData.Beneficios;
-      }
+  // 🔹 SOLO UN JSON.parse!
+  const getCurrentBeneficios = () => {
+    if (isEditing) {
       return Array.isArray(formData.Beneficios) ? formData.Beneficios : [];
-    } catch (error) {
-      console.error('Error parsing beneficios:', error);
-      return formData.Beneficios;
     }
+    if (currentData && currentData.Beneficios) {
+      try {
+        const parsed = JSON.parse(currentData.Beneficios || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
   };
-  
-  const beneficios = getBeneficios();
 
-  // Load data on component mount
+  console.log("currentData", currentData);
+  console.log("getCurrentBeneficios", getCurrentBeneficios());
+
   useEffect(() => {
     fetchUneteData();
   }, []);
 
   const fetchUneteData = async () => {
     try {
-      const response = await axios.get('https://backbetter-production.up.railway.app/unete-equipo/');
+      const response = await axios.get(
+        "https://backbetter-production.up.railway.app/unete-equipo/"
+      );
       if (response.data && response.data.length > 0) {
         const data = response.data[0];
-        setCurrentData(data);
-        
-        // Safely parse beneficios
+
+        // Parse beneficios SOLO UNA VEZ
         let parsedBeneficios = [];
         try {
-          parsedBeneficios = JSON.parse(data.Beneficios || '[]');
-          if (!Array.isArray(parsedBeneficios)) {
-            parsedBeneficios = formData.Beneficios;
-          }
-        } catch (parseError) {
-          console.error('Error parsing beneficios from API:', parseError);
-          parsedBeneficios = formData.Beneficios;
+          parsedBeneficios = JSON.parse(data.Beneficios || "[]");
+          if (!Array.isArray(parsedBeneficios)) parsedBeneficios = [];
+        } catch {
+          parsedBeneficios = [];
         }
-        
+
+        setCurrentData(data);
         setFormData({
-          Titulo: data.Titulo || formData.Titulo,
-          Subtitulo: data.Subtitulo || formData.Subtitulo,
+          Titulo: data.Titulo || "",
+          Subtitulo: data.Subtitulo || "",
           Beneficios: parsedBeneficios,
-          TextoBoton: data.TextoBoton || formData.TextoBoton,
+          TextoBoton: data.TextoBoton || "",
+          ColorTitulo: data.ColorTitulo || "#ffffff",
+          ColorSubtitulo: data.ColorSubtitulo || "#ffffff",
           Imagen: data.Imagen,
-          newImage: null
+          newImage: null,
         });
       }
     } catch (error) {
-      console.error('Error fetching unete data:', error);
+      console.error("Error fetching unete data:", error);
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -99,47 +103,47 @@ function Unete() {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('La imagen debe ser menor a 5MB');
+        toast.error("La imagen debe ser menor a 5MB");
         return;
       }
-      
-      if (!file.type.startsWith('image/')) {
-        toast.error('Por favor selecciona un archivo de imagen válido');
+      if (!file.type.startsWith("image/")) {
+        toast.error("Por favor selecciona un archivo de imagen válido");
         return;
       }
-
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        newImage: file
+        newImage: file,
       }));
 
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target.result);
-        setShowImageUpload(false); // Cerrar el modal después de seleccionar
+        setShowImageUpload(false);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const addBeneficio = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      Beneficios: [...prev.Beneficios, ""]
+      Beneficios: [...prev.Beneficios, ""],
     }));
   };
 
   const removeBeneficio = (index) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      Beneficios: prev.Beneficios.filter((_, i) => i !== index)
+      Beneficios: prev.Beneficios.filter((_, i) => i !== index),
     }));
   };
 
   const updateBeneficio = (index, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      Beneficios: prev.Beneficios.map((item, i) => i === index ? value : item)
+      Beneficios: prev.Beneficios.map((item, i) =>
+        i === index ? value : item
+      ),
     }));
   };
 
@@ -147,40 +151,41 @@ function Unete() {
     setLoading(true);
     try {
       const form = new FormData();
-      form.append('Titulo', formData.Titulo);
-      form.append('Subtitulo', formData.Subtitulo);
-      form.append('Beneficios', JSON.stringify(formData.Beneficios));
-      form.append('TextoBoton', formData.TextoBoton);
-      
+      form.append("Titulo", formData.Titulo);
+      form.append("Subtitulo", formData.Subtitulo);
+      // 🔹 SOLO UN stringify
+      form.append("Beneficios", JSON.stringify(formData.Beneficios));
+      form.append("TextoBoton", formData.TextoBoton);
+      form.append("ColorTitulo", formData.ColorTitulo);
+      form.append("ColorSubtitulo", formData.ColorSubtitulo);
+
       if (formData.newImage) {
-        form.append('Imagen', formData.newImage);
+        form.append("Imagen", formData.newImage);
       }
 
       let response;
       if (currentData) {
-        // Update existing
         response = await axios.put(
           `https://backbetter-production.up.railway.app/unete-equipo/actualizar-UneteEquipo/${currentData.IdUnete}`,
           form,
-          { headers: { 'Content-Type': 'multipart/form-data' } }
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
       } else {
-        // Create new
         response = await axios.post(
-          'https://backbetter-production.up.railway.app/unete-equipo/agregar-UneteEquipo',
+          "https://backbetter-production.up.railway.app/unete-equipo/agregar-UneteEquipo",
           form,
-          { headers: { 'Content-Type': 'multipart/form-data' } }
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
       }
 
       setCurrentData(response.data);
       setIsEditing(false);
       setImagePreview(null);
-      toast.success('Contenido actualizado exitosamente');
+      toast.success("Contenido actualizado exitosamente");
       await fetchUneteData();
     } catch (error) {
-      console.error('Error saving data:', error);
-      toast.error('Error al guardar los cambios');
+      console.error("Error saving data:", error);
+      toast.error("Error al guardar los cambios");
     } finally {
       setLoading(false);
     }
@@ -191,21 +196,33 @@ function Unete() {
     setImagePreview(null);
     setShowImageUpload(false);
     if (currentData) {
+      // Al cancelar, parsear sólo una vez
+      let parsedBeneficios = [];
+      try {
+        parsedBeneficios = JSON.parse(currentData.Beneficios || "[]");
+        if (!Array.isArray(parsedBeneficios)) parsedBeneficios = [];
+      } catch {
+        parsedBeneficios = [];
+      }
       setFormData({
         Titulo: currentData.Titulo,
         Subtitulo: currentData.Subtitulo,
-        Beneficios: JSON.parse(currentData.Beneficios || '[]'),
+        Beneficios: parsedBeneficios,
         TextoBoton: currentData.TextoBoton,
+        ColorTitulo: currentData.ColorTitulo || "#ffffff",
+        ColorSubtitulo: currentData.ColorSubtitulo || "#ffffff",
         Imagen: currentData.Imagen,
-        newImage: null
+        newImage: null,
       });
     }
   };
 
-  const currentTitle = currentData?.Titulo || formData.Titulo;
-  const currentSubtitle = currentData?.Subtitulo || formData.Subtitulo;
-  const currentButtonText = currentData?.TextoBoton || formData.TextoBoton;
-  const currentImage = currentData?.Imagen || portada;
+  const currentTitle = currentData?.Titulo || "";
+  const currentSubtitle = currentData?.Subtitulo || "";
+  const currentButtonText = currentData?.TextoBoton || "";
+  const currentImage = currentData?.Imagen || "";
+  const currentTitleColor = currentData?.ColorTitulo || "#ffffff";
+  const currentSubtitleColor = currentData?.ColorSubtitulo || "#ffffff";
 
   return (
     <>
@@ -268,7 +285,6 @@ function Unete() {
           <div className="absolute inset-0 flex items-center justify-center z-30">
             {/* Overlay para resaltar la opción de cambio de imagen */}
             <div className="absolute inset-0 bg-black bg-opacity-70"></div>
-
             {/* Botón centrado para cambiar imagen */}
             <div className="relative z-10 text-center">
               <label className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-xl cursor-pointer shadow-2xl transition-all duration-300 flex items-center gap-3 text-lg font-semibold hover:scale-105">
@@ -281,7 +297,6 @@ function Unete() {
                   className="sr-only"
                 />
               </label>
-
               {/* Información adicional */}
               <div className="mt-4 text-white">
                 <p className="text-sm opacity-80">
@@ -293,7 +308,6 @@ function Unete() {
                   </p>
                 )}
               </div>
-
               {/* Botón para cerrar */}
               <button
                 onClick={() => setShowImageUpload(false)}
@@ -308,22 +322,52 @@ function Unete() {
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
           {isEditing ? (
             <>
-              <input
-                type="text"
-                name="Titulo"
-                value={formData.Titulo}
-                onChange={handleInputChange}
-                className="text-4xl md:text-5xl font-extrabold text-center bg-transparent border-2 border-white text-white mb-4 p-2 rounded"
-                placeholder="Título principal"
-              />
-              <textarea
-                name="Subtitulo"
-                value={formData.Subtitulo}
-                onChange={handleInputChange}
-                className="text-lg md:text-xl text-center bg-transparent border-2 border-white text-white mb-6 p-2 rounded max-w-2xl resize-none"
-                placeholder="Subtítulo"
-                rows={3}
-              />
+              <div className="w-full max-w-2xl mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <label className="text-white text-sm">
+                    Color del título:
+                  </label>
+                  <input
+                    type="color"
+                    name="ColorTitulo"
+                    value={formData.ColorTitulo}
+                    onChange={handleInputChange}
+                    className="w-8 h-8 rounded cursor-pointer"
+                  />
+                </div>
+                <input
+                  type="text"
+                  name="Titulo"
+                  value={formData.Titulo}
+                  onChange={handleInputChange}
+                  style={{ color: formData.ColorTitulo }}
+                  className="text-4xl md:text-5xl font-extrabold text-center bg-transparent border-2 border-white mb-4 p-2 rounded w-full"
+                  placeholder="Título principal"
+                />
+              </div>
+              <div className="w-full max-w-2xl mb-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <label className="text-white text-sm">
+                    Color del subtítulo:
+                  </label>
+                  <input
+                    type="color"
+                    name="ColorSubtitulo"
+                    value={formData.ColorSubtitulo}
+                    onChange={handleInputChange}
+                    className="w-8 h-8 rounded cursor-pointer"
+                  />
+                </div>
+                <textarea
+                  name="Subtitulo"
+                  value={formData.Subtitulo}
+                  onChange={handleInputChange}
+                  style={{ color: formData.ColorSubtitulo }}
+                  className="text-lg md:text-xl text-center bg-transparent border-2 border-white p-2 rounded w-full resize-none"
+                  placeholder="Subtítulo"
+                  rows={3}
+                />
+              </div>
               <input
                 type="text"
                 name="TextoBoton"
@@ -335,26 +379,16 @@ function Unete() {
             </>
           ) : (
             <>
-              <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
-                {currentTitle.split(" ").map((word, index) => {
-                  if (word.toLowerCase() === "hoy") {
-                    return (
-                      <span key={index} className="text-orange-400">
-                        {word}{" "}
-                      </span>
-                    );
-                  }
-                  if (word.toLowerCase() === "betterware") {
-                    return (
-                      <span key={index} className="text-cyan-300">
-                        {word}{" "}
-                      </span>
-                    );
-                  }
-                  return word + " ";
-                })}
+              <h1
+                className="text-4xl md:text-5xl font-extrabold mb-4"
+                style={{ color: currentTitleColor }}
+              >
+                {currentTitle}
               </h1>
-              <p className="text-lg md:text-xl text-white mb-6 max-w-2xl">
+              <p
+                className="text-lg md:text-xl mb-6 max-w-2xl"
+                style={{ color: currentSubtitleColor }}
+              >
                 {currentSubtitle}
               </p>
               <Link
@@ -376,7 +410,6 @@ function Unete() {
           <p className="text-xl text-center mb-8 font-bold">
             Y gana increíbles beneficios
           </p>
-
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <p className="text-lg font-semibold">
@@ -392,14 +425,7 @@ function Unete() {
                 </button>
               )}
             </div>
-            {(isEditing
-              ? Array.isArray(formData.Beneficios)
-                ? formData.Beneficios
-                : []
-              : Array.isArray(beneficios)
-              ? beneficios
-              : []
-            ).map((item, index) => (
+            {getCurrentBeneficios().map((item, index) => (
               <div key={index} className="flex items-start gap-3">
                 <CheckCircle className="text-green-500 w-6 h-6 mt-1" />
                 {isEditing ? (
@@ -425,7 +451,6 @@ function Unete() {
               </div>
             ))}
           </div>
-
           <div className="flex flex-col text-center md:flex-row gap-4 justify-center mt-10">
             <Link
               to="/AgEmpleado"
@@ -442,7 +467,6 @@ function Unete() {
           </div>
         </div>
       </section>
-
       {/* Modal para el video */}
       <Dialog
         open={isOpen}
@@ -469,7 +493,6 @@ function Unete() {
           </Dialog.Panel>
         </div>
       </Dialog>
-
       <ToastContainer
         position="top-center"
         autoClose={3000}
