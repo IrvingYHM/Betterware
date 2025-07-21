@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Dialog } from "@headlessui/react";
 import {
   CheckCircle,
-  Play,
   Edit,
   Save,
   X,
@@ -458,41 +456,10 @@ function Unete() {
             >
               Afiliarme
             </Link>
-            <button
-              onClick={() => setIsOpen(true)}
-              className="underline underline-offset-4 hover:text-blue-900 font-semibold flex items-center gap-2 text-lg"
-            >
-              <Play className="w-5 h-5" /> Ver Video
-            </button>
           </div>
         </div>
       </section>
-      {/* Modal para el video */}
-      <Dialog
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        className="relative z-50"
-      >
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
-          <Dialog.Panel className="relative w-full max-w-6xl p-6">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-0 right-0 lg:-top-4 lg:-right-4 text-white text-4xl"
-            >
-              &times;
-            </button>
-            <div className="w-full h-[300px] md:h-[620px]">
-              <iframe
-                src="https://www.youtube.com/embed/fzOij-3cHCM"
-                title="Video Betterware"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-                className="w-full h-full rounded-xl"
-              />
-            </div>
-          </Dialog.Panel>
-        </div>
-      </Dialog>
+
       <ToastContainer
         position="top-center"
         autoClose={3000}
