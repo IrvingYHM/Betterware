@@ -5,20 +5,24 @@ import Logo from "../../img/betterware_logo.jpg";
 import LogoMini from "../../img/betterware_logo.png";
 import burgerMenu from "../../img/user/user-01.png";
 import { FaShoppingCart } from "react-icons/fa";
-import { AiFillShopping } from 'react-icons/ai';
+import { AiFillShopping } from "react-icons/ai";
 import { IoLogOutSharp } from "react-icons/io5";
 import { FaBook } from "react-icons/fa6";
 import Busqueda from "./Busqueda";
 import { FaUser } from "react-icons/fa6";
 import { AiFillSetting } from "react-icons/ai";
-import ProductosEncontrados from "../../views/bus/ProductosEncontrados";
+import { FaTrophy } from "react-icons/fa";
 import ImageUser from "../../img/user/user-01.png";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { IoIosMenu } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { IoIosGlasses } from "react-icons/io";
-import {Accordion,AccordionHeader, AccordionBody,} from "@material-tailwind/react";
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionBody,
+} from "@material-tailwind/react";
 import { AccordionActions } from "@mui/material";
 import { FaRegUser } from "react-icons/fa";
 
@@ -113,7 +117,7 @@ function Barra() {
         navigate("/productos-encontrados", { state: { productos: data } });
       } else {
         console.log("No se encontraron productos.");
-        navigate("/productos-Noencontrados")
+        navigate("/productos-Noencontrados");
         // Podemos mostrar un mensaje al usuario indicando que no se encontraron productos
         setProductosEncontrados([]);
       }
@@ -176,19 +180,12 @@ function Barra() {
               <AiOutlineHome size={24} className="mr-2" /> Inicio
             </Link>
             <Link
-              to="/lentes"
+              to="/productos"
               className="p-4 w-full hover:border-b-2 border-blue-700 font-bold flex items-center"
             >
-              <IoIosGlasses size={24} className="mr-2" />
-              Lentes
+              <AiFillShopping size={20} className="mr-1" />
+              Productos
             </Link>
-            {/* <Link
-            to="/Agendar-cita"
-            className="p-4 w-full hover:border-b-2 border-blue-700 font-bold flex items-center"
-          >
-            <FaRegCalendarAlt size={24} className="mr-2" />
-            Agenda tu cita
-          </Link> */}
 
             {/* Mostrar solo si no esta logueado */}
             {!usuarioLogueado && (
@@ -275,22 +272,10 @@ function Barra() {
             {usuarioLogueado && userType === "empleado" && (
               <div className="flex space-x-4">
                 <Link
-                  to="/Productos"
+                  to="/dashboard"
                   className="hover:border-b-2 border-blue-700 font-bold flex items-center"
                 >
-                  Productos
-                </Link>
-                <Link
-                  to="/ClientesAd"
-                  className="hover:border-b-2 border-blue-700 font-bold flex items-center"
-                >
-                  Clientes
-                </Link>
-                <Link
-                  to="/EmpleadoAd"
-                  className="hover:border-b-2 border-blue-700 font-bold flex items-center"
-                >
-                  Empleados
+                  Dashboard
                 </Link>
               </div>
             )}
@@ -407,7 +392,7 @@ function Barra() {
           <AiOutlineHome size={20} className="mr-1" /> Inicio
         </Link>
         <Link
-          to="/lentes"
+          to="/productos"
           className="hover:border-b-2 border-blue-700 font-bold flex items-center mr-5"
         >
           <AiFillShopping size={20} className="mr-1" />
@@ -419,6 +404,13 @@ function Barra() {
         >
           <FaBook size={20} className="mr-1" />
           Catalogos
+        </Link>
+        <Link
+          to="/retos"
+          className="hover:border-b-2 border-blue-700 font-bold flex items-center mr-5"
+        >
+          <FaTrophy size={20} className="mr-1" />
+          Retos
         </Link>
         <Link
           to="/unete-al-equipo"

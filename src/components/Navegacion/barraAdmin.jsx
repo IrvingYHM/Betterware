@@ -3,16 +3,11 @@ import { AiOutlineHome } from "react-icons/ai";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Logo from "../../img/betterware_logo.jpg";
 import burgerMenu from "../../img/burgerMenu.png";
-import { FaShoppingCart } from "react-icons/fa";
-import { BiGlassesAlt } from "react-icons/bi";
-import { AiOutlineAppstoreAdd } from "react-icons/ai";
 import { IoLogOutSharp } from "react-icons/io5";
 import Busqueda from "./Busqueda";
 import { FaUser } from "react-icons/fa6";
 import { AiFillSetting } from "react-icons/ai";
-import ProductosEncontrados from "../../views/bus/ProductosEncontrados";
 import ImageUser from "../../img/user/user-01.png";
-import { FaRegCalendarAlt } from "react-icons/fa";
 
 // Función para decodificar JWT
 function parseJwt(token) {
@@ -45,11 +40,9 @@ function Barra() {
   useEffect(() => {
     // Verificar el tipo de usuario al cargar la página
     const token = localStorage.getItem("token");
-    let nombreUsuario = "";
     if (token) {
       const decodedToken = parseJwt(token);
       setUserType(decodedToken.userType);
-      nombreUsuario = decodedToken.nombre;
       setUsuarioLogueado(true);
       setNombreUsuario(decodedToken.nombre);
     }
@@ -228,16 +221,28 @@ function Barra() {
                 Productos
               </Link>
               <Link
+                to="/CatalogosAd"
+                className="hover:border-b-2 border-blue-700 font-bold flex items-center"
+              >
+                Catálogos
+              </Link>
+              <Link
                 to="/ClientesAd"
                 className="hover:border-b-2 border-blue-700 font-bold flex items-center"
               >
                 Clientes
               </Link>
               <Link
-                to="/EmpleadoAd"
+                to="/AfiliadosAd"
                 className="hover:border-b-2 border-blue-700 font-bold flex items-center"
               >
-                Empleados
+                Afiliados
+              </Link>
+              <Link
+                to="/retos"
+                className="hover:border-b-2 border-blue-700 font-bold flex items-center"
+              >
+                Retos
               </Link>
             </div>
           )}

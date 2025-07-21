@@ -7,9 +7,6 @@ import imagen2 from "../img/Productos/Better-Tostador.webp";
 import imagen3 from "../img/Productos/Escurridor-Max-Resist.webp";
 import Scrool from '../components/scroll';
 import Barra from "../components/Navegacion/barra";
-import banner from "../img/Anuncios/Afiliate/afiliaciones2.jpg";
-import banner2 from "../img/Anuncios/Afiliate/afiliaciones6.jpg";
-
 
 function App() {
   return (
@@ -22,7 +19,7 @@ function App() {
         async
       ></script>
       <div className="flex flex-col lg:flex-row mt-16 px-4 lg:px-12 gap-6">
-        <div className="w-full lg:w-3/4 my-16">
+        <div className="w-full lg:w-3/4 my-16 mt-24">
           <Slider />
           <br />
 
@@ -36,12 +33,12 @@ function App() {
           </div>
 
           <div className="flex flex-col md:flex-row justify-center">
-            <div className="max-w-sm rounded overflow-hidden shadow-lg mx-8">
+            <div className="bg-white max-w-sm rounded overflow-hidden shadow-lg mx-8">
               <img className="w-full h-72" src={imagen} alt="Agua Fresh" />
 
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 ">Agua Fresh</div>
-                <p className="text-gray-700 text-justify">
+                <p className="text-justify">
                   Ten agua fría y lista para servir directo del refri gracias la
                   llave dosificadora integrada de Agua Fresh, un contenedor con
                   dispensador de líquidos de diseño angosto, fácil de sujetar y
@@ -51,7 +48,7 @@ function App() {
             </div>
 
             {/* Aquí empieza El segundo */}
-            <div className="max-w-sm rounded overflow-hidden shadow-lg mx-8">
+            <div className="bg-white max-w-sm rounded overflow-hidden shadow-lg mx-8">
               <img
                 className="w-full h-72"
                 src={imagen2}
@@ -59,7 +56,7 @@ function App() {
               />
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 ">Better Tostador</div>
-                <p className="text-gray-700 text-justify">
+                <p className="text-justify">
                   Descubre el Better Tostador Betterware, el tostador de pan
                   ideal para calentar distintos panes de manera rápida y
                   sencilla. Incluye 2 accesorios: una amplia rejilla en la cual
@@ -73,7 +70,7 @@ function App() {
             </div>
 
             {/* Aquí empieza el tercero */}
-            <div className="max-w-sm rounded overflow-hidden shadow-lg mx-8">
+            <div className="bg-white max-w-sm rounded overflow-hidden shadow-lg mx-8">
               <img
                 className="w-full h-72"
                 src={imagen3}
@@ -83,7 +80,7 @@ function App() {
                 <div className="font-bold text-xl mb-2 ">
                   Escurridor Max Resist
                 </div>
-                <p className="text-gray-700 text-justify">
+                <p className="text-justify">
                   Descubre el Escurridor Max Resist Betterware, ideal para una
                   cocina organizada. Este escurridor de gran tamaño tiene dos
                   niveles, permitiéndote secar más vajilla. Es extensible, lo
@@ -98,48 +95,6 @@ function App() {
           <br />
         </div>
         <Scrool />
-
-        {/* Banner de Nuevas Afiliaciones Betterware */}
-        <div className="my-16 w-3/12 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white p-4 rounded-xl shadow-md">
-          <div className="rounded-xl">
-            <img
-              src={banner}
-              alt="Afíliate a Betterware"
-              className="rounded-md mb-3"
-            />
-            <h3 className="text-lg font-bold mb-2">¡Afíliate a Betterware!</h3>
-            <p className="text-sm mb-4">
-              Gana comisiones, accede a promociones exclusivas y transforma tu
-              futuro con nosotros.
-            </p>
-            <a
-              href="#afiliaciones"
-              className="block justify-self-center w-2/4 text-center bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-full transition"
-            >
-              Afíliate ahora
-            </a>
-          </div>
-
-          {/* Anucio Afiliate 2 */}
-          <div className="rounded-xl mt-10">
-            <img
-              src={banner2}
-              alt="Afíliate a Betterware"
-              className="rounded-md mb-3"
-            />
-            <h3 className="text-lg font-bold mb-2">¡Afíliate a Betterware!</h3>
-            <p className="text-sm mb-4">
-              Gana comisiones, accede a promociones exclusivas y transforma tu
-              futuro con nosotros.
-            </p>
-            <a
-              href="#afiliaciones"
-              className="block justify-self-center w-2/4 text-center bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-full transition"
-            >
-              Afíliate ahora
-            </a>
-          </div>
-        </div>
       </div>
 
       <Fot />

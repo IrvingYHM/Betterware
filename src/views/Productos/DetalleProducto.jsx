@@ -30,37 +30,26 @@ const DetalleProducto = () => {
   const { addToCart, cart } = useCart(CartContext);
   const [producto, setProducto] = useState({ Existencias: 1 });
   const [existencias, setExistencias] = useState(producto.Existencias);
-  const [mostrarGraduacion, setMostrarGraduacion] = useState(false);
   const [mostrarDetalles, setMostrarDetalles] = useState(true);
-  const [mostrarTratamiento, setMostrarTratamiento] = useState(false);
-  /*   const [lensOption, setLensOption] = useState(""); // Estado para almacenar la opción seleccionada */
-  const [selectedLens, setSelectedLens] = useState("");
-  const [selectedTreatment, setSelectedTreatment] = useState("");
   const [usuarioLogueado, setusuarioLogueado] = useState(false);
   const navigate = useNavigate();
   const [userType, setUserType] = useState(null); // Estado para almacenar el tipo de usuario
   /*   const [nombreUsuario, setNombreUsuario] = useState(""); */
   const [clienteId, setClienteId] = useState("");
-  const [tratamientos, setTratamientos] = useState([]);
-  const [graduaciones, setGraduaciones] = useState([]);
-  ///
-  const [precioBase, setPrecioBase] = useState(producto.Precio);
-  const [precioGraduacion, setPrecioGraduacion] = useState(0);
-  const [precioTratamiento, setPrecioTratamiento] = useState(0);
   const [precioTotal, setPrecioTotal] = useState(0);
 
   const [rules, setRules] = useState([]);
   const [productos, setProductos] = useState([]);
   const [recomendaciones, setRecomendaciones] = useState([]);
 
-  const carritoApiBaseUrl = "https://backopt-production.up.railway.app/Carrito";
-  const detallesCarritoApiBaseUrl = "https://backopt-production.up.railway.app/DetalleCarrito/";
+  const carritoApiBaseUrl = "https://backbetter-production.up.railway.app/Carrito";
+  const detallesCarritoApiBaseUrl = "https://backbetter-production.up.railway.app/DetalleCarrito/";
 
   useEffect(() => {
     const fetchProducto = async () => {
       try {
         const response = await fetch(
-          "https://backopt-production.up.railway.app/productos/productosId",
+          "https://backbetter-production.up.railway.app/productos_Better/productosId",
           {
             method: "POST",
             headers: {
@@ -105,7 +94,7 @@ const DetalleProducto = () => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const response = await fetch('https://backopt-production.up.railway.app/productos/Productos');
+        const response = await fetch('https://backbetter-production.up.railway.app/productos_Better/Productos');
         const data = await response.json();
         setProductos(data);
       } catch (error) {
@@ -160,34 +149,6 @@ const DetalleProducto = () => {
     }
   }, [/* nombreUsuario */ clienteId]);
 
-  useEffect(() => {
-    const fetchGraduaciones = async () => {
-      try {
-        const response = await fetch("https://backopt-production.up.railway.app/graduaciones");
-        const data = await response.json();
-        setGraduaciones(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchGraduaciones();
-  }, []);
-
-  useEffect(() => {
-    const fetchTratamientos = async () => {
-      try {
-        const response = await fetch("https://backopt-production.up.railway.app/Tratamiento");
-        const data = await response.json();
-        setTratamientos(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchTratamientos();
-  }, []);
-
   const decrementarExistencias = () => {
     if (existencias > 0) {
       setExistencias(existencias - 1);
@@ -197,24 +158,16 @@ const DetalleProducto = () => {
   useEffect(() => {
     // Convierte los precios a números y verifica si son válidos
     const precioProducto = parseFloat(producto.Precio) || 0;
-    const precioGrad = parseFloat(precioGraduacion) || 0;
-    const precioTrat = parseFloat(precioTratamiento) || 0;
-
     // Calcula el precio total sumando el precio base, de graduación y de tratamiento
-    const total = precioProducto + precioGrad + precioTrat;
+    const total = precioProducto;
 
     // Actualiza el estado del precio total
     setPrecioTotal(total);
-  }, [producto.Precio, precioGraduacion, precioTratamiento]); // Agrega los estados que afectan al cálculo del precio total como dependencias
+  }, [producto.Precio]); // Agrega los estados que afectan al cálculo del precio total como dependencias
 
   const agregarAlCarrito = async () => {
     if (!usuarioLogueado) {
       toast.error("Aún no has iniciado sesión.");
-      return;
-    }
-
-    if (!selectedTreatment) {
-      toast.error("Por favor, selecciona un tratamiento.");
       return;
     }
 
@@ -253,8 +206,6 @@ const DetalleProducto = () => {
             },
             body: JSON.stringify({
               IdProducto: producto.IdProducto,
-              IdGraduacion: selectedLens,
-              IdTratamiento: selectedTreatment,
               Precio: precioTotal,
               Descripcion: producto.vchDescripcion,
               SubTotal: precioTotal * cantidadAAgregar,
@@ -268,12 +219,9 @@ const DetalleProducto = () => {
           addToCart({
             ...producto,
             quantity: cantidadAAgregar,
-            graduacion: selectedLens,
-            tratamiento: selectedTreatment,
-            precioTotal: producto.Precio + precioGraduacion + precioTratamiento,
+            precioTotal: producto.Precio,
           });
           setExistencias(existencias - cantidadAAgregar);
-          setSelectedTreatment("");
           toast.success("Producto(s) agregado(s) al carrito.");
           setTimeout(() => {
             navigate("/carrito");
@@ -293,36 +241,6 @@ const DetalleProducto = () => {
   /*   const checkProductInCart = () => {
     return cart.some((item) => item.IdProducto === producto.IdProducto);
   }; */
-
-  /*   // Función para manejar el cambio de opción
-  const handleLensOptionChange = (e) => {
-    setLensOption(e.target.value);
-    console.log(e);
-  }; */
-
-  const handleLensOptionChange = (e) => {
-    setSelectedLens(e.target.value);
-    const graduacionSeleccionada = graduaciones.find(
-      (graduacion) => graduacion.IdGraduacion.toString() === e.target.value
-    );
-    if (graduacionSeleccionada) {
-      setPrecioGraduacion(graduacionSeleccionada.Precio);
-    } else {
-      setPrecioGraduacion(0);
-    }
-  };
-
-  const handleTreatmentOptionChange = (e) => {
-    setSelectedTreatment(e.target.value);
-    const tratamientoSeleccionado = tratamientos.find(
-      (tratamiento) => tratamiento.IdTratamiento.toString() === e.target.value
-    );
-    if (tratamientoSeleccionado) {
-      setPrecioTratamiento(tratamientoSeleccionado.Precio);
-    } else {
-      setPrecioTratamiento(0);
-    }
-  };
 
   return (
     <div>
@@ -399,153 +317,9 @@ const DetalleProducto = () => {
               <div className="flex items-center mt-6">
                 <button
                   onClick={() => {
-                    /* agregarAlCarrito(); */
-                    setMostrarGraduacion(true);
-                    setMostrarDetalles(false);
+                    agregarAlCarrito();
                   }}
-                  className="px-8 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500"
-                >
-                  Siguiente
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {mostrarGraduacion && (
-        <div className="container mx-auto px-6 my-20 mt-36">
-          <div className="md:flex md:items-center">
-            <div className="w-full h-64 md:w-1/2 lg:h-96">
-              <img
-                className="h-full w-full rounded-md object-cover max-w-lg mx-auto"
-                src={producto.vchNomImagen}
-                alt="Lentes"
-              />
-            </div>
-            <div className="w-full max-w-lg mx-auto mt-5 md:ml-8 md:mt-0 md:w-1/2">
-              <h3 className="text-black uppercase text-lg font-bold">
-                Graduacion
-              </h3>
-              <hr className="my-3" />
-
-              <div className="mt-2 space-y-3">
-                {graduaciones.map((graduacion) => (
-                  <div key={graduacion.IdGraduacion}>
-                    <div className="flex items-center">
-                      <input
-                        type="radio"
-                        id={graduacion.nombre}
-                        name="lens"
-                        className="appearance-none w-6 h-5 border border-gray-300 rounded-full checked:bg-indigo-600 checked:border-transparent focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                        value={graduacion.IdGraduacion}
-                        checked={
-                          selectedLens === graduacion.IdGraduacion.toString()
-                        }
-                        onChange={handleLensOptionChange}
-                      />
-                      <label
-                        htmlFor={graduacion.ValorGraduacion}
-                        className="cursor-pointer ml-2"
-                      >
-                        <div>
-                          <p className="font-bold">
-                            {graduacion.ValorGraduacion}
-                          </p>
-                          <p className="text-black font-semibold">
-                            {graduacion.Precio === 0
-                              ? "Gratis"
-                              : `$ ${graduacion.Precio}`}
-                          </p>
-                          <p className="text-sm text-black">
-                            {graduacion.descripcion}
-                          </p>
-                        </div>
-                      </label>
-                    </div>
-                    <hr className="my-2" />
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4">Seleccionaste: {selectedLens}</p>
-
-              <div className="flex items-center mt-6">
-                <button
-                  onClick={() => {
-                    if (!selectedLens) {
-                      toast.error("Por favor, selecciona una graduacion.");
-                      return;
-                    }
-                    setMostrarGraduacion(false); // Cambia el estado a false para ocultar la sección de graduación
-                    setMostrarTratamiento(true); // Cambia el estado a true para mostrar la sección de tratamiento
-                  }}
-                  className="px-8 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500"
-                >
-                  Siguiente
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {mostrarTratamiento && (
-        <div className="container mx-auto px-6 my-20 mt-36">
-          <div className="md:flex md:items-center">
-            <div className="w-full h-64 md:w-1/2 lg:h-96">
-              <img
-                className="h-full w-full rounded-md object-cover max-w-lg mx-auto"
-                src={producto.vchNomImagen}
-                alt="Lentes"
-              />
-            </div>
-            <div className="w-full max-w-lg mx-auto mt-5 md:ml-8 md:mt-0 md:w-1/2">
-              <h3 className="text-black uppercase text-lg font-bold">
-                Tratamiento
-              </h3>
-              <hr className="my-3" />
-
-              <div className="mt-2 space-y-3">
-                {tratamientos.map((tratamiento) => (
-                  <div
-                    key={tratamiento.IdTratamiento}
-                    className="flex items-center"
-                  >
-                    <input
-                      type="radio"
-                      id={`tratamiento-${tratamiento.IdTratamiento}`}
-                      name="tratamiento"
-                      className="appearance-none w-6 h-5 border border-gray-300 rounded-full checked:bg-indigo-600 checked:border-transparent focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                      value={tratamiento.IdTratamiento.toString()}
-                      checked={
-                        selectedTreatment ===
-                        tratamiento.IdTratamiento.toString()
-                      }
-                      onChange={handleTreatmentOptionChange}
-                    />
-                    <label
-                      htmlFor={`tratamiento-${tratamiento.IdTratamiento}`}
-                      className="cursor-pointer ml-2"
-                    >
-                      <div>
-                        <p className="font-bold">{tratamiento.Nombre}</p>
-                        <p className="text-black font-semibold">
-                          $ {tratamiento.Precio}
-                        </p>
-                        <p className="text-sm text-black">
-                          {/* Descripción del tratamiento */}
-                        </p>
-                      </div>
-                    </label>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4">Seleccionaste: {selectedTreatment}</p>
-
-              <div className="flex items-center mt-6">
-                <button
-                  onClick={() => agregarAlCarrito()}
-                  className="px-8 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500"
+                  className="px-8 py-2 bg-orange-600 text-white text-sm font-medium rounded-full hover:bg-orange-700 focus:outline-none focus:bg-orange-700"
                 >
                   Agregar al carrito
                 </button>

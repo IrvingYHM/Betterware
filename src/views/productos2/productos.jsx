@@ -7,10 +7,9 @@ import { Link} from "react-router-dom";
 function App() {
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState({});
-  const [marcas, setMarcas] = useState({});
   
   useEffect(() => {
-    fetch("http://localhost:3000/productos/Productos")
+    fetch("http://localhost:3000/productos_Better/Productos")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error al obtener los productos");
@@ -19,13 +18,10 @@ function App() {
       })
       .then((data) => {
         const categoriasMap = {};
-        const marcasMap = {};
         data.forEach((producto) => {
             categoriasMap[producto.IdCategoria] = producto.categoria.NombreCategoria;
-            marcasMap[producto.IdMarca] = producto.marca.NombreMarca;
         });
         setCategorias(categoriasMap);
-        setMarcas(marcasMap);
         setProductos(data);
       })
       .catch((error) => {
@@ -68,9 +64,6 @@ function App() {
                   Categoria
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Marca
-                </th>
-                <th scope="col" className="px-6 py-3">
                   ACCION
                 </th>
               </tr>
@@ -111,10 +104,6 @@ function App() {
                   <td
                     className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-white">                                    
                     {categorias[producto.IdCategoria] || 'Sin categoria'}
-                  </td>
-                  <td
-                    className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-white">                                                 
-                    {marcas[producto.IdMarca] || 'Sin Marca'}
                   </td>
                   <td className="px-6 py-4 flex items-center">
                     <a
