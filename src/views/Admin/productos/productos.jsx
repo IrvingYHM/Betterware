@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Fot from "../../../components/Footer";
 import Barra from "../../../components/Navegacion/barraAdmin";
 import SkeletonProductCard from "../../../components/SkeletonProductCard";
+import { API_ENDPOINTS } from "../../../service/apirest";
 
 function ProductsList() {
   const [productos, setProductos] = useState([]);
@@ -13,9 +14,7 @@ function ProductsList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(
-      "https://backbetter-production.up.railway.app/productos_Better/ProductosAll"
-    )
+    fetch(API_ENDPOINTS.productos.getAllAdmin)
       .then((response) => {
         if (!response.ok) {
           toast.error("Error al obtener los productos");

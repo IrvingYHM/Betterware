@@ -5,9 +5,9 @@ import { useCart } from "./hooks/useCart";
 import { CartContext } from "./context/cart";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom"; // Importa useHistory para manejar la redirección
+import { useNavigate } from "react-router-dom";
 import Barra from "../../components/Navegacion/barra";
-
+import { API_ENDPOINTS } from "../../service/apirest";
 
 function parseJwt(token) {
   var base64Url = token.split(".")[1];
@@ -29,27 +29,25 @@ const DetalleProducto = () => {
   const { id } = useParams();
   const { addToCart, cart } = useCart(CartContext);
   const [producto, setProducto] = useState({ Existencias: 1 });
-  const [existencias, setExistencias] = useState(producto.Existencias);
+  const [existencias, setExistencias] = useState(1);
   const [mostrarDetalles, setMostrarDetalles] = useState(true);
   const [usuarioLogueado, setusuarioLogueado] = useState(false);
   const navigate = useNavigate();
   const [userType, setUserType] = useState(null); // Estado para almacenar el tipo de usuario
   /*   const [nombreUsuario, setNombreUsuario] = useState(""); */
   const [clienteId, setClienteId] = useState("");
-  const [precioTotal, setPrecioTotal] = useState(0);
 
-  const [rules, setRules] = useState([]);
-  const [productos, setProductos] = useState([]);
-  const [recomendaciones, setRecomendaciones] = useState([]);
-
-  const carritoApiBaseUrl = "https://backbetter-production.up.railway.app/Carrito";
-  const detallesCarritoApiBaseUrl = "https://backbetter-production.up.railway.app/DetalleCarrito/";
+  // URLs centralizadas desde configuración
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProducto = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const response = await fetch(
-          "https://backbetter-production.up.railway.app/productos_Better/productosId",
+          API_ENDPOINTS.productos.getById,
           {
             method: "POST",
             headers: {
@@ -58,10 +56,17 @@ const DetalleProducto = () => {
             body: JSON.stringify({ IdProducto: id }),
           }
         );
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
         const data = await response.json();
         setProducto(data);
+        setExistencias(1); // Reset to 1 when product loads
+        setLoading(false);
       } catch (error) {
-        console.error(error);
+        console.error('Error al cargar el producto:', error);
+        setError(error.message);
+        setLoading(false);
       }
     };
 
@@ -76,64 +81,6 @@ const DetalleProducto = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchRules = async () => {
-      try {
-        const response = await fetch('../association_rules.json');
-        const data = await response.json();
-        setRules(data);
-        console.log('Reglas cargadas:', data);
-      } catch (error) {
-        console.error('Error al cargar las reglas:', error);
-      }
-    };
-
-    fetchRules();
-  }, []);
-
-  useEffect(() => {
-    const fetchProductos = async () => {
-      try {
-        const response = await fetch('https://backbetter-production.up.railway.app/productos_Better/Productos');
-        const data = await response.json();
-        setProductos(data);
-      } catch (error) {
-        console.error('Error al cargar los productos:', error);
-      }
-    };
-
-    fetchProductos();
-  }, []);
-
-  useEffect(() => {
-    if (producto && productos.length && rules.length) {
-      const productoNombre = producto.vchNombreProducto?.trim().replace(/\s+/g, ' ') || '';
-      console.log('Nombre del producto:', productoNombre);
-
-      const newRecommendations = rules
-        .filter(rule => {
-          console.log('Antecedents:', rule.antecedents);
-          return rule.antecedents.includes(productoNombre);
-        })
-        .flatMap(rule => rule.consequents);
-
-      console.log('New Recommendations:', newRecommendations);
-
-      const uniqueRecommendations = [...new Set(newRecommendations)];
-      const limitedRecommendations = uniqueRecommendations.slice(0, 7);
-      const productosRecomendados = productos.filter(p => 
-        limitedRecommendations.includes(p.vchNombreProducto.trim().replace(/\s+/g, ' '))
-      );
-
-      console.log('Productos Recomendados:', productosRecomendados);
-
-      setRecomendaciones(productosRecomendados);
-    }
-  }, [producto, productos, rules]);
-
-  useEffect(() => {
-    console.log('Recomendaciones:', recomendaciones);
-  }, [recomendaciones]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -155,86 +102,116 @@ const DetalleProducto = () => {
     }
   };
 
-  useEffect(() => {
-    // Convierte los precios a números y verifica si son válidos
-    const precioProducto = parseFloat(producto.Precio) || 0;
-    // Calcula el precio total sumando el precio base, de graduación y de tratamiento
-    const total = precioProducto;
 
-    // Actualiza el estado del precio total
-    setPrecioTotal(total);
-  }, [producto.Precio]); // Agrega los estados que afectan al cálculo del precio total como dependencias
+  const [addingToCart, setAddingToCart] = useState(false);
 
   const agregarAlCarrito = async () => {
+    console.log('Datos del carrito:', {
+      usuarioLogueado,
+      clienteId,
+      existencias,
+      producto: producto.IdProducto,
+      productoExistencias: producto.Existencias
+    });
+
+    // Validaciones iniciales
     if (!usuarioLogueado) {
       toast.error("Aún no has iniciado sesión.");
       return;
     }
 
-    if (existencias > 0) {
-      const cantidadAAgregar =
-        existencias > producto.Existencias ? producto.Existencias : existencias;
-      try {
-        const carritoResponse = await fetch(
-          `${carritoApiBaseUrl}/crearCarrito`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              IdProducto: producto.IdProducto,
-              cantidad: cantidadAAgregar,
-              IdCliente: clienteId,
-            }),
-          }
-        );
+    if (!clienteId) {
+      toast.error("Error: ID de cliente no encontrado.");
+      return;
+    }
 
-        if (!carritoResponse.ok) {
-          throw new Error("Error al agregar producto al carrito.");
-        }
-
-        const carritoData = await carritoResponse.json();
-        const IdCarrito = carritoData.IdCarrito;
-
-        const detallesCarritoResponse = await fetch(
-          `${detallesCarritoApiBaseUrl}crear`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              IdProducto: producto.IdProducto,
-              Precio: precioTotal,
-              Descripcion: producto.vchDescripcion,
-              SubTotal: precioTotal * cantidadAAgregar,
-              Cantidad: cantidadAAgregar,
-              IdCarrito: IdCarrito,
-            }),
-          }
-        );
-
-        if (detallesCarritoResponse.ok) {
-          addToCart({
-            ...producto,
-            quantity: cantidadAAgregar,
-            precioTotal: producto.Precio,
-          });
-          setExistencias(existencias - cantidadAAgregar);
-          toast.success("Producto(s) agregado(s) al carrito.");
-          setTimeout(() => {
-            navigate("/carrito");
-          }, 3000);
-        } else {
-          throw new Error("Error al agregar producto al carrito.");
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error("Error al agregar producto al carrito.");
-      }
-    } else {
+    if (existencias <= 0) {
       toast.error("No hay suficientes productos en existencia.");
+      return;
+    }
+
+    if (addingToCart) {
+      return; // Evitar múltiples clicks
+    }
+
+    const cantidadAAgregar = Math.min(existencias, producto.Existencias);
+    
+    setAddingToCart(true);
+    
+    try {
+      // Crear carrito y detalles en una sola operación optimizada
+      const carritoPayload = {
+        IdProducto: producto.IdProducto,
+        IdCliente: clienteId,
+      };
+
+      const carritoResponse = await fetch(API_ENDPOINTS.carrito.crear, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(carritoPayload),
+      });
+
+      if (!carritoResponse.ok) {
+        const errorData = await carritoResponse.json().catch(() => ({}));
+        throw new Error(errorData.message || `Error ${carritoResponse.status}: ${carritoResponse.statusText}`);
+      }
+
+      const carritoData = await carritoResponse.json();
+      console.log('Carrito data recibida:', carritoData);
+      console.log('IdCarrito obtenido:', carritoData.IdCarrito);
+
+      // Crear detalles del carrito
+      const precio = parseFloat(producto.Precio) || 0;
+      const detallesPayload = {
+        IdProducto: parseInt(producto.IdProducto),
+        Precio: parseFloat(precio),
+        Descripcion: (producto.vchDescripcion || producto.vchNombreProducto || 'Sin descripción').substring(0, 255),
+        SubTotal: parseFloat(precio * cantidadAAgregar),
+        Cantidad: parseInt(cantidadAAgregar),
+        IdCarrito: parseInt(carritoData.IdCarrito),
+      };
+
+      console.log('Payload detalles carrito:', detallesPayload);
+
+      const detallesResponse = await fetch(API_ENDPOINTS.carrito.detalles, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(detallesPayload),
+      });
+
+      if (!detallesResponse.ok) {
+        const errorData = await detallesResponse.json().catch(() => ({}));
+        console.error('Error response from detalles:', errorData);
+        console.error('Response status:', detallesResponse.status);
+        console.error('Response text:', detallesResponse.statusText);
+        throw new Error(errorData.message || `Error ${detallesResponse.status}: ${detallesResponse.statusText}`);
+      }
+
+      const detallesData = await detallesResponse.json();
+      console.log('Detalle carrito creado exitosamente:', detallesData);
+
+      // Éxito: actualizar estado local
+      addToCart({
+        ...producto,
+        quantity: cantidadAAgregar,
+        precioTotal: producto.Precio,
+      });
+
+      // Actualizar existencias localmente
+      setExistencias(existencias - cantidadAAgregar);
+      
+      toast.success(`${cantidadAAgregar} producto(s) agregado(s) al carrito.`);
+      
+      // Navegar después de un breve delay
+      setTimeout(() => {
+        navigate("/carrito");
+      }, 3000);
+
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
+      toast.error(error.message || "Error al agregar producto al carrito.");
+    } finally {
+      setAddingToCart(false);
     }
   };
 
@@ -242,17 +219,58 @@ const DetalleProducto = () => {
     return cart.some((item) => item.IdProducto === producto.IdProducto);
   }; */
 
+  // Mostrar estado de loading
+  if (loading) {
+    return (
+      <div>
+        <Barra />
+        <div className="container mx-auto px-6 my-20 mt-36 flex justify-center items-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-betterware mx-auto"></div>
+            <p className="mt-4 text-gray-600">Cargando producto...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Mostrar estado de error
+  if (error) {
+    return (
+      <div>
+        <Barra />
+        <div className="container mx-auto px-6 my-20 mt-36">
+          <div className="text-center bg-red-50 border border-red-200 rounded-lg p-6">
+            <div className="text-red-600 mb-4">
+              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 19.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-red-800 mb-2">Error al cargar el producto</h3>
+            <p className="text-red-600">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+            >
+              Recargar página
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Barra />
       {mostrarDetalles && (
         <div className="container mx-auto px-6 my-20 mt-36">
           <div className="md:flex md:items-center">
-            <div className="w-full h-64 md:w-1/2 lg:h-96">
+            <div className="w-full md:w-1/2 flex justify-center items-center">
               <img
-                className="h-full w-full rounded-md object-cover max-w-lg mx-auto "
+                className="max-w-full max-h-96 rounded-md object-contain mx-auto"
                 src={producto.vchNomImagen}
-                alt="Lentes"
+                alt={producto.vchNombreProducto}
               />
             </div>
             <div className="w-full max-w-lg mx-auto mt-5 md:ml-8 md:mt-0 md:w-1/2">
@@ -316,12 +334,20 @@ const DetalleProducto = () => {
               </div>
               <div className="flex items-center mt-6">
                 <button
-                  onClick={() => {
-                    agregarAlCarrito();
-                  }}
-                  className="px-8 py-2 bg-orange-600 text-white text-sm font-medium rounded-full hover:bg-orange-700 focus:outline-none focus:bg-orange-700"
+                  onClick={agregarAlCarrito}
+                  disabled={addingToCart || producto.Existencias <= 0}
+                  className={`px-8 py-2 text-white text-sm font-medium rounded-full focus:outline-none transition-all duration-200 flex items-center gap-2 ${
+                    addingToCart || producto.Existencias <= 0
+                      ? 'bg-gray-400 cursor-not-allowed' 
+                      : 'bg-orange-600 hover:bg-orange-700 focus:bg-orange-700'
+                  }`}
                 >
-                  Agregar al carrito
+                  {addingToCart && (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  )}
+                  {addingToCart ? 'Agregando...' : 
+                   producto.Existencias <= 0 ? 'Sin existencias' : 
+                   'Agregar al carrito'}
                 </button>
               </div>
             </div>
@@ -329,46 +355,20 @@ const DetalleProducto = () => {
         </div>
       )}
 
-      {/* Sección de recomendaciones */}
-      {/*     {recomendaciones.length > 0 && (
-      <div className="container mx-auto px-6 py-20">
-        <h2 className="text-black uppercase text-lg font-bold">Recomendaciones</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-          {recomendaciones.map((recomendado) => (
-            <div key={recomendado.IdProducto} className="bg-white shadow-md rounded-lg overflow-hidden">
-              <img
-                className="w-20 h-20 object-cover rounded-md"
-                src={recomendado.vchNomImagen}
-                alt={recomendado.vchNombreProducto}
-              />
-              <div className="p-4">
-                <h3 className="text-gray-700 font-bold">{recomendado.vchNombreProducto}</h3>
-                <p className="mt-2 text-gray-700">${recomendado.Precio}</p>
-                <button
-                  className="mt-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500"
-                  onClick={() => navigate(`/detalle-producto/${recomendado.IdProducto}`)}
-                >
-                  Ver detalles
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )} */}
-
       <Fot />
+
       <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+              position="top-center"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              limit={1}
+              className="toast-container"
+            />
     </div>
   );
 };

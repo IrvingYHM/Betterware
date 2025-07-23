@@ -9,6 +9,7 @@ import { AiFillShopping } from "react-icons/ai";
 import { IoLogOutSharp } from "react-icons/io5";
 import { FaBook } from "react-icons/fa6";
 import Busqueda from "./Busqueda";
+import { API_ENDPOINTS } from "../../service/apirest";
 import { FaUser } from "react-icons/fa6";
 import { AiFillSetting } from "react-icons/ai";
 import { FaTrophy } from "react-icons/fa";
@@ -139,7 +140,7 @@ function Barra() {
 
     try {
       const response = await fetch(
-        `https://backopt-production.up.railway.app/productos/Buscar_productos?busqueda=${busqueda}`
+        `${API_ENDPOINTS.productos.search}?busqueda=${busqueda}`
       );
       const data = await response.json();
       if (data.length > 0) {

@@ -4,35 +4,42 @@ import { useEffect, useState } from "react";
 import { obtenerProductos } from "./Api";
 import { Link } from "react-router-dom";
 import Barra from "../../components/Navegacion/barra";
+import { API_ENDPOINTS } from "../../service/apirest";
+import { ProductSkeletonGrid } from "./ProductSkeleton";
 
 
 const Lentes = () => {
   const [productos, setProductos] = useState([]);
   const [resultadosCategoria, setResultadosCategoria] = useState([]);
-  const [selectedMarca, setSelectedMarca] = useState("all");
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("all");
   const [productoAgregado, setProductoAgregado] = useState(null); // Nuevo estado para manejar el producto agregado
+  const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
+    setLoading(true);
     obtenerProductos()
       .then((data) => {
         setProductos(data);
         setResultadosCategoria(data); // Inicializar resultadosCategoria con todos los productos
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
       });
   }, []);
 
   async function buscarProductos(categoria) {
-    let url = `https://backbetter-production.up.railway.app/productos_Better/filtro_producto?categoria=${categoria}`;
+    let url = `${API_ENDPOINTS.productos.filter}?categoria=${categoria}`;
+    setLoading(true);
     try {
       const response = await fetch(url);
       const data = await response.json();
       setResultadosCategoria(data);
+      setLoading(false);
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   }
 
@@ -47,55 +54,104 @@ const Lentes = () => {
             </p>
           )}
         </div>
-        <div className="flex flex-row flex-wrap justify-center gap-6 mt-8">
-          {resultadosCategoria.map((producto) => {
-            return (
-              <Link
-                to={`/productoDetalle/${producto.IdProducto}`}
-                key={producto.IdProducto}
-                className="w-80 bg-white hover:bg-blue-200 shadow-xl rounded-xl flex flex-col"
-              >
-                <div className="h-full w-full flex flex-col justify-between p-4 bg-cover bg-center">
-                  <img
-                    src={producto.vchNomImagen}
-                    alt="Producto"
-                    className="h-full w-full object-cover rounded-lg"
-                  />
-                </div>
-                <div className="pb-4 flex flex-col items-center">
-                  <h1 className="text-center font-semibold lg:text-lg">
-                    {producto.vchNombreProducto}
-                  </h1>
-                  {/* <h1 className="text-center mt-1">
-                    Categoría: {producto.categoria.NombreCategoria}
-                  </h1> */}
-                  <p className="text-center font-bold lg:text-lg mt-1">
-                    ${producto.Precio}
-                  </p>
-                  {
-                    <div className="flex items-center justify-center bg-gray-100 rounded-full py-1 px-3 mt-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-gray-600 mr-1"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 9a1 1 0 112 0 1 1 0 01-2 0zM5 9a1 1 0 112 0 1 1 0 01-2 0zm10 0a1 1 0 112 0 1 1 0 01-2 0zM6.293 7.293a1 1 0 011.414-1.414L10 8.586l2.293-2.293a1 1 0 111.414 1.414L11.414 10l2.293 2.293a1 1 0 01-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 01-1.414-1.414L8.586 10 6.293 7.707a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-gray-600">
-                        {producto.Existencias}
+        {loading ? (
+          <ProductSkeletonGrid count={6} />
+        ) : (
+          <div className="flex flex-row flex-wrap justify-center gap-6 mt-8">
+            {resultadosCategoria.map((producto) => {
+              return (
+                <Link
+                  to={`/productoDetalle/${producto.IdProducto}`}
+                  key={producto.IdProducto}
+                  className="group relative w-80 bg-white border-2 border-gray-200 shadow-lg rounded-xl flex flex-col transition-all duration-300 hover:shadow-2xl hover:border-blue-500 hover:-translate-y-1 overflow-hidden"
+                >
+                  {/* Oferta Badge */}
+                  {producto.EnOferta && producto.PrecioOferta && (() => {
+                    const precioOriginal = parseFloat(producto.Precio) || 0;
+                    const precioOferta = parseFloat(producto.PrecioOferta) || 0;
+                    return precioOferta < precioOriginal; // Solo mostrar si hay descuento real
+                  })() && (
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
+                        OFERTA
                       </span>
                     </div>
-                  }
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+                  )}
+                  
+                  {/* Discount Percentage */}
+                  {producto.EnOferta && producto.PrecioOferta && (() => {
+                    const precioOriginal = parseFloat(producto.Precio) || 0;
+                    const precioOferta = parseFloat(producto.PrecioOferta) || 0;
+                    return precioOferta < precioOriginal; // Solo mostrar si hay descuento real
+                  })() && (
+                    <div className="absolute top-3 right-3 z-10">
+                      <span className="bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
+                        {(() => {
+                          const precioOriginal = parseFloat(producto.Precio) || 0;
+                          const precioOferta = parseFloat(producto.PrecioOferta) || 0;
+                          const porcentaje = Math.round(((precioOriginal - precioOferta) / precioOriginal) * 100);
+                          return porcentaje;
+                        })()}% OFF
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="relative h-64 w-full bg-gradient-to-b from-gray-50 to-gray-100">
+                    <img
+                      src={producto.vchNomImagen}
+                      alt={producto.vchNombreProducto}
+                      className="h-full w-full object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                    
+                    {/* Overlay gradiente en hover */}
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-t-lg"></div>
+                  </div>
+                  
+                  <div className="relative flex flex-col p-4 space-y-2 bg-white flex-grow">
+                    <h1 className="font-semibold text-gray-800 lg:text-lg line-clamp-2 group-hover:text-blue-600 transition-colors duration-200">
+                      {producto.vchNombreProducto}
+                    </h1>
+                    
+                    {/* Precio Section */}
+                    <div className="flex flex-col space-y-1 flex-grow">
+                      {producto.EnOferta && producto.PrecioOferta && (() => {
+                        const precioOriginal = parseFloat(producto.Precio) || 0;
+                        const precioOferta = parseFloat(producto.PrecioOferta) || 0;
+                        return precioOferta < precioOriginal; // Solo mostrar formato oferta si hay descuento real
+                      })() ? (
+                        <>
+                          <span className="text-sm text-gray-500 line-through">
+                            ${parseFloat(producto.Precio).toFixed(2)}
+                          </span>
+                          <span className="text-2xl font-bold text-red-600">
+                            ${parseFloat(producto.PrecioOferta).toFixed(2)}
+                          </span>
+                          <span className="text-sm text-green-600 font-medium">
+                            Ahorras ${(parseFloat(producto.Precio) - parseFloat(producto.PrecioOferta)).toFixed(2)}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-2xl font-bold text-gray-800">
+                          ${parseFloat(producto.Precio).toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                    
+                    {/* Action indicator - positioned at bottom right */}
+                    <div className="absolute bottom-4 right-4">
+                      <div className="flex items-center text-gray-400 group-hover:text-blue-500 transition-colors duration-200">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
       <Fot />
     </div>
