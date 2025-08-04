@@ -3,7 +3,10 @@
     "allow": [
       "Bash(npx eslint:*)",
       "Bash(npm run build:*)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "mcp__ide__getDiagnostics",
+      "WebFetch(domain:backbetter-production.up.railway.app)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }

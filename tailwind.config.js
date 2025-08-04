@@ -6,22 +6,20 @@ export default {
       colors: {
         danger: "#FFD099",
         turquesa: "#19BDFD",
-        betterware: "#0b9ca7",
-        betterware_card: "#65bed4",
-        betterware_claro: "#04acc9",
         aRey: "#1446F5",
         azulOp: "#6786F6",
-        naranja: {
-          50: "#fff1e6", // más claro
-          100: "#ffe0cc",
-          200: "#ffc199",
-          300: "#ffa366",
-          400: "#ff8433",
-          500: "#ff6900", // igual que DEFAULT
-          600: "#cc5500", // más oscuro
-          700: "#994000",
-          800: "#662b00",
-          900: "#331500", // muy oscuro
+        // Betterware brand colors - Teal/Cyan palette
+        teal: {
+          50: "#f0fdfa",   // Muy claro
+          100: "#ccfbf1",  // Claro
+          200: "#99f6e4",  // Claro medio
+          300: "#5eead4",  // Medio claro
+          400: "#2dd4bf",  // Medio
+          500: "#0b9ca7",  // Principal (betterware original)
+          600: "#00aec9",  // Medio oscuro (betterware2 original)
+          700: "#04acc9",  // Oscuro (betterware_claro original)
+          800: "#065f46",  // Muy oscuro
+          900: "#134e4a",  // Ultra oscuro
         },
       },
       spacing: {

@@ -10,7 +10,7 @@ export default function Footer() {
 /*   const { cart } = useCart(); */
 
   return (
-    <footer className="bg-betterware w-full">
+    <footer className="bg-teal-500 w-full">
       <div className="w-full max-w-screen-xl p-4 py-6 mx-auto lg:p-8">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0 md:flex md:items-center">

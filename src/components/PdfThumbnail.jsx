@@ -13,14 +13,26 @@ function PdfThumbnail({ url }) {
       try {
         const pdf = await pdfjsLib.getDocument(url).promise;
         const page = await pdf.getPage(1);
-        const viewport = page.getViewport({ scale: 0.6 });
+        const viewport = page.getViewport({ scale: 1 });
 
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+        
+        // Calcular escala para que se ajuste al contenedor
+        const container = canvas.parentElement;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        
+        const scaleX = containerWidth / viewport.width;
+        const scaleY = containerHeight / viewport.height;
+        const scale = Math.min(scaleX, scaleY);
+        
+        const scaledViewport = page.getViewport({ scale });
+        
+        canvas.height = scaledViewport.height;
+        canvas.width = scaledViewport.width;
 
-        await page.render({ canvasContext: context, viewport }).promise;
+        await page.render({ canvasContext: context, viewport: scaledViewport }).promise;
       } catch (err) {
         console.error("Error cargando PDF:", err);
         setError(true);
@@ -33,7 +45,11 @@ function PdfThumbnail({ url }) {
   return error ? (
     <p className="text-red-500 text-sm">No se pudo cargar la vista previa</p>
   ) : (
-    <canvas ref={canvasRef} className="rounded-md mb-4 shadow-md" />
+    <canvas 
+      ref={canvasRef} 
+      className="max-w-full max-h-full object-contain rounded-md" 
+      style={{ display: 'block', margin: '0 auto' }}
+    />
   );
 }
 

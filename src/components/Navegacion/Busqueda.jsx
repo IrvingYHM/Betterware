@@ -52,9 +52,9 @@ function Busqueda({ busqueda, setBusqueda, handleSearch }) {
   };
 
   return (
-    <div className="flex items-center w-full max-w-sm mx-auto px-2 space-x-2">
-      <div className="flex items-center w-full bg-white rounded-full shadow-md px-2 py-1 md:py-2">
-        <AiOutlineSearch className="w-4 h-4 md:w-5 md:h-5 text-gray-500 ml-2" />
+    <div className="flex items-center w-full px-1 sm:px-2">
+      <div className="flex items-center w-full bg-white rounded-full shadow-md px-1 sm:px-2 py-1 md:py-2">
+        <AiOutlineSearch className="w-4 h-4 md:w-5 md:h-5 text-gray-500 ml-1 sm:ml-2 flex-shrink-0" />
         
         <input
           type="text"
@@ -62,18 +62,18 @@ function Busqueda({ busqueda, setBusqueda, handleSearch }) {
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-grow outline-none bg-transparent placeholder-gray-500 text-sm md:text-base px-2 "
+          className="flex-grow outline-none bg-transparent placeholder-gray-500 text-sm md:text-base px-1 sm:px-2 min-w-0"
         />
 
         {/* Botón de micrófono para búsqueda por voz */}
         <button
           type="button"
           onClick={startListening}
-          className="bg-gray-200 rounded-full p-1 md:p-2 mr-1"
+          className="bg-gray-200 rounded-full p-1 md:p-2 ml-1 flex-shrink-0"
           disabled={isListening}
         >
           <AiOutlineAudio
-            className={`w-4 h-4 md:w-5 md:h-5 ${isListening ? "text-red-500" : "text-gray-500"}`}
+            className={`w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 ${isListening ? "text-red-500" : "text-gray-500"}`}
           />
         </button>
 
@@ -81,9 +81,9 @@ function Busqueda({ busqueda, setBusqueda, handleSearch }) {
         <button
           type="button"
           onClick={handleSearch}
-          className="bg-gray-200 rounded-full p-1 md:p-2 mr-2"
+          className="bg-gray-200 rounded-full p-1 md:p-2 ml-1 flex-shrink-0"
         >
-          <AiOutlineSearch className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
+          <AiOutlineSearch className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-gray-500" />
         </button>
       </div>
     </div>

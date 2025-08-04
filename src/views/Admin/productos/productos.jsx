@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Fot from "../../../components/Footer";
 import Barra from "../../../components/Navegacion/barraAdmin";
 import SkeletonProductCard from "../../../components/SkeletonProductCard";
+import { API_ENDPOINTS } from "../../../service/apirest";
 
 function ProductsList() {
   const [productos, setProductos] = useState([]);
@@ -13,9 +14,7 @@ function ProductsList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(
-      "https://backbetter-production.up.railway.app/productos_Better/ProductosAll"
-    )
+    fetch(API_ENDPOINTS.productos.getAllAdmin)
       .then((response) => {
         if (!response.ok) {
           toast.error("Error al obtener los productos");
@@ -63,11 +62,11 @@ function ProductsList() {
                   key={producto.IdProducto}
                   className="w-72 bg-white rounded-xl shadow-md flex flex-col justify-between"
                 >
-                  <div className="relative w-full rounded-t overflow-hidden">
+                  <div className="relative h-72 w-full rounded-t overflow-hidden">
                     <img
                       src={producto.vchNomImagen}
                       alt={producto.vchNombreProducto}
-                      className="w-full object-cover"
+                      className="h-full w-full object-cover"
                     />
 
                     {/* Texto AGOTADO en diagonal */}

@@ -20,15 +20,20 @@ async function getCachedProductos() {
   return await db.get('productos', 'lista');
 }
 
+import { API_ENDPOINTS } from "../../service/apirest";
+
 // Función principal para obtener productos, usando cache si no hay conexión
 export async function obtenerProductos() {
   try {
-    const response = await fetch("https://backbetter-production.up.railway.app/productos_Better/Productos", {
-      headers: {
-        'ngrok-skip-browser-warning': 'true',  // Ignora advertencias de navegador de ngrok
-        'Content-Type': 'application/json',    // Tipo de contenido
+    const response = await fetch(
+      API_ENDPOINTS.productos.getAll,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "true", // Ignora advertencias de navegador de ngrok
+          "Content-Type": "application/json", // Tipo de contenido
+        },
       }
-    });
+    );
 
     // Si la respuesta no es exitosa, lanza un error
     if (!response.ok) {
