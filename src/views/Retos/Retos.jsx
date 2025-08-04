@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Trophy, Crown, Users, TrendingUp, Upload, Eye, Edit3, Award, Target, X } from "lucide-react";
 import Barra from "../../components/Navegacion/barra";
 import Fot from "../../components/Footer";
+import { TopListSkeleton, ImageSkeleton } from "./RetosSkeletons";
 
 const obtenerMesAnteriorYAño = () => {
   const date = new Date();
@@ -23,6 +24,12 @@ function Retos() {
   const [topVentas, setTopVentas] = useState([]);
   const [topReferidos, setTopReferidos] = useState([]);
   const [imagenes, setImagenes] = useState({});
+  const [loading, setLoading] = useState({
+    topVentas: true,
+    topReferidos: true,
+    imagenesVentas: true,
+    imagenesAfiliados: true
+  });
   const navigate = useNavigate();
   
   // Betterware color palette matching dashboard
@@ -38,15 +45,37 @@ function Retos() {
   };
 
   useEffect(() => {
+    // Reset loading states
+    setLoading({
+      topVentas: true,
+      topReferidos: true,
+      imagenesVentas: true,
+      imagenesAfiliados: true
+    });
+
+    // Load top ventas
     axios
       .get(`https://backbetter-production.up.railway.app/top-vendedor?month=${mes}&year=${año}`)
-      .then((res) => setTopVentas(res.data.slice(0, 10)))
-      .catch((err) => console.error("Error cargando top ventas", err));
+      .then((res) => {
+        setTopVentas(res.data.slice(0, 10));
+        setLoading(prev => ({ ...prev, topVentas: false }));
+      })
+      .catch((err) => {
+        console.error("Error cargando top ventas", err);
+        setLoading(prev => ({ ...prev, topVentas: false }));
+      });
 
+    // Load top referidos
     axios
       .get(`https://backbetter-production.up.railway.app/top-referidos?month=${mes}&year=${año}`)
-      .then((res) => setTopReferidos(res.data.slice(0, 10)))
-      .catch((err) => console.error("Error cargando top referidos", err));
+      .then((res) => {
+        setTopReferidos(res.data.slice(0, 10));
+        setLoading(prev => ({ ...prev, topReferidos: false }));
+      })
+      .catch((err) => {
+        console.error("Error cargando top referidos", err);
+        setLoading(prev => ({ ...prev, topReferidos: false }));
+      });
 
     const tipos = [
       "retos-ventas",
@@ -55,17 +84,59 @@ function Retos() {
       "ganadores-afiliados",
     ];
 
+    let imagenesVentasLoaded = 0;
+    let imagenesAfiliadosLoaded = 0;
+    const ventasTypes = ["retos-ventas", "ganadores-ventas"];
+    const afiliadosTypes = ["retos-afiliados", "ganadores-afiliados"];
+
     tipos.forEach((tipo) => {
       axios
         .get(`https://backbetter-production.up.railway.app/imagenes/filtrar/${tipo}`)
         .then((res) => {
           setImagenes((prev) => ({ ...prev, [tipo]: res.data }));
+          
+          // Update loading states for images
+          if (ventasTypes.includes(tipo)) {
+            imagenesVentasLoaded++;
+            if (imagenesVentasLoaded === ventasTypes.length) {
+              setLoading(prev => ({ ...prev, imagenesVentas: false }));
+            }
+          }
+          
+          if (afiliadosTypes.includes(tipo)) {
+            imagenesAfiliadosLoaded++;
+            if (imagenesAfiliadosLoaded === afiliadosTypes.length) {
+              setLoading(prev => ({ ...prev, imagenesAfiliados: false }));
+            }
+          }
         })
-        .catch((err) => console.error(`Error cargando imágenes de tipo ${tipo}`, err));
+        .catch((err) => {
+          console.error(`Error cargando imágenes de tipo ${tipo}`, err);
+          
+          // Update loading states even on error
+          if (ventasTypes.includes(tipo)) {
+            imagenesVentasLoaded++;
+            if (imagenesVentasLoaded === ventasTypes.length) {
+              setLoading(prev => ({ ...prev, imagenesVentas: false }));
+            }
+          }
+          
+          if (afiliadosTypes.includes(tipo)) {
+            imagenesAfiliadosLoaded++;
+            if (imagenesAfiliadosLoaded === afiliadosTypes.length) {
+              setLoading(prev => ({ ...prev, imagenesAfiliados: false }));
+            }
+          }
+        });
     });
   }, [mes, año]);
 
-  const renderTop = (lista, tipo) => {
+
+  const renderTop = (lista, tipo, isLoading) => {
+    if (isLoading) {
+      return <TopListSkeleton tipo={tipo} />;
+    }
+
     const isVentas = tipo === "Ventas";
     const icon = isVentas ? TrendingUp : Users;
     const headerColor = isVentas ? colors.success : colors.warning;
@@ -88,39 +159,48 @@ function Retos() {
         </div>
         
         <div className="space-y-3 max-h-96 overflow-y-auto">
-          {lista.map((item, index) => {
-            const isTop3 = index < 3;
-            const rankColors = ['bg-yellow-100 text-yellow-800', 'bg-gray-100 text-gray-800', 'bg-orange-100 text-orange-800'];
-            const rankColor = isTop3 ? rankColors[index] : 'bg-blue-100 text-blue-800';
-            
-            return (
-              <div key={item.id || index} 
-                   className={`p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
-                     isTop3 ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200' : 'bg-gray-50 border-gray-200'
-                   }`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${rankColor}`}>
-                      {isTop3 && index === 0 ? <Crown className="w-4 h-4" /> : `#${index + 1}`}
-                    </span>
-                    <div>
-                      <p className="font-semibold text-gray-900">
-                        {item.empleado?.vchNombre} {item.empleado?.vchAPaterno} {item.empleado?.vchAMaterno}
+          {lista.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-gray-400 mb-2">
+                {React.createElement(icon, { className: "w-12 h-12 mx-auto" })}
+              </div>
+              <p className="text-gray-500">No hay datos disponibles para {mes} {año}</p>
+            </div>
+          ) : (
+            lista.map((item, index) => {
+              const isTop3 = index < 3;
+              const rankColors = ['bg-yellow-100 text-yellow-800', 'bg-gray-100 text-gray-800', 'bg-orange-100 text-orange-800'];
+              const rankColor = isTop3 ? rankColors[index] : 'bg-blue-100 text-blue-800';
+              
+              return (
+                <div key={item.id || index} 
+                     className={`p-4 rounded-xl border transition-all duration-200 hover:shadow-md ${
+                       isTop3 ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200' : 'bg-gray-50 border-gray-200'
+                     } transform hover:scale-105`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${rankColor} transition-all duration-200`}>
+                        {isTop3 && index === 0 ? <Crown className="w-4 h-4" /> : `#${index + 1}`}
+                      </span>
+                      <div>
+                        <p className="font-semibold text-gray-900">
+                          {item.empleado?.vchNombre} {item.empleado?.vchAPaterno} {item.empleado?.vchAMaterno}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="font-bold text-lg" style={{ color: headerColor }}>
+                        {tipo === "Ventas" ? item.numVentas : item.numReferidos}
+                      </span>
+                      <p className="text-xs text-gray-500">
+                        {tipo === "Ventas" ? "ventas" : "referidos"}
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <span className="font-bold text-lg" style={{ color: headerColor }}>
-                      {tipo === "Ventas" ? item.numVentas : item.numReferidos}
-                    </span>
-                    <p className="text-xs text-gray-500">
-                      {tipo === "Ventas" ? "ventas" : "referidos"}
-                    </p>
-                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
     );
@@ -131,8 +211,14 @@ function Retos() {
     tipoGanador,
     titulo,
     imagenes,
+    isLoading
   ) => {
     const [modalAbierto, setModalAbierto] = useState(false);
+    
+    if (isLoading) {
+      return <ImageSkeleton titulo={titulo} />;
+    }
+
     const imagenReto = imagenes[tipoReto]?.[0]?.Imagen;
     const imagenGanador = imagenes[tipoGanador]?.[0]?.Imagen;
     const isVentas = titulo.includes("Ventas");
@@ -226,7 +312,7 @@ function Retos() {
   return (
     <div className="mt-36">
       <Barra/>
-      <div className="min-h-screen bg-gradient-to-br">
+      <div className="min-h-screen bg-gradient-to-br mb-6">
         <div className="max-w-7xl mx-auto space-y-8">
           {/* Ventas Section */}
           <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200">
@@ -244,12 +330,13 @@ function Retos() {
               </h2>
             </div>
             <div className="flex flex-col lg:flex-row gap-6">
-              {renderTop(topVentas, "Ventas")}
+              {renderTop(topVentas, "Ventas", loading.topVentas)}
               {renderImagenConBotones(
                 "retos-ventas",
                 "ganadores-ventas",
                 "Reto - Ventas",
                 imagenes,
+                loading.imagenesVentas
               )}
             </div>
           </div>
@@ -270,12 +357,13 @@ function Retos() {
               </h2>
             </div>
             <div className="flex flex-col lg:flex-row gap-6">
-              {renderTop(topReferidos, "Afiliados")}
+              {renderTop(topReferidos, "Afiliados", loading.topReferidos)}
               {renderImagenConBotones(
                 "retos-afiliados",
                 "ganadores-afiliados",
                 "Reto - Afiliaciones",
                 imagenes,
+                loading.imagenesAfiliados
               )}
             </div>
           </div>

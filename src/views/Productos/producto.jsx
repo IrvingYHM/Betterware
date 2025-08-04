@@ -55,7 +55,7 @@ const Lentes = () => {
           )}
         </div>
         {loading ? (
-          <ProductSkeletonGrid count={6} />
+          <ProductSkeletonGrid count={12} />
         ) : (
           <div className="flex flex-row flex-wrap justify-center gap-6 mt-8">
             {resultadosCategoria.map((producto) => {
@@ -63,7 +63,7 @@ const Lentes = () => {
                 <Link
                   to={`/productoDetalle/${producto.IdProducto}`}
                   key={producto.IdProducto}
-                  className="group relative w-80 bg-white border-2 border-gray-200 shadow-lg rounded-xl flex flex-col transition-all duration-300 hover:shadow-2xl hover:border-blue-500 hover:-translate-y-1 overflow-hidden"
+                  className="group relative w-72 bg-white border-2 border-gray-200 shadow-lg rounded-xl flex flex-col transition-all duration-300 hover:shadow-2xl hover:border-blue-500 hover:-translate-y-1 overflow-hidden"
                 >
                   {/* Oferta Badge */}
                   {producto.EnOferta && producto.PrecioOferta && (() => {
@@ -96,7 +96,7 @@ const Lentes = () => {
                     </div>
                   )}
 
-                  <div className="relative h-64 w-full bg-gradient-to-b from-gray-50 to-gray-100">
+                  <div className="relative h-72 w-full bg-gradient-to-b from-gray-50 to-gray-100">
                     <img
                       src={producto.vchNomImagen}
                       alt={producto.vchNombreProducto}

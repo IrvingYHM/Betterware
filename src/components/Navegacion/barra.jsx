@@ -89,8 +89,8 @@ function Barra() {
   // Function to get active class for mobile menu items
   const getMobileActiveClass = (path) => {
     return isActiveRoute(path) 
-      ? "text-betterware border-r-4 border-betterware font-bold" 
-      : "text-gray-700 hover:text-betterware hover:bg-gray-50";
+      ? "text-teal-500 border-r-4 border-teal-500 font-bold" 
+      : "text-gray-700 hover:text-teal-500 hover:bg-gray-50";
   };
 
   useEffect(() => {
@@ -169,7 +169,7 @@ function Barra() {
     <>
       {/* Mobile Navigation - Solo renderizar en móvil */}
       {isMobile && (
-        <nav className="flex fixed items-center w-full top-0 bg-betterware_claro/95 lg:text-base h-16 px-2 z-50">
+        <nav className="flex fixed items-center w-full top-0 bg-teal-700/95 lg:text-base h-16 px-2 z-50">
           <IoIosMenu
             className="w-8 h-8 cursor-pointer flex-shrink-0 mr-2"
             src={burgerMenu}
@@ -188,7 +188,7 @@ function Barra() {
 
       {/* Desktop Navigation - Solo renderizar en desktop */}
       {!isMobile && (
-        <nav className="flex fixed items-center w-full top-0 bg-betterware_claro/95 lg:text-base h-16 md:h-20 z-50">
+        <nav className="flex fixed items-center w-full top-0 bg-teal-700/95 lg:text-base h-16 md:h-20 z-50">
           <div className="w-18 md:w-25 h-16 md:h-20 flex items-center ml-2">
             <Link to="/" className="flex items-center">
               <img
@@ -508,7 +508,7 @@ function Barra() {
 
       {/* Barra de navegación inferior - Solo en desktop */}
       {!isMobile && (
-        <div className="flex fixed mt-20 items-center justify-center w-full top-0 bg-betterware/95 py-1.5 lg:text-base z-40">
+        <div className="flex fixed mt-20 items-center justify-center w-full top-0 bg-teal-500/95 py-1.5 lg:text-base z-40">
           <Link
             to="/inicio"
             className={`font-bold flex items-center mr-5 px-3 py-1 rounded-md transition-colors text-white ${getActiveClass(

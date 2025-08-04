@@ -27,4 +27,9 @@ export const API_ENDPOINTS = {
   auth: {
     login: `${API_BASE_URL}/auth/login`,
   },
+  catalogos: {
+    getAll: `${API_BASE_URL}/catalogos/`,
+    create: `${API_BASE_URL}/catalogos/agregar-catalogo`,
+    delete: `${API_BASE_URL}/catalogos/eliminar`,
+  },
 };

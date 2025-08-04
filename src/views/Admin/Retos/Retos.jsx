@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { Trophy, Crown, Users, TrendingUp, Upload, Eye, Edit3, Award, Target, X } from "lucide-react";
+import { AdminTopListSkeleton, AdminImageSkeleton, AdminSectionSkeleton } from "./AdminRetosSkeletons";
+import { ToastContainer } from "react-toastify";
+import ImagenesForm from "./ImagenesForm";
+import TopVendedorForm from "./TopVentas";
+import TopReferidosForm from "./TopReferidos";
 
 const obtenerMesAnteriorYAño = () => {
   const date = new Date();
@@ -21,7 +26,19 @@ function Retos() {
   const [topVentas, setTopVentas] = useState([]);
   const [topReferidos, setTopReferidos] = useState([]);
   const [imagenes, setImagenes] = useState({});
+  const [loading, setLoading] = useState({
+    topVentas: true,
+    topReferidos: true,
+    imagenesVentas: true,
+    imagenesAfiliados: true
+  });
   const navigate = useNavigate();
+  
+  // Estados para navegación y modales
+  const [currentView, setCurrentView] = useState('retos'); // 'retos', 'upload', 'top-ventas', 'top-referidos'
+  const [uploadTipo, setUploadTipo] = useState('');
+  const [modalGanadoresVentas, setModalGanadoresVentas] = useState(false);
+  const [modalGanadoresAfiliados, setModalGanadoresAfiliados] = useState(false);
   
   // Betterware color palette matching dashboard
   const colors = {
@@ -36,15 +53,37 @@ function Retos() {
   };
 
   useEffect(() => {
+    // Reset loading states
+    setLoading({
+      topVentas: true,
+      topReferidos: true,
+      imagenesVentas: true,
+      imagenesAfiliados: true
+    });
+
+    // Load top ventas
     axios
       .get(`https://backbetter-production.up.railway.app/top-vendedor?month=${mes}&year=${año}`)
-      .then((res) => setTopVentas(res.data.slice(0, 10)))
-      .catch((err) => console.error("Error cargando top ventas", err));
+      .then((res) => {
+        setTopVentas(res.data.slice(0, 10));
+        setLoading(prev => ({ ...prev, topVentas: false }));
+      })
+      .catch((err) => {
+        console.error("Error cargando top ventas", err);
+        setLoading(prev => ({ ...prev, topVentas: false }));
+      });
 
+    // Load top referidos
     axios
       .get(`https://backbetter-production.up.railway.app/top-referidos?month=${mes}&year=${año}`)
-      .then((res) => setTopReferidos(res.data.slice(0, 10)))
-      .catch((err) => console.error("Error cargando top referidos", err));
+      .then((res) => {
+        setTopReferidos(res.data.slice(0, 10));
+        setLoading(prev => ({ ...prev, topReferidos: false }));
+      })
+      .catch((err) => {
+        console.error("Error cargando top referidos", err);
+        setLoading(prev => ({ ...prev, topReferidos: false }));
+      });
 
     const tipos = [
       "retos-ventas",
@@ -53,17 +92,111 @@ function Retos() {
       "ganadores-afiliados",
     ];
 
+    let imagenesVentasLoaded = 0;
+    let imagenesAfiliadosLoaded = 0;
+    const ventasTypes = ["retos-ventas", "ganadores-ventas"];
+    const afiliadosTypes = ["retos-afiliados", "ganadores-afiliados"];
+
     tipos.forEach((tipo) => {
       axios
         .get(`https://backbetter-production.up.railway.app/imagenes/filtrar/${tipo}`)
         .then((res) => {
           setImagenes((prev) => ({ ...prev, [tipo]: res.data }));
+          
+          // Update loading states for images
+          if (ventasTypes.includes(tipo)) {
+            imagenesVentasLoaded++;
+            if (imagenesVentasLoaded === ventasTypes.length) {
+              setLoading(prev => ({ ...prev, imagenesVentas: false }));
+            }
+          }
+          
+          if (afiliadosTypes.includes(tipo)) {
+            imagenesAfiliadosLoaded++;
+            if (imagenesAfiliadosLoaded === afiliadosTypes.length) {
+              setLoading(prev => ({ ...prev, imagenesAfiliados: false }));
+            }
+          }
         })
-        .catch((err) => console.error(`Error cargando imágenes de tipo ${tipo}`, err));
+        .catch((err) => {
+          console.error(`Error cargando imágenes de tipo ${tipo}`, err);
+          
+          // Update loading states even on error
+          if (ventasTypes.includes(tipo)) {
+            imagenesVentasLoaded++;
+            if (imagenesVentasLoaded === ventasTypes.length) {
+              setLoading(prev => ({ ...prev, imagenesVentas: false }));
+            }
+          }
+          
+          if (afiliadosTypes.includes(tipo)) {
+            imagenesAfiliadosLoaded++;
+            if (imagenesAfiliadosLoaded === afiliadosTypes.length) {
+              setLoading(prev => ({ ...prev, imagenesAfiliados: false }));
+            }
+          }
+        });
     });
   }, [mes, año]);
 
-  const renderTop = (lista, tipo) => {
+  // Funciones para navegación del formulario
+  const openUploadForm = (tipo) => {
+    setUploadTipo(tipo);
+    setCurrentView('upload');
+  };
+
+  const closeUploadForm = () => {
+    setCurrentView('retos');
+    setUploadTipo('');
+    // Recargar imágenes al volver
+    fetchImagenesUpdate();
+  };
+
+  // Funciones para navegación de formularios de top
+  const openTopForm = (tipo) => {
+    setCurrentView(tipo);
+  };
+
+  const closeTopForm = () => {
+    setCurrentView('retos');
+    // Recargar datos al volver
+    const tipos = ["retos-ventas", "ganadores-ventas", "retos-afiliados", "ganadores-afiliados"];
+    
+    // Reload top ventas
+    axios
+      .get(`https://backbetter-production.up.railway.app/top-vendedor?month=${mes}&year=${año}`)
+      .then((res) => {
+        setTopVentas(res.data.slice(0, 10));
+      });
+    
+    // Reload top referidos
+    axios
+      .get(`https://backbetter-production.up.railway.app/top-referidos?month=${mes}&year=${año}`)
+      .then((res) => {
+        setTopReferidos(res.data.slice(0, 10));
+      });
+  };
+
+  const fetchImagenesUpdate = async () => {
+    const tipos = ["retos-ventas", "ganadores-ventas", "retos-afiliados", "ganadores-afiliados"];
+    
+    for (const tipo of tipos) {
+      try {
+        const res = await axios.get(
+          `https://backbetter-production.up.railway.app/imagenes/filtrar/${tipo}`
+        );
+        setImagenes(prev => ({ ...prev, [tipo]: res.data }));
+      } catch (error) {
+        console.error(`Error actualizando imágenes de tipo ${tipo}`, error);
+      }
+    }
+  };
+
+  const renderTop = (lista, tipo, isLoading) => {
+    if (isLoading) {
+      return <AdminTopListSkeleton tipo={tipo} />;
+    }
+
     const tipoRuta = tipo.toLowerCase() === "ventas" ? "ventas" : "referidos";
     const isVentas = tipo === "Ventas";
     const icon = isVentas ? TrendingUp : Users;
@@ -87,7 +220,15 @@ function Retos() {
         </div>
         
         <div className="space-y-3 max-h-96 overflow-y-auto">
-          {lista.map((item, index) => {
+          {lista.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-gray-400 mb-2">
+                {React.createElement(icon, { className: "w-12 h-12 mx-auto" })}
+              </div>
+              <p className="text-gray-500">No hay datos disponibles para {mes} {año}</p>
+            </div>
+          ) : (
+            lista.map((item, index) => {
             const isTop3 = index < 3;
             const rankColors = ['bg-yellow-100 text-yellow-800', 'bg-gray-100 text-gray-800', 'bg-orange-100 text-orange-800'];
             const rankColor = isTop3 ? rankColors[index] : 'bg-blue-100 text-blue-800';
@@ -119,18 +260,19 @@ function Retos() {
                 </div>
               </div>
             );
-          })}
+            })
+          )}
         </div>
 
         <div className="mt-6 pt-4 border-t border-gray-200">
-          <Link
-            to={`/nuevo-top-${tipoRuta}`}
+          <button
+            onClick={() => openTopForm(tipo === "Ventas" ? 'top-ventas' : 'top-referidos')}
             className="inline-flex items-center px-4 py-2 rounded-xl text-white font-semibold transition-all duration-300 hover:scale-105 shadow-lg w-full justify-center"
             style={{ background: `linear-gradient(135deg, ${headerColor}, ${colors.secondary})` }}
           >
             <Edit3 className="w-4 h-4 mr-2" />
             Editar Ranking
-          </Link>
+          </button>
         </div>
       </div>
     );
@@ -141,13 +283,22 @@ function Retos() {
     tipoGanador,
     titulo,
     imagenes,
-    navigate
+    navigate,
+    isLoading
   ) => {
-    const [modalAbierto, setModalAbierto] = useState(false);
+    if (isLoading) {
+      return <AdminImageSkeleton titulo={titulo} />;
+    }
+
     const imagenReto = imagenes[tipoReto]?.[0]?.Imagen;
     const imagenGanador = imagenes[tipoGanador]?.[0]?.Imagen;
     const isVentas = titulo.includes("Ventas");
     const headerColor = isVentas ? colors.success : colors.warning;
+    
+    // Determinar qué modal usar según el tipo
+    const isVentasSection = titulo.includes("Ventas");
+    const modalAbierto = isVentasSection ? modalGanadoresVentas : modalGanadoresAfiliados;
+    const setModalAbierto = isVentasSection ? setModalGanadoresVentas : setModalGanadoresAfiliados;
 
     return (
       <>
@@ -199,7 +350,7 @@ function Retos() {
             )}
 
             <button
-              onClick={() => navigate(`/imagen-reto/${tipoReto}`)}
+              onClick={() => openUploadForm(tipoReto)}
               className="flex items-center justify-center px-4 py-3 rounded-xl text-white font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
               style={{ background: `linear-gradient(135deg, ${headerColor}, ${colors.secondary})` }}
             >
@@ -207,7 +358,7 @@ function Retos() {
               Subir Reto
             </button>
             <button
-              onClick={() => navigate(`/imagen-reto/${tipoGanador}`)}
+              onClick={() => openUploadForm(tipoGanador)}
               className="flex items-center justify-center px-4 py-3 rounded-xl text-white font-semibold transition-all duration-300 hover:scale-105 shadow-lg"
               style={{ background: `linear-gradient(135deg, ${colors.warning}, ${colors.secondary})` }}
             >
@@ -253,41 +404,110 @@ function Retos() {
     );
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+  // Renderizar vista de formulario de subida usando el componente existente
+  const renderUploadForm = () => {
+    return (
+      <ImagenesForm 
+        integratedMode={true}
+        tipo={uploadTipo}
+        onBack={closeUploadForm}
+        showNavBar={false}
+      />
+    );
+  };
 
-        {/* Ventas Section */}
-        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200">
-          <div className="flex justify-center space-x-3 mb-6">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center"
-                 style={{ background: `linear-gradient(135deg, ${colors.success}, ${colors.primary})` }}>
-              <TrendingUp className="w-4 h-4 text-white" />
-            </div>
-            <h2 className="text-xl font-bold text-gray-900">Retos de Ventas</h2>
-          </div>
-          <div className="flex flex-col lg:flex-row gap-6">
-            {renderTop(topVentas, "Ventas")}
-            {renderImagenConBotones("retos-ventas", "ganadores-ventas", "Reto - Ventas", imagenes, navigate)}
-          </div>
-        </div>
+  // Renderizar formulario de top ventas
+  const renderTopVentasForm = () => {
+    return (
+      <TopVendedorForm 
+        integratedMode={true}
+        onBack={closeTopForm}
+        showNavBar={false}
+      />
+    );
+  };
 
-        {/* Afiliaciones Section */}
-        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200">
-          <div className="flex justify-center space-x-3 mb-6">
-            <div className="w-8 h-8 rounded-xl flex items-center justify-center"
-                 style={{ background: `linear-gradient(135deg, ${colors.warning}, ${colors.primary})` }}>
-              <Users className="w-4 h-4 text-white" />
+  // Renderizar formulario de top referidos
+  const renderTopReferidosForm = () => {
+    return (
+      <TopReferidosForm 
+        integratedMode={true}
+        onBack={closeTopForm}
+        showNavBar={false}
+      />
+    );
+  };
+
+  // Renderizar vista principal de retos
+  const renderRetosView = () => {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-6">
+        <div className="max-w-7xl mx-auto space-y-8">
+
+          {/* Ventas Section */}
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200">
+            <div className="flex justify-center space-x-3 mb-6">
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center"
+                   style={{ background: `linear-gradient(135deg, ${colors.success}, ${colors.primary})` }}>
+                <TrendingUp className="w-4 h-4 text-white" />
+              </div>
+              <h2 className="text-xl font-bold text-gray-900">Retos de Ventas</h2>
             </div>
-            <h2 className="text-xl font-bold text-gray-900">Retos de Afiliaciones</h2>
+            <div className="flex flex-col lg:flex-row gap-6">
+              {renderTop(topVentas, "Ventas", loading.topVentas)}
+              {renderImagenConBotones("retos-ventas", "ganadores-ventas", "Reto - Ventas", imagenes, navigate, loading.imagenesVentas)}
+            </div>
           </div>
-          <div className="flex flex-col lg:flex-row gap-6">
-            {renderTop(topReferidos, "Afiliados")}
-            {renderImagenConBotones("retos-afiliados", "ganadores-afiliados", "Reto - Afiliaciones", imagenes, navigate)}
+
+          {/* Afiliaciones Section */}
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200">
+            <div className="flex justify-center space-x-3 mb-6">
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center"
+                   style={{ background: `linear-gradient(135deg, ${colors.warning}, ${colors.primary})` }}>
+                <Users className="w-4 h-4 text-white" />
+              </div>
+              <h2 className="text-xl font-bold text-gray-900">Retos de Afiliaciones</h2>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-6">
+              {renderTop(topReferidos, "Afiliados", loading.topReferidos)}
+              {renderImagenConBotones("retos-afiliados", "ganadores-afiliados", "Reto - Afiliaciones", imagenes, navigate, loading.imagenesAfiliados)}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    );
+  };
+
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'upload':
+        return renderUploadForm();
+      case 'top-ventas':
+        return renderTopVentasForm();
+      case 'top-referidos':
+        return renderTopReferidosForm();
+      default:
+        return renderRetosView();
+    }
+  };
+
+  return (
+    <>
+      {renderCurrentView()}
+
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
   );
 }
 

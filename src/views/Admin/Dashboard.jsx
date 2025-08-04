@@ -145,7 +145,7 @@ const Dashboard = () => {
       {/* Main Content */}
       <main className={`transition-all duration-500 ${sidebarCollapsed ? 'ml-20' : 'ml-72'}`}>
         {/* Header */}
-        <header className="bg-betterware_claro/95 backdrop-blur-sm shadow-lg border-b border-betterware sticky top-0 z-30">
+        <header className="bg-teal-700/95 backdrop-blur-sm shadow-lg border-b border-teal-500 sticky top-0 z-30">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>

@@ -65,7 +65,7 @@ La aplicación está configurada como PWA con:
 
 ### Styling System
 - Tailwind con colores personalizados para Betterware: `betterware`, `betterware_card`, `betterware_claro`
-- Colores específicos: `turquesa`, `naranja` (con variantes 50-900), `azulOp`
+- Colores específicos: `turquesa`, `teal` (con variantes 50-900), `azulOp`
 - Configuración responsive con breakpoints extendidos
 
 ### Authentication Flow

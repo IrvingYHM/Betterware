@@ -62,11 +62,11 @@ function ProductsList() {
                   key={producto.IdProducto}
                   className="w-72 bg-white rounded-xl shadow-md flex flex-col justify-between"
                 >
-                  <div className="relative w-full rounded-t overflow-hidden">
+                  <div className="relative h-72 w-full rounded-t overflow-hidden">
                     <img
                       src={producto.vchNomImagen}
                       alt={producto.vchNombreProducto}
-                      className="w-full object-cover"
+                      className="h-full w-full object-cover"
                     />
 
                     {/* Texto AGOTADO en diagonal */}

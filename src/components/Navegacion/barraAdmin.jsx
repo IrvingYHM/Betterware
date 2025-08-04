@@ -121,7 +121,7 @@ function Barra() {
   };
 
   return (
-    <nav className="flex fixed items-center justify-between w-full top-0 bg-betterware py-1 lg:text-xl z-50">
+    <nav className="flex fixed items-center justify-between w-full top-0 bg-teal-500 py-1 lg:text-xl z-50">
       <div className="w-18 md:w-25 h-16 md:h-20 flex items-center ml-2">
         <Link to="/" className="flex items-center">
           <img
