@@ -4,9 +4,11 @@ import { CheckCircle } from "lucide-react";
 import axios from "axios";
 import Barra from "../../components/Navegacion/barra";
 import Fot from "../../components/Footer";
+import UneteSkeleton from "../../components/UneteSkeleton";
 
 function Unete() {
   const [currentData, setCurrentData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const getBeneficios = () => {
     if (currentData && currentData.Beneficios) {
@@ -26,14 +28,18 @@ function Unete() {
 
   const fetchUneteData = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         "https://backbetter-production.up.railway.app/unete-equipo/"
       );
       if (response.data && response.data.length > 0) {
         setCurrentData(response.data[0]);
       }
+      // Simular un pequeño delay para mostrar la animación
+      setTimeout(() => setLoading(false), 1000);
     } catch (error) {
       console.error("Error fetching unete data:", error);
+      setLoading(false);
     }
   };
 
@@ -45,11 +51,15 @@ function Unete() {
   const currentTitleColor = currentData?.ColorTitulo || "#ffffff";
   const currentSubtitleColor = currentData?.ColorSubtitulo || "#ffffff";
 
+  if (loading) {
+    return <UneteSkeleton isAdmin={false} />;
+  }
+
   return (
     <>
       <Barra/>
 
-      <section className="relative w-full h-[600px]">
+      <section className="relative w-full h-[550px] mt-32">
         <img
           src={currentImage}
           alt="Equipo Betterware"

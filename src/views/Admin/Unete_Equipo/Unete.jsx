@@ -12,10 +12,12 @@ import {
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UneteSkeleton from "../../../components/UneteSkeleton";
 
 function Unete() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [currentData, setCurrentData] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -56,6 +58,7 @@ function Unete() {
 
   const fetchUneteData = async () => {
     try {
+      setInitialLoading(true);
       const response = await axios.get(
         "https://backbetter-production.up.railway.app/unete-equipo/"
       );
@@ -83,8 +86,11 @@ function Unete() {
           newImage: null,
         });
       }
+      // Simular un pequeño delay para mostrar la animación
+      setTimeout(() => setInitialLoading(false), 1200);
     } catch (error) {
       console.error("Error fetching unete data:", error);
+      setInitialLoading(false);
     }
   };
 
@@ -221,6 +227,10 @@ function Unete() {
   const currentTitleColor = currentData?.ColorTitulo || "#ffffff";
   const currentSubtitleColor = currentData?.ColorSubtitulo || "#ffffff";
 
+  if (initialLoading) {
+    return <UneteSkeleton isAdmin={true} />;
+  }
+
   return (
     <>
       {/* Admin Edit Button */}
@@ -259,7 +269,7 @@ function Unete() {
         )}
       </div>
 
-      <section className="relative w-full h-[600px]">
+      <section className="relative w-full h-[550px]">
         <img
           src={imagePreview || currentImage}
           alt="Equipo Betterware"
