@@ -6,14 +6,19 @@ import Fot from "../../../components/Footer";
 import Barra from "../../../components/Navegacion/barraAdmin";
 import SkeletonProductCard from "../../../components/SkeletonProductCard";
 import { API_ENDPOINTS } from "../../../service/apirest";
+import { Search, Filter, Package, Tags } from "lucide-react";
 
 function ProductsList() {
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState({});
+  const [listaCategoria, setListaCategoria] = useState([]);
   const [mostrarDescripcion, setMostrarDescripcion] = useState({});
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
+    // Cargar productos
     fetch(API_ENDPOINTS.productos.getAllAdmin)
       .then((response) => {
         if (!response.ok) {
@@ -34,7 +39,17 @@ function ProductsList() {
         console.log(error);
       })
       .finally(() => {
-        setLoading(false); // ✅ TERMINA LA CARGA
+        setLoading(false);
+      });
+      
+    // Cargar categorías para el filtro
+    fetch("https://backbetter-production.up.railway.app/categoria/")
+      .then((response) => response.json())
+      .then((data) => {
+        setListaCategoria(data);
+      })
+      .catch((error) => {
+        console.log("Error al cargar categorías:", error);
       });
   }, []);
 
@@ -45,9 +60,85 @@ function ProductsList() {
     }));
   };
 
+  // Filtrar productos por búsqueda y categoría
+  const filteredProductos = productos.filter((producto) => {
+    const matchesSearch = producto.vchNombreProducto
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase()) ||
+      producto.vchDescripcion
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    
+    const matchesCategory = selectedCategory === "" || 
+      producto.IdCategoria.toString() === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
+
   return (
     <>
       <div className="max-w-8xl mx-auto px-4 mt-6 mb-10">
+        {/* Barra de búsqueda y filtros */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg bg-gradient-to-br from-blue-500 to-blue-600">
+                <Package className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Gestión de Productos</h1>
+                <p className="text-gray-600">Total de productos: {productos.length} | Mostrando: {filteredProductos.length}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* Barra de búsqueda */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Buscar productos por nombre o descripción..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              />
+            </div>
+            
+            {/* Filtro por categoría */}
+            <div className="md:w-64">
+              <div className="relative">
+                <Tags className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 appearance-none"
+                >
+                  <option value="">Todas las categorías</option>
+                  {listaCategoria.map((categoria) => (
+                    <option key={categoria.IdCategoria} value={categoria.IdCategoria}>
+                      {categoria.NombreCategoria}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            
+            {/* Botón limpiar filtros */}
+            {(searchTerm || selectedCategory) && (
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  setSelectedCategory("");
+                }}
+                className="px-4 py-3 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2"
+              >
+                <Filter className="w-5 h-5" />
+                Limpiar
+              </button>
+            )}
+          </div>
+        </div>
         {loading ? (
           <div className="flex flex-wrap justify-center gap-6">
             {Array.from({ length: 12 }).map((_, index) => (
@@ -56,8 +147,33 @@ function ProductsList() {
           </div>
         ) : (
           <>
-            <div className="flex flex-row flex-wrap justify-center gap-6">
-              {productos.map((producto) => (
+            {filteredProductos.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="bg-white rounded-2xl shadow-lg p-12 max-w-md mx-auto">
+                  <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No se encontraron productos</h3>
+                  <p className="text-gray-600 mb-6">
+                    {searchTerm || selectedCategory 
+                      ? "Intenta con otros términos de búsqueda o cambia el filtro de categoría"
+                      : "No hay productos disponibles en este momento"
+                    }
+                  </p>
+                  {(searchTerm || selectedCategory) && (
+                    <button
+                      onClick={() => {
+                        setSearchTerm("");
+                        setSelectedCategory("");
+                      }}
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
+                    >
+                      Limpiar filtros
+                    </button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-row flex-wrap justify-center gap-6">
+                {filteredProductos.map((producto) => (
                 <div
                   key={producto.IdProducto}
                   className="w-72 bg-white rounded-xl shadow-md flex flex-col justify-between"
@@ -148,8 +264,9 @@ function ProductsList() {
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* Botón flotante visible siempre */}
             <Link
