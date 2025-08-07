@@ -5,6 +5,7 @@ import Barra from "../../../components/Navegacion/barraAdmin";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 // Función para decodificar JWT
 function parseJwt(token) {
@@ -23,7 +24,7 @@ function parseJwt(token) {
   return JSON.parse(jsonPayload);
 }
 
-const CreateProductForm = () => {
+const CreateProductForm = ({ integratedMode = false, onBack, showNavBar = true }) => {
   const [formData, setFormData] = useState({
     vchNombreProducto: "",
     vchDescripcion: "",
@@ -110,17 +111,31 @@ const CreateProductForm = () => {
       );
 
       toast.success("Producto agregado exitosamente");
-      setTimeout(() => navigate("/Productos"), 3000);
+      if (integratedMode && onBack) {
+        setTimeout(() => onBack(), 2000);
+      } else {
+        setTimeout(() => navigate("/Productos"), 3000);
+      }
     } catch (error) {
       console.error(error);
       toast.error("Error al agregar el producto");
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Barra />
-      <div className="flex-grow container mx-auto px-2 sm:px-4 lg:px-6 py-28">
+  // Contenido del formulario
+  const formContent = (
+    <div className="container mx-auto px-2 sm:px-4 lg:px-6">
+      {integratedMode && onBack && (
+        <div className="mb-6">
+          <button
+            onClick={onBack}
+            className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Volver a la lista de productos
+          </button>
+        </div>
+      )}
         <form
           onSubmit={handleSubmit}
           className="bg-white p-6 rounded-lg shadow-md max-w-xl mx-auto"
@@ -237,6 +252,34 @@ const CreateProductForm = () => {
             Agregar Producto
           </button>
         </form>
+    </div>
+  );
+
+  if (integratedMode) {
+    return (
+      <>
+        {formContent}
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          limit={1}
+          className="toast-container"
+        />
+      </>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {showNavBar && <Barra />}
+      <div className="flex-grow py-28">
+        {formContent}
       </div>
       <Fot />
       <ToastContainer

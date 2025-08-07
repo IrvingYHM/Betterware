@@ -6,7 +6,9 @@ import Fot from "../../../components/Footer";
 import Barra from "../../../components/Navegacion/barraAdmin";
 import SkeletonProductCard from "../../../components/SkeletonProductCard";
 import { API_ENDPOINTS } from "../../../service/apirest";
-import { Search, Filter, Package, Tags } from "lucide-react";
+import { Search, Filter, Package, Tags, ArrowLeft } from "lucide-react";
+import CreateProductForm from "./agregarProductos";
+import ModificarProducto from "./modificarProducto";
 
 function ProductsList() {
   const [productos, setProductos] = useState([]);
@@ -16,6 +18,8 @@ function ProductsList() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [currentView, setCurrentView] = useState("list");
+  const [editingProductId, setEditingProductId] = useState(null);
 
   useEffect(() => {
     // Cargar productos
@@ -74,6 +78,54 @@ function ProductsList() {
     
     return matchesSearch && matchesCategory;
   });
+
+  const handleAddProduct = () => {
+    setCurrentView("add");
+  };
+
+  const handleEditProduct = (productId) => {
+    setEditingProductId(productId);
+    setCurrentView("edit");
+  };
+
+  const handleBackToList = () => {
+    setCurrentView("list");
+    setEditingProductId(null);
+    // Recargar productos después de agregar/editar
+    fetch(API_ENDPOINTS.productos.getAllAdmin)
+      .then((response) => response.json())
+      .then((data) => {
+        const categoriasMap = {};
+        data.forEach((producto) => {
+          categoriasMap[producto.IdCategoria] =
+            producto.categoria.NombreCategoria;
+        });
+        setCategorias(categoriasMap);
+        setProductos(data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  if (currentView === "add") {
+    return (
+      <CreateProductForm
+        integratedMode={true}
+        onBack={handleBackToList}
+        showNavBar={false}
+      />
+    );
+  }
+
+  if (currentView === "edit" && editingProductId) {
+    return (
+      <ModificarProducto
+        integratedMode={true}
+        onBack={handleBackToList}
+        showNavBar={false}
+        productId={editingProductId}
+      />
+    );
+  }
 
   return (
     <>
@@ -255,12 +307,12 @@ function ProductsList() {
                     )}
 
                     <div className="mt-4">
-                      <Link
-                        to={`/ModificarProducto/${producto.IdProducto}`}
+                      <button
+                        onClick={() => handleEditProduct(producto.IdProducto)}
                         className="inline-block font-semibold bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700 transition"
                       >
                         Editar
-                      </Link>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -269,12 +321,12 @@ function ProductsList() {
             )}
 
             {/* Botón flotante visible siempre */}
-            <Link
-              to="/ProductosAg"
+            <button
+              onClick={handleAddProduct}
               className="fixed bottom-6 right-6 z-50 bg-blue-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-blue-700 transition"
             >
               + Nuevo producto
-            </Link>
+            </button>
           </>
         )}
       </div>

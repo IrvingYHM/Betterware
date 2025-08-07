@@ -5,10 +5,12 @@ import "react-toastify/dist/ReactToastify.css";
 import Barra from "../../../components/Navegacion/barraAdmin";
 import Fot from "../../../components/Footer";
 import Loader from "../../../components/Loader";
+import { ArrowLeft } from "lucide-react";
 
-function ModificarProducto() {
-  const { id } = useParams();
+function ModificarProducto({ integratedMode = false, onBack, showNavBar = true, productId }) {
+  const { id: paramId } = useParams();
   const navigate = useNavigate();
+  const id = productId || paramId;
 
   const [producto, setProducto] = useState({
     vchNombreProducto: "",
@@ -97,7 +99,11 @@ function ModificarProducto() {
           toast.error("Error al actualizar el producto");
         }
         toast.success("Producto actualizado con éxito");
-        setTimeout(() => navigate("/Productos"), 3000);
+        if (integratedMode && onBack) {
+          setTimeout(() => onBack(), 2000);
+        } else {
+          setTimeout(() => navigate("/Productos"), 3000);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -105,15 +111,25 @@ function ModificarProducto() {
       });
   };
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Barra />
-      <div className="flex-grow container mx-auto px-2 sm:px-4 lg:px-6 mt-28 mb-10">
-        {loading ? (
-          <Loader mensaje="Cargando información del producto..." /> //MUESTRA EL LOADER SI ESTÁ CARGANDO
-        ) : (
-          <>
-            <form
+  // Contenido del formulario
+  const formContent = (
+    <div className="container mx-auto px-2 sm:px-4 lg:px-6">
+      {integratedMode && onBack && (
+        <div className="mb-6">
+          <button
+            onClick={onBack}
+            className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Volver a la lista de productos
+          </button>
+        </div>
+      )}
+      {loading ? (
+        <Loader mensaje="Cargando información del producto..." />
+      ) : (
+        <>
+          <form
               onSubmit={handleSubmit}
               className="bg-white w-full max-w-xl rounded-lg p-6 shadow-md mx-auto"
             >
@@ -263,16 +279,27 @@ function ModificarProducto() {
                 <button
                   type="button"
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                  onClick={() => navigate("/Productos")}
+                  onClick={() => {
+                    if (integratedMode && onBack) {
+                      onBack();
+                    } else {
+                      navigate("/Productos");
+                    }
+                  }}
                 >
                   Cancelar
                 </button>
               </div>
             </form>
-          </>
-        )}
-      </div>
+        </>
+      )}
+    </div>
+  );
 
+  if (integratedMode) {
+    return (
+      <>
+        {formContent}
         <ToastContainer
           position="top-center"
           autoClose={3000}
@@ -285,6 +312,28 @@ function ModificarProducto() {
           limit={1}
           className="toast-container"
         />
+      </>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {showNavBar && <Barra />}
+      <div className="flex-grow mt-28 mb-10">
+        {formContent}
+      </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        limit={1}
+        className="toast-container"
+      />
       <Fot />
     </div>
   );
