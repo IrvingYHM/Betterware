@@ -213,7 +213,7 @@ function TopReferidosForm({
               className="flex items-center text-xl font-bold text-teal-600 hover:text-teal-700 mb-6 transition-colors group"
             >
               <ChevronLeft className="w-6 h-6 mr-2 transition-transform group-hover:-translate-x-1" />
-              Volver a Retos
+              Regresar
             </button>
 
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-200">
@@ -332,25 +332,33 @@ function TopReferidosForm({
                   .map((referido, index) => {
                     const nombreCompleto = `${referido.empleado?.vchNombre} ${referido.empleado?.vchAPaterno} ${referido.empleado?.vchAMaterno}`;
                     const isEditing = editandoId === referido.idTopReferidos;
-                    
+
                     return (
                       <li key={referido.idTopReferidos} className="py-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
-                            <span className="font-semibold text-gray-500">#{index + 1}</span>
+                            <span className="font-semibold text-gray-500">
+                              #{index + 1}
+                            </span>
                             <div>
-                              <p className="font-medium text-gray-900">{nombreCompleto}</p>
+                              <p className="font-medium text-gray-900">
+                                {nombreCompleto}
+                              </p>
                               <div className="flex items-center space-x-2">
                                 {isEditing ? (
                                   <div className="flex items-center space-x-2">
                                     <input
                                       type="number"
                                       value={valorEditando}
-                                      onChange={(e) => setValorEditando(e.target.value)}
+                                      onChange={(e) =>
+                                        setValorEditando(e.target.value)
+                                      }
                                       className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                       min="1"
                                     />
-                                    <span className="text-sm text-gray-600">referidos</span>
+                                    <span className="text-sm text-gray-600">
+                                      referidos
+                                    </span>
                                   </div>
                                 ) : (
                                   <span className="text-blue-600 font-bold">
@@ -360,12 +368,14 @@ function TopReferidosForm({
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center space-x-2">
                             {isEditing ? (
                               <>
                                 <button
-                                  onClick={() => handleSaveEdit(referido.idTopReferidos)}
+                                  onClick={() =>
+                                    handleSaveEdit(referido.idTopReferidos)
+                                  }
                                   className="p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-full transition-colors"
                                   title="Guardar cambios"
                                 >
@@ -389,7 +399,12 @@ function TopReferidosForm({
                                   <Edit3 className="w-4 h-4" />
                                 </button>
                                 <button
-                                  onClick={() => handleDelete(referido.idTopReferidos, nombreCompleto)}
+                                  onClick={() =>
+                                    handleDelete(
+                                      referido.idTopReferidos,
+                                      nombreCompleto
+                                    )
+                                  }
                                   className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full transition-colors"
                                   title="Eliminar registro"
                                 >

@@ -5,10 +5,12 @@ import "react-toastify/dist/ReactToastify.css";
 import Barra from "../../../components/Navegacion/barraAdmin";
 import Fot from "../../../components/Footer";
 import Loader from "../../../components/Loader";
+import { ChevronLeft } from "lucide-react";
 
-function ModificarProducto() {
-  const { id } = useParams();
+function ModificarProducto({ integratedMode = false, onBack, showNavBar = true, productId }) {
+  const { id: paramId } = useParams();
   const navigate = useNavigate();
+  const id = productId || paramId;
 
   const [producto, setProducto] = useState({
     vchNombreProducto: "",
@@ -97,7 +99,11 @@ function ModificarProducto() {
           toast.error("Error al actualizar el producto");
         }
         toast.success("Producto actualizado con éxito");
-        setTimeout(() => navigate("/Productos"), 3000);
+        if (integratedMode && onBack) {
+          setTimeout(() => onBack(), 2000);
+        } else {
+          setTimeout(() => navigate("/Productos"), 3000);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -105,174 +111,193 @@ function ModificarProducto() {
       });
   };
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Barra />
-      <div className="flex-grow container mx-auto px-2 sm:px-4 lg:px-6 mt-28 mb-10">
-        {loading ? (
-          <Loader mensaje="Cargando información del producto..." /> //MUESTRA EL LOADER SI ESTÁ CARGANDO
-        ) : (
-          <>
-            <form
-              onSubmit={handleSubmit}
-              className="bg-white w-full max-w-xl rounded-lg p-6 shadow-md mx-auto"
-            >
-              <h2 className="text-2xl text-center font-bold mb-6">
-                Editar Producto
-              </h2>
-              {/* Nombre */}
-              <div className="mb-4">
-                <label className="block font-semibold">Nombre:</label>
-                <input
-                  type="text"
-                  name="vchNombreProducto"
-                  value={producto.vchNombreProducto}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                  required
-                />
-              </div>
+  // Contenido del formulario
+  const formContent = (
+    <div className="container mx-auto px-2 sm:px-4 lg:px-6 mt-6">
+      {integratedMode && onBack && (
+        <div className="mb-6">
+          <button
+            onClick={onBack}
+            className="flex items-center text-xl font-bold text-teal-600 hover:text-teal-700 mb-6 transition-colors group"
+          >
+            <ChevronLeft className="w-6 h-6 mr-2 transition-transform group-hover:-translate-x-1" />
+            Regresar
+          </button>
+        </div>
+      )}
+      {loading ? (
+        <Loader mensaje="Cargando información del producto..." />
+      ) : (
+        <>
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white w-full max-w-xl rounded-lg p-6 shadow-md mx-auto"
+          >
+            <h2 className="text-2xl text-center font-bold mb-6">
+              Editar Producto
+            </h2>
+            {/* Nombre */}
+            <div className="mb-4">
+              <label className="block font-semibold">Nombre:</label>
+              <input
+                type="text"
+                name="vchNombreProducto"
+                value={producto.vchNombreProducto}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                required
+              />
+            </div>
 
-              {/* Descripción */}
-              <div className="mb-4">
-                <label className="block font-semibold">Descripción:</label>
-                <textarea
-                  name="vchDescripcion"
-                  value={producto.vchDescripcion}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                  rows={3}
-                  required
-                />
-              </div>
+            {/* Descripción */}
+            <div className="mb-4">
+              <label className="block font-semibold">Descripción:</label>
+              <textarea
+                name="vchDescripcion"
+                value={producto.vchDescripcion}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                rows={3}
+                required
+              />
+            </div>
 
-              {/* Precio */}
+            {/* Precio */}
+            <div className="mb-4">
+              <label className="block font-semibold">Precio:</label>
+              <input
+                type="number"
+                name="Precio"
+                value={producto.Precio}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                min="0"
+                step="1"
+                required
+              />
+            </div>
+
+            {/* En Oferta */}
+            <div className="mb-4 flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="EnOferta"
+                checked={producto.EnOferta}
+                onChange={handleChange}
+                id="enOferta"
+              />
+              <label htmlFor="enOferta" className="">
+                ¿Está en oferta?
+              </label>
+            </div>
+
+            {/* Precio Oferta */}
+            {producto.EnOferta && (
               <div className="mb-4">
-                <label className="block font-semibold">Precio:</label>
+                <label className="block font-semibold">Precio en Oferta:</label>
                 <input
                   type="number"
-                  name="Precio"
-                  value={producto.Precio}
+                  name="PrecioOferta"
+                  value={producto.PrecioOferta || ""}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border rounded"
                   min="0"
-                  step="1"
-                  required
+                  step="0.01"
+                  required={producto.EnOferta}
                 />
               </div>
+            )}
 
-              {/* En Oferta */}
-              <div className="mb-4 flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="EnOferta"
-                  checked={producto.EnOferta}
-                  onChange={handleChange}
-                  id="enOferta"
-                />
-                <label htmlFor="enOferta" className="">
-                  ¿Está en oferta?
+            {/* Existencias */}
+            <div className="mb-4">
+              <label className="block font-semibold">Existencias:</label>
+              <input
+                type="number"
+                name="Existencias"
+                value={producto.Existencias}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                min="0"
+                required
+              />
+            </div>
+
+            {/* Categoría */}
+            <div className="mb-4">
+              <label className="block font-semibold">Categoría:</label>
+              <select
+                name="IdCategoria"
+                value={producto.IdCategoria}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                required
+              >
+                <option value="">Seleccione una categoría</option>
+                {categorias.map((cat) => (
+                  <option key={cat.IdCategoria} value={cat.IdCategoria}>
+                    {cat.NombreCategoria}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Imagen */}
+            <div className="mb-4">
+              <label className="block font-semibold">URL de la Imagen:</label>
+              <input
+                type="text"
+                name="vchNomImagen"
+                value={producto.vchNomImagen}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+              />
+            </div>
+
+            {/* Preview imagen */}
+            {imagePreviewUrl && (
+              <div className="mb-4">
+                <label className="block font-semibold">
+                  Previsualización de la imagen:
                 </label>
-              </div>
-
-              {/* Precio Oferta */}
-              {producto.EnOferta && (
-                <div className="mb-4">
-                  <label className="block font-semibold">
-                    Precio en Oferta:
-                  </label>
-                  <input
-                    type="number"
-                    name="PrecioOferta"
-                    value={producto.PrecioOferta || ""}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded"
-                    min="0"
-                    step="0.01"
-                    required={producto.EnOferta}
-                  />
-                </div>
-              )}
-
-              {/* Existencias */}
-              <div className="mb-4">
-                <label className="block font-semibold">Existencias:</label>
-                <input
-                  type="number"
-                  name="Existencias"
-                  value={producto.Existencias}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                  min="0"
-                  required
+                <img
+                  src={imagePreviewUrl}
+                  alt="Previsualización"
+                  className="w-60 h-auto rounded"
                 />
               </div>
+            )}
 
-              {/* Categoría */}
-              <div className="mb-4">
-                <label className="block font-semibold">Categoría:</label>
-                <select
-                  name="IdCategoria"
-                  value={producto.IdCategoria}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                  required
-                >
-                  <option value="">Seleccione una categoría</option>
-                  {categorias.map((cat) => (
-                    <option key={cat.IdCategoria} value={cat.IdCategoria}>
-                      {cat.NombreCategoria}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div className="flex justify-between items-center">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                Actualizar
+              </button>
+              <button
+                type="button"
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                onClick={() => {
+                  if (integratedMode && onBack) {
+                    onBack();
+                  } else {
+                    navigate("/Productos");
+                  }
+                }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </>
+      )}
+    </div>
+  );
 
-              {/* Imagen */}
-              <div className="mb-4">
-                <label className="block font-semibold">URL de la Imagen:</label>
-                <input
-                  type="text"
-                  name="vchNomImagen"
-                  value={producto.vchNomImagen}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                />
-              </div>
-
-              {/* Preview imagen */}
-              {imagePreviewUrl && (
-                <div className="mb-4">
-                  <label className="block font-semibold">
-                    Previsualización de la imagen:
-                  </label>
-                  <img
-                    src={imagePreviewUrl}
-                    alt="Previsualización"
-                    className="w-60 h-auto rounded"
-                  />
-                </div>
-              )}
-
-              <div className="flex justify-between items-center">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Actualizar
-                </button>
-                <button
-                  type="button"
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                  onClick={() => navigate("/Productos")}
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
-          </>
-        )}
-      </div>
-
+  if (integratedMode) {
+    return (
+      <>
+        {formContent}
         <ToastContainer
           position="top-center"
           autoClose={3000}
@@ -285,6 +310,28 @@ function ModificarProducto() {
           limit={1}
           className="toast-container"
         />
+      </>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {showNavBar && <Barra />}
+      <div className="flex-grow mt-28 mb-10">
+        {formContent}
+      </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        limit={1}
+        className="toast-container"
+      />
       <Fot />
     </div>
   );

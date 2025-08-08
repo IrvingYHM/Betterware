@@ -32,4 +32,12 @@ export const API_ENDPOINTS = {
     create: `${API_BASE_URL}/catalogos/agregar-catalogo`,
     delete: `${API_BASE_URL}/catalogos/eliminar`,
   },
+  categorias: {
+    getAll: `${API_BASE_URL}/categoria/`,
+    getById: `${API_BASE_URL}/categoria`,
+    checkProducts: `${API_BASE_URL}/categoria/check-products`,
+    create: `${API_BASE_URL}/categoria/agregar-categoria`,
+    update: `${API_BASE_URL}/categoria/actualizar-categoria`,
+    delete: `${API_BASE_URL}/categoria/eliminar-categoria`,
+  },
 };

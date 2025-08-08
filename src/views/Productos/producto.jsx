@@ -4,23 +4,38 @@ import { useEffect, useState } from "react";
 import { obtenerProductos } from "./Api";
 import { Link } from "react-router-dom";
 import Barra from "../../components/Navegacion/barra";
-import { API_ENDPOINTS } from "../../service/apirest";
+// import { API_ENDPOINTS } from "../../service/apirest";
 import { ProductSkeletonGrid } from "./ProductSkeleton";
+import { ChevronLeft, ChevronRight, Package, Tag, Percent } from "lucide-react";
 
 
 const Lentes = () => {
   const [productos, setProductos] = useState([]);
   const [resultadosCategoria, setResultadosCategoria] = useState([]);
-  const [productoAgregado, setProductoAgregado] = useState(null); // Nuevo estado para manejar el producto agregado
+  const [productoAgregado] = useState(null); // Nuevo estado para manejar el producto agregado
   const [loading, setLoading] = useState(true);
+  
+  // Estados para filtros
+  const [categorias, setCategorias] = useState([]);
+  const [filtroActivo, setFiltroActivo] = useState("todos"); // "todos", "ofertas", o ID de categoría
+  
+  // Estados para paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const PRODUCTS_PER_PAGE = 40; // Mostrar 40 productos por página en el cliente
 
 
   useEffect(() => {
     setLoading(true);
-    obtenerProductos()
-      .then((data) => {
-        setProductos(data);
-        setResultadosCategoria(data); // Inicializar resultadosCategoria con todos los productos
+    
+    // Cargar productos y categorías en paralelo
+    Promise.all([
+      obtenerProductos(),
+      fetch("https://backbetter-production.up.railway.app/categoria/").then(res => res.json())
+    ])
+      .then(([productosData, categoriasData]) => {
+        setProductos(productosData);
+        setResultadosCategoria(productosData);
+        setCategorias(categoriasData);
         setLoading(false);
       })
       .catch((error) => {
@@ -29,19 +44,80 @@ const Lentes = () => {
       });
   }, []);
 
-  async function buscarProductos(categoria) {
-    let url = `${API_ENDPOINTS.productos.filter}?categoria=${categoria}`;
-    setLoading(true);
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      setResultadosCategoria(data);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
+  // Aplicar filtros cuando cambie el filtro activo
+  useEffect(() => {
+    aplicarFiltro(filtroActivo);
+  }, [filtroActivo, productos]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Función para aplicar filtros
+  const aplicarFiltro = (filtro) => {
+    let productosFiltrados = [];
+
+    if (filtro === "todos") {
+      productosFiltrados = productos;
+    } else if (filtro === "ofertas") {
+      productosFiltrados = productos.filter(producto => {
+        if (!producto.EnOferta || !producto.PrecioOferta) return false;
+        const precioOriginal = parseFloat(producto.Precio) || 0;
+        const precioOferta = parseFloat(producto.PrecioOferta) || 0;
+        return precioOferta < precioOriginal;
+      });
+    } else {
+      // Filtrar por categoría específica
+      productosFiltrados = productos.filter(producto => 
+        producto.IdCategoria.toString() === filtro.toString()
+      );
     }
-  }
+
+    setResultadosCategoria(productosFiltrados);
+    setCurrentPage(1); // Reset página al filtrar
+  };
+
+  // Función para cambiar filtro
+  const cambiarFiltro = (nuevoFiltro) => {
+    setFiltroActivo(nuevoFiltro);
+  };
+
+  // Contar productos por categoría y ofertas
+  const contarProductosPorFiltro = (filtro) => {
+    if (filtro === "todos") return productos.length;
+    if (filtro === "ofertas") {
+      return productos.filter(producto => {
+        if (!producto.EnOferta || !producto.PrecioOferta) return false;
+        const precioOriginal = parseFloat(producto.Precio) || 0;
+        const precioOferta = parseFloat(producto.PrecioOferta) || 0;
+        return precioOferta < precioOriginal;
+      }).length;
+    }
+    return productos.filter(producto => 
+      producto.IdCategoria.toString() === filtro.toString()
+    ).length;
+  };
+
+  // Lógica de paginación
+  const totalProducts = resultadosCategoria.length;
+  const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const endIndex = startIndex + PRODUCTS_PER_PAGE;
+  const paginatedProducts = resultadosCategoria.slice(startIndex, endIndex);
+
+  // Funciones de navegación de páginas
+  const goToPage = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
 
   return (
     <div className="flex-center">
@@ -54,11 +130,119 @@ const Lentes = () => {
             </p>
           )}
         </div>
+
+        {/* Filtros Minimalistas */}
+        <div className="max-w-6xl mx-auto mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-gray-50 px-4 py-2 rounded border">
+            
+            {/* Título simple */}
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-medium text-gray-700">Productos</h2>
+              <span className="text-xs text-teal-600 font-semibold">({totalProducts})</span>
+              {filtroActivo !== "todos" && (
+                <span className="text-xs text-gray-500">
+                  • {filtroActivo === "ofertas" 
+                    ? "Ofertas" 
+                    : categorias.find(c => c.IdCategoria.toString() === filtroActivo)?.NombreCategoria}
+                </span>
+              )}
+            </div>
+
+            {/* Filtros como links simples */}
+            <div className="flex items-center gap-4 text-xs">
+              <button
+                onClick={() => cambiarFiltro("todos")}
+                className={`${
+                  filtroActivo === "todos"
+                    ? "text-teal-600 font-semibold underline"
+                    : "text-gray-600 hover:text-teal-600"
+                } transition-colors`}
+              >
+                Todos
+              </button>
+
+              <button
+                onClick={() => cambiarFiltro("ofertas")}
+                className={`${
+                  filtroActivo === "ofertas"
+                    ? "text-red-600 font-semibold underline"
+                    : "text-gray-600 hover:text-red-600"
+                } transition-colors`}
+              >
+                Ofertas ({contarProductosPorFiltro("ofertas")})
+              </button>
+
+              {/* Dropdown simple para categorías */}
+              <select
+                value={filtroActivo}
+                onChange={(e) => cambiarFiltro(e.target.value)}
+                className="text-xs bg-transparent border-none text-gray-600 hover:text-teal-600 cursor-pointer focus:outline-none"
+              >
+                <option value="" disabled>Categorías...</option>
+                {categorias.map((categoria) => (
+                  <option
+                    key={categoria.IdCategoria}
+                    value={categoria.IdCategoria.toString()}
+                  >
+                    {categoria.NombreCategoria} ({contarProductosPorFiltro(categoria.IdCategoria.toString())})
+                  </option>
+                ))}
+              </select>
+
+              {filtroActivo !== "todos" && (
+                <button
+                  onClick={() => cambiarFiltro("todos")}
+                  className="text-gray-400 hover:text-red-500 transition-colors"
+                  title="Limpiar filtro"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
         {loading ? (
           <ProductSkeletonGrid count={12} />
+        ) : totalProducts === 0 ? (
+          <div className="max-w-2xl mx-auto text-center py-16">
+            <div className="bg-white rounded-2xl shadow-lg p-12 border border-gray-200">
+              {filtroActivo === "ofertas" ? (
+                <>
+                  <Percent className="w-16 h-16 text-red-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No hay ofertas disponibles</h3>
+                  <p className="text-gray-600 mb-6">
+                    Actualmente no tenemos productos en oferta. Te invitamos a explorar nuestro catálogo completo.
+                  </p>
+                </>
+              ) : filtroActivo !== "todos" ? (
+                <>
+                  <Tag className="w-16 h-16 text-blue-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No hay productos en esta categoría</h3>
+                  <p className="text-gray-600 mb-6">
+                    No encontramos productos en la categoría seleccionada. Prueba con otra categoría o explora todos nuestros productos.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No hay productos disponibles</h3>
+                  <p className="text-gray-600 mb-6">
+                    Actualmente no tenemos productos disponibles. Vuelve pronto para ver nuestras novedades.
+                  </p>
+                </>
+              )}
+              <button
+                onClick={() => cambiarFiltro("todos")}
+                className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
+              >
+                Ver todos los productos
+              </button>
+            </div>
+          </div>
         ) : (
-          <div className="flex flex-row flex-wrap justify-center gap-6 mt-8">
-            {resultadosCategoria.map((producto) => {
+          <>
+            <div className="flex flex-row flex-wrap justify-center gap-6 mt-8">
+              {paginatedProducts.map((producto) => {
               return (
                 <Link
                   to={`/productoDetalle/${producto.IdProducto}`}
@@ -149,8 +333,136 @@ const Lentes = () => {
                   </div>
                 </Link>
               );
-            })}
-          </div>
+              })}
+            </div>
+
+            {/* Componente de Paginación para Cliente */}
+            {totalPages > 1 && (
+              <div className="mt-12 mb-8">
+                <div className="max-w-4xl mx-auto bg-gradient-to-r from-teal-50 to-cyan-50 rounded-2xl p-6 border border-teal-100 shadow-sm">
+                  <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+                    {/* Información de resultados */}
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2 text-sm text-gray-600 bg-white px-4 py-2 rounded-full shadow-sm">
+                        <Package className="w-4 h-4 text-teal-500" />
+                        <span className="font-medium">
+                          {startIndex + 1} - {Math.min(endIndex, totalProducts)} de {totalProducts} productos
+                        </span>
+                      </div>
+                      <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-500">
+                        <span>Página</span>
+                        <span className="font-semibold text-teal-600">{currentPage}</span>
+                        <span>de</span>
+                        <span className="font-semibold text-teal-600">{totalPages}</span>
+                      </div>
+                    </div>
+                    
+                    {/* Controles de navegación */}
+                    <div className="flex items-center justify-center space-x-2">
+                      {/* Botón Primera Página */}
+                      {currentPage > 2 && (
+                        <button
+                          onClick={() => goToPage(1)}
+                          className="w-10 h-10 flex items-center justify-center rounded-xl bg-white text-gray-500 hover:text-teal-600 hover:bg-teal-50 shadow-sm transition-all duration-200"
+                          title="Primera página"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                          <ChevronLeft className="w-4 h-4 -ml-2" />
+                        </button>
+                      )}
+
+                      {/* Botón Anterior */}
+                      <button
+                        onClick={goToPrevPage}
+                        disabled={currentPage === 1}
+                        className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 ${
+                          currentPage === 1
+                            ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                            : 'bg-white text-gray-600 hover:text-teal-600 hover:bg-teal-50 shadow-sm hover:shadow-md'
+                        }`}
+                        title="Página anterior"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+
+                      {/* Números de página */}
+                      <div className="flex items-center space-x-1">
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                          let pageNum = i + 1;
+                          if (totalPages > 5) {
+                            if (currentPage <= 3) {
+                              pageNum = i + 1;
+                            } else if (currentPage >= totalPages - 2) {
+                              pageNum = totalPages - 4 + i;
+                            } else {
+                              pageNum = currentPage - 2 + i;
+                            }
+                          }
+
+                          if (pageNum < 1 || pageNum > totalPages) return null;
+
+                          return (
+                            <button
+                              key={pageNum}
+                              onClick={() => goToPage(pageNum)}
+                              className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-all duration-200 ${
+                                pageNum === currentPage
+                                  ? 'bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-lg transform scale-105'
+                                  : 'bg-white text-gray-700 hover:text-teal-600 hover:bg-teal-50 shadow-sm hover:shadow-md hover:scale-105'
+                              }`}
+                            >
+                              {pageNum}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Botón Siguiente */}
+                      <button
+                        onClick={goToNextPage}
+                        disabled={currentPage === totalPages}
+                        className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 ${
+                          currentPage === totalPages
+                            ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                            : 'bg-white text-gray-600 hover:text-teal-600 hover:bg-teal-50 shadow-sm hover:shadow-md'
+                        }`}
+                        title="Página siguiente"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+
+                      {/* Botón Última Página */}
+                      {currentPage < totalPages - 1 && (
+                        <button
+                          onClick={() => goToPage(totalPages)}
+                          className="w-10 h-10 flex items-center justify-center rounded-xl bg-white text-gray-500 hover:text-teal-600 hover:bg-teal-50 shadow-sm transition-all duration-200"
+                          title="Última página"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                          <ChevronRight className="w-4 h-4 -ml-2" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Selector rápido de página (solo móvil) */}
+                    <div className="lg:hidden w-full max-w-xs">
+                      <select
+                        value={currentPage}
+                        onChange={(e) => goToPage(parseInt(e.target.value))}
+                        className="w-full px-4 py-2 bg-white border border-teal-200 rounded-xl text-sm font-medium text-gray-700 focus:ring-2 focus:ring-teal-500 focus:border-transparent shadow-sm"
+                      >
+                        {Array.from({ length: totalPages }, (_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            Página {i + 1} de {totalPages}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
       <Fot />
