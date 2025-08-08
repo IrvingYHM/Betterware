@@ -252,8 +252,8 @@ function ImagenesForm({
               onClick={handleBackClick}
               className="flex items-center text-xl font-bold text-teal-600 hover:text-teal-700 mb-6 transition-colors group"
             >
-              <ChevronLeft  className="w-6 h-6 mr-2 transition-transform group-hover:-translate-x-1" />
-              Volver a Retos
+              <ChevronLeft className="w-6 h-6 mr-2 transition-transform group-hover:-translate-x-1" />
+              Regresar
             </button>
 
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-200">
@@ -445,10 +445,12 @@ function ImagenesForm({
               <div className="flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full">
                 <AlertTriangle className="w-8 h-8 text-amber-600" />
               </div>
-              
+
               {/* Mensaje principal */}
               <div className="space-y-3">
-                <h3 className="text-xl font-bold text-gray-900">¿Reemplazar imagen?</h3>
+                <h3 className="text-xl font-bold text-gray-900">
+                  ¿Reemplazar imagen?
+                </h3>
                 <p className="text-sm text-gray-600">
                   Ya existe una imagen para
                 </p>
@@ -459,13 +461,14 @@ function ImagenesForm({
                   La imagen actual será reemplazada permanentemente
                 </p>
               </div>
-              
+
               {/* Botones */}
               <div className="flex gap-3 justify-center w-full pt-2">
                 <button
                   onClick={handleConfirmReplace}
                   disabled={loading}
-                  className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+                  className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                >
                   {loading ? (
                     <>
                       <RefreshCw className="w-4 h-4 mr-2 animate-spin" />

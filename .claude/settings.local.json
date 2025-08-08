@@ -7,7 +7,8 @@
       "mcp__ide__getDiagnostics",
       "WebFetch(domain:backbetter-production.up.railway.app)",
       "Bash(mv:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

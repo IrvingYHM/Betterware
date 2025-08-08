@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
-import Fot from "../../../components/Footer";
-import Barra from "../../../components/Navegacion/barraAdmin";
 import SkeletonProductCard from "../../../components/SkeletonProductCard";
 import { API_ENDPOINTS } from "../../../service/apirest";
-import { Search, Filter, Package, Tags, ArrowLeft } from "lucide-react";
+import { Search, Filter, Package, Tags, Settings, ChevronLeft, ChevronRight } from "lucide-react";
 import CreateProductForm from "./agregarProductos";
 import ModificarProducto from "./modificarProducto";
+import GestionCategorias from "./gestionCategorias";
 
 function ProductsList() {
   const [productos, setProductos] = useState([]);
@@ -20,6 +18,9 @@ function ProductsList() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [currentView, setCurrentView] = useState("list");
   const [editingProductId, setEditingProductId] = useState(null);
+  // Estados para paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const PRODUCTS_PER_PAGE = 40;
 
   useEffect(() => {
     // Cargar productos
@@ -57,6 +58,11 @@ function ProductsList() {
       });
   }, []);
 
+  // Reset página cuando cambian los filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory]);
+
   const toggleDescripcion = (id) => {
     setMostrarDescripcion((prev) => ({
       ...prev,
@@ -78,6 +84,32 @@ function ProductsList() {
     
     return matchesSearch && matchesCategory;
   });
+
+  // Lógica de paginación
+  const totalProducts = filteredProductos.length;
+  const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const endIndex = startIndex + PRODUCTS_PER_PAGE;
+  const paginatedProductos = filteredProductos.slice(startIndex, endIndex);
+
+
+  // Funciones de navegación de páginas
+  const goToPage = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
 
   const handleAddProduct = () => {
     setCurrentView("add");
@@ -127,6 +159,16 @@ function ProductsList() {
     );
   }
 
+  if (currentView === "categories") {
+    return (
+      <GestionCategorias
+        integratedMode={true}
+        onBack={handleBackToList}
+        showNavBar={false}
+      />
+    );
+  }
+
   return (
     <>
       <div className="max-w-8xl mx-auto px-4 mt-6 mb-10">
@@ -139,9 +181,21 @@ function ProductsList() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Gestión de Productos</h1>
-                <p className="text-gray-600">Total de productos: {productos.length} | Mostrando: {filteredProductos.length}</p>
+                <p className="text-gray-600">
+                  Total: {productos.length} | Filtrados: {totalProducts} | 
+                  Mostrando: {startIndex + 1}-{Math.min(endIndex, totalProducts)} | 
+                  Página: {currentPage} de {totalPages}
+                </p>
               </div>
             </div>
+            
+            <button
+              onClick={() => setCurrentView("categories")}
+              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl font-semibold transition-all duration-300"
+            >
+              <Settings className="w-5 h-5" />
+              Gestionar Categorías
+            </button>
           </div>
           
           <div className="flex flex-col md:flex-row gap-4">
@@ -182,6 +236,7 @@ function ProductsList() {
                 onClick={() => {
                   setSearchTerm("");
                   setSelectedCategory("");
+                  setCurrentPage(1);
                 }}
                 className="px-4 py-3 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2"
               >
@@ -199,7 +254,7 @@ function ProductsList() {
           </div>
         ) : (
           <>
-            {filteredProductos.length === 0 ? (
+            {totalProducts === 0 ? (
               <div className="text-center py-16">
                 <div className="bg-white rounded-2xl shadow-lg p-12 max-w-md mx-auto">
                   <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -215,6 +270,7 @@ function ProductsList() {
                       onClick={() => {
                         setSearchTerm("");
                         setSelectedCategory("");
+                        setCurrentPage(1);
                       }}
                       className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
                     >
@@ -225,7 +281,7 @@ function ProductsList() {
               </div>
             ) : (
               <div className="flex flex-row flex-wrap justify-center gap-6">
-                {filteredProductos.map((producto) => (
+                {paginatedProductos.map((producto) => (
                 <div
                   key={producto.IdProducto}
                   className="w-72 bg-white rounded-xl shadow-md flex flex-col justify-between"
@@ -317,6 +373,133 @@ function ProductsList() {
                   </div>
                 </div>
                 ))}
+              </div>
+            )}
+
+            {/* Componente de Paginación Mejorado */}
+            {totalPages > 1 && (
+              <div className="mt-8">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100 shadow-sm">
+                  <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+                    {/* Información de resultados */}
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2 text-sm text-gray-600 bg-white px-4 py-2 rounded-full shadow-sm">
+                        <Package className="w-4 h-4 text-blue-500" />
+                        <span className="font-medium">
+                          {startIndex + 1} - {Math.min(endIndex, totalProducts)} de {totalProducts}
+                        </span>
+                      </div>
+                      <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-500">
+                        <span>Página</span>
+                        <span className="font-semibold text-blue-600">{currentPage}</span>
+                        <span>de</span>
+                        <span className="font-semibold text-blue-600">{totalPages}</span>
+                      </div>
+                    </div>
+                    
+                    {/* Controles de navegación */}
+                    <div className="flex items-center justify-center space-x-2">
+                      {/* Botón Primera Página */}
+                      {currentPage > 2 && (
+                        <button
+                          onClick={() => goToPage(1)}
+                          className="w-10 h-10 flex items-center justify-center rounded-xl bg-white text-gray-500 hover:text-blue-600 hover:bg-blue-50 shadow-sm transition-all duration-200"
+                          title="Primera página"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                          <ChevronLeft className="w-4 h-4 -ml-2" />
+                        </button>
+                      )}
+
+                      {/* Botón Anterior */}
+                      <button
+                        onClick={goToPrevPage}
+                        disabled={currentPage === 1}
+                        className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 ${
+                          currentPage === 1
+                            ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                            : 'bg-white text-gray-600 hover:text-blue-600 hover:bg-blue-50 shadow-sm hover:shadow-md'
+                        }`}
+                        title="Página anterior"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+
+                      {/* Números de página */}
+                      <div className="flex items-center space-x-1">
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                          let pageNum = i + 1;
+                          if (totalPages > 5) {
+                            if (currentPage <= 3) {
+                              pageNum = i + 1;
+                            } else if (currentPage >= totalPages - 2) {
+                              pageNum = totalPages - 4 + i;
+                            } else {
+                              pageNum = currentPage - 2 + i;
+                            }
+                          }
+
+                          if (pageNum < 1 || pageNum > totalPages) return null;
+
+                          return (
+                            <button
+                              key={pageNum}
+                              onClick={() => goToPage(pageNum)}
+                              className={`w-10 h-10 flex items-center justify-center rounded-xl text-sm font-semibold transition-all duration-200 ${
+                                pageNum === currentPage
+                                  ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg transform scale-105'
+                                  : 'bg-white text-gray-700 hover:text-blue-600 hover:bg-blue-50 shadow-sm hover:shadow-md hover:scale-105'
+                              }`}
+                            >
+                              {pageNum}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Botón Siguiente */}
+                      <button
+                        onClick={goToNextPage}
+                        disabled={currentPage === totalPages}
+                        className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 ${
+                          currentPage === totalPages
+                            ? 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                            : 'bg-white text-gray-600 hover:text-blue-600 hover:bg-blue-50 shadow-sm hover:shadow-md'
+                        }`}
+                        title="Página siguiente"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+
+                      {/* Botón Última Página */}
+                      {currentPage < totalPages - 1 && (
+                        <button
+                          onClick={() => goToPage(totalPages)}
+                          className="w-10 h-10 flex items-center justify-center rounded-xl bg-white text-gray-500 hover:text-blue-600 hover:bg-blue-50 shadow-sm transition-all duration-200"
+                          title="Última página"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                          <ChevronRight className="w-4 h-4 -ml-2" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Selector rápido de página (solo móvil) */}
+                    <div className="lg:hidden w-full max-w-xs">
+                      <select
+                        value={currentPage}
+                        onChange={(e) => goToPage(parseInt(e.target.value))}
+                        className="w-full px-4 py-2 bg-white border border-blue-200 rounded-xl text-sm font-medium text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+                      >
+                        {Array.from({ length: totalPages }, (_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            Página {i + 1} de {totalPages}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 

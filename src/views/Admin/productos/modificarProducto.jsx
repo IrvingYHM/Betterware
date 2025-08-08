@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Barra from "../../../components/Navegacion/barraAdmin";
 import Fot from "../../../components/Footer";
 import Loader from "../../../components/Loader";
-import { ArrowLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 function ModificarProducto({ integratedMode = false, onBack, showNavBar = true, productId }) {
   const { id: paramId } = useParams();
@@ -113,15 +113,15 @@ function ModificarProducto({ integratedMode = false, onBack, showNavBar = true, 
 
   // Contenido del formulario
   const formContent = (
-    <div className="container mx-auto px-2 sm:px-4 lg:px-6">
+    <div className="container mx-auto px-2 sm:px-4 lg:px-6 mt-6">
       {integratedMode && onBack && (
         <div className="mb-6">
           <button
             onClick={onBack}
-            className="flex items-center px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+            className="flex items-center text-xl font-bold text-teal-600 hover:text-teal-700 mb-6 transition-colors group"
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Volver a la lista de productos
+            <ChevronLeft className="w-6 h-6 mr-2 transition-transform group-hover:-translate-x-1" />
+            Regresar
           </button>
         </div>
       )}
@@ -130,167 +130,165 @@ function ModificarProducto({ integratedMode = false, onBack, showNavBar = true, 
       ) : (
         <>
           <form
-              onSubmit={handleSubmit}
-              className="bg-white w-full max-w-xl rounded-lg p-6 shadow-md mx-auto"
-            >
-              <h2 className="text-2xl text-center font-bold mb-6">
-                Editar Producto
-              </h2>
-              {/* Nombre */}
-              <div className="mb-4">
-                <label className="block font-semibold">Nombre:</label>
-                <input
-                  type="text"
-                  name="vchNombreProducto"
-                  value={producto.vchNombreProducto}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                  required
-                />
-              </div>
+            onSubmit={handleSubmit}
+            className="bg-white w-full max-w-xl rounded-lg p-6 shadow-md mx-auto"
+          >
+            <h2 className="text-2xl text-center font-bold mb-6">
+              Editar Producto
+            </h2>
+            {/* Nombre */}
+            <div className="mb-4">
+              <label className="block font-semibold">Nombre:</label>
+              <input
+                type="text"
+                name="vchNombreProducto"
+                value={producto.vchNombreProducto}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                required
+              />
+            </div>
 
-              {/* Descripción */}
-              <div className="mb-4">
-                <label className="block font-semibold">Descripción:</label>
-                <textarea
-                  name="vchDescripcion"
-                  value={producto.vchDescripcion}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                  rows={3}
-                  required
-                />
-              </div>
+            {/* Descripción */}
+            <div className="mb-4">
+              <label className="block font-semibold">Descripción:</label>
+              <textarea
+                name="vchDescripcion"
+                value={producto.vchDescripcion}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                rows={3}
+                required
+              />
+            </div>
 
-              {/* Precio */}
+            {/* Precio */}
+            <div className="mb-4">
+              <label className="block font-semibold">Precio:</label>
+              <input
+                type="number"
+                name="Precio"
+                value={producto.Precio}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                min="0"
+                step="1"
+                required
+              />
+            </div>
+
+            {/* En Oferta */}
+            <div className="mb-4 flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="EnOferta"
+                checked={producto.EnOferta}
+                onChange={handleChange}
+                id="enOferta"
+              />
+              <label htmlFor="enOferta" className="">
+                ¿Está en oferta?
+              </label>
+            </div>
+
+            {/* Precio Oferta */}
+            {producto.EnOferta && (
               <div className="mb-4">
-                <label className="block font-semibold">Precio:</label>
+                <label className="block font-semibold">Precio en Oferta:</label>
                 <input
                   type="number"
-                  name="Precio"
-                  value={producto.Precio}
+                  name="PrecioOferta"
+                  value={producto.PrecioOferta || ""}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border rounded"
                   min="0"
-                  step="1"
-                  required
+                  step="0.01"
+                  required={producto.EnOferta}
                 />
               </div>
+            )}
 
-              {/* En Oferta */}
-              <div className="mb-4 flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name="EnOferta"
-                  checked={producto.EnOferta}
-                  onChange={handleChange}
-                  id="enOferta"
-                />
-                <label htmlFor="enOferta" className="">
-                  ¿Está en oferta?
+            {/* Existencias */}
+            <div className="mb-4">
+              <label className="block font-semibold">Existencias:</label>
+              <input
+                type="number"
+                name="Existencias"
+                value={producto.Existencias}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                min="0"
+                required
+              />
+            </div>
+
+            {/* Categoría */}
+            <div className="mb-4">
+              <label className="block font-semibold">Categoría:</label>
+              <select
+                name="IdCategoria"
+                value={producto.IdCategoria}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+                required
+              >
+                <option value="">Seleccione una categoría</option>
+                {categorias.map((cat) => (
+                  <option key={cat.IdCategoria} value={cat.IdCategoria}>
+                    {cat.NombreCategoria}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Imagen */}
+            <div className="mb-4">
+              <label className="block font-semibold">URL de la Imagen:</label>
+              <input
+                type="text"
+                name="vchNomImagen"
+                value={producto.vchNomImagen}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded"
+              />
+            </div>
+
+            {/* Preview imagen */}
+            {imagePreviewUrl && (
+              <div className="mb-4">
+                <label className="block font-semibold">
+                  Previsualización de la imagen:
                 </label>
-              </div>
-
-              {/* Precio Oferta */}
-              {producto.EnOferta && (
-                <div className="mb-4">
-                  <label className="block font-semibold">
-                    Precio en Oferta:
-                  </label>
-                  <input
-                    type="number"
-                    name="PrecioOferta"
-                    value={producto.PrecioOferta || ""}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2 border rounded"
-                    min="0"
-                    step="0.01"
-                    required={producto.EnOferta}
-                  />
-                </div>
-              )}
-
-              {/* Existencias */}
-              <div className="mb-4">
-                <label className="block font-semibold">Existencias:</label>
-                <input
-                  type="number"
-                  name="Existencias"
-                  value={producto.Existencias}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                  min="0"
-                  required
+                <img
+                  src={imagePreviewUrl}
+                  alt="Previsualización"
+                  className="w-60 h-auto rounded"
                 />
               </div>
+            )}
 
-              {/* Categoría */}
-              <div className="mb-4">
-                <label className="block font-semibold">Categoría:</label>
-                <select
-                  name="IdCategoria"
-                  value={producto.IdCategoria}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                  required
-                >
-                  <option value="">Seleccione una categoría</option>
-                  {categorias.map((cat) => (
-                    <option key={cat.IdCategoria} value={cat.IdCategoria}>
-                      {cat.NombreCategoria}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Imagen */}
-              <div className="mb-4">
-                <label className="block font-semibold">URL de la Imagen:</label>
-                <input
-                  type="text"
-                  name="vchNomImagen"
-                  value={producto.vchNomImagen}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                />
-              </div>
-
-              {/* Preview imagen */}
-              {imagePreviewUrl && (
-                <div className="mb-4">
-                  <label className="block font-semibold">
-                    Previsualización de la imagen:
-                  </label>
-                  <img
-                    src={imagePreviewUrl}
-                    alt="Previsualización"
-                    className="w-60 h-auto rounded"
-                  />
-                </div>
-              )}
-
-              <div className="flex justify-between items-center">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Actualizar
-                </button>
-                <button
-                  type="button"
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                  onClick={() => {
-                    if (integratedMode && onBack) {
-                      onBack();
-                    } else {
-                      navigate("/Productos");
-                    }
-                  }}
-                >
-                  Cancelar
-                </button>
-              </div>
-            </form>
+            <div className="flex justify-between items-center">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                Actualizar
+              </button>
+              <button
+                type="button"
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                onClick={() => {
+                  if (integratedMode && onBack) {
+                    onBack();
+                  } else {
+                    navigate("/Productos");
+                  }
+                }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
         </>
       )}
     </div>

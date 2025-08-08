@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
-import { Settings } from "lucide-react";
+import { Edit } from "lucide-react";
 import SliderForm from "./SliderForm";
 
 function Slider() {
@@ -82,26 +82,40 @@ function Slider() {
             <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 animate-gentle-breathing z-20">
               {/* Efecto de ondas sutiles */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-wave-gentle"></div>
-              
+
               {/* Elementos decorativos flotantes */}
               <div className="absolute top-16 left-16 w-4 h-4 bg-gradient-to-br from-blue-200/40 to-blue-300/40 rounded-full animate-float-gentle"></div>
               <div className="absolute top-24 right-20 w-6 h-6 bg-gradient-to-br from-teal-200/40 to-teal-300/40 rounded-full animate-float-gentle-delayed"></div>
               <div className="absolute bottom-20 left-20 w-3 h-3 bg-gradient-to-br from-cyan-200/40 to-cyan-300/40 rounded-full animate-float-gentle-slow"></div>
-              
+
               {/* Indicador de carga central */}
               <div className="absolute top-4 left-4 flex items-center space-x-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-2">
                 <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <span className="text-white/80 text-xs font-medium ml-2">Cargando imagen...</span>
+                <div
+                  className="w-2 h-2 bg-white/60 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.1s" }}
+                ></div>
+                <div
+                  className="w-2 h-2 bg-white/60 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                ></div>
+                <span className="text-white/80 text-xs font-medium ml-2">
+                  Cargando imagen...
+                </span>
               </div>
 
               {/* Contenido simulado */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center space-y-6">
                   <div className="w-80 h-12 bg-gradient-to-r from-white/30 via-white/50 to-white/30 rounded-xl animate-gentle-pulse mx-auto shadow-lg"></div>
-                  <div className="w-64 h-8 bg-gradient-to-r from-white/25 via-white/45 to-white/25 rounded-lg animate-gentle-pulse mx-auto shadow-md" style={{ animationDelay: '0.3s' }}></div>
-                  <div className="w-44 h-12 bg-gradient-to-r from-orange-300/60 via-orange-400/70 to-orange-500/60 rounded-full animate-gentle-glow mx-auto shadow-lg" style={{ animationDelay: '0.6s' }}>
+                  <div
+                    className="w-64 h-8 bg-gradient-to-r from-white/25 via-white/45 to-white/25 rounded-lg animate-gentle-pulse mx-auto shadow-md"
+                    style={{ animationDelay: "0.3s" }}
+                  ></div>
+                  <div
+                    className="w-44 h-12 bg-gradient-to-r from-orange-300/60 via-orange-400/70 to-orange-500/60 rounded-full animate-gentle-glow mx-auto shadow-lg"
+                    style={{ animationDelay: "0.6s" }}
+                  >
                     <div className="w-full h-full flex items-center justify-center">
                       <div className="w-24 h-4 bg-orange-100/80 rounded animate-gentle-pulse"></div>
                     </div>
@@ -110,8 +124,8 @@ function Slider() {
               </div>
 
               {/* Botón de gestión skeleton */}
-              <div className="absolute top-4 right-4 bg-gradient-to-br from-blue-400/60 to-blue-500/60 p-2 rounded-full animate-gentle-scale shadow-lg z-10">
-                <Settings className="w-5 h-5 text-white/80 animate-fade-pulse" />
+              <div className="absolute top-4 right-4 bg-gradient-to-br from-blue-400/60 to-blue-500/60 p-3 rounded-full animate-gentle-scale shadow-lg z-10">
+                <Edit className="w-5 h-5 text-white/80 animate-fade-pulse" />
               </div>
             </div>
           )}
@@ -123,18 +137,20 @@ function Slider() {
                 src={slides[currentIndex].Imagen}
                 alt="Slide"
                 className={`w-full h-full object-cover transition-opacity duration-500 ${
-                  imageLoaded[currentIndex] ? 'opacity-100' : 'opacity-0'
+                  imageLoaded[currentIndex] ? "opacity-100" : "opacity-0"
                 }`}
                 onLoad={() => handleImageLoad(currentIndex)}
                 onError={() => handleImageError(currentIndex)}
               />
-              
+
               {/* Overlay clickeable */}
               <div
                 className="absolute inset-0 cursor-pointer z-10"
                 onClick={handleImageClick}
                 style={{
-                  cursor: slides[currentIndex]?.UrlDestino ? "pointer" : "default",
+                  cursor: slides[currentIndex]?.UrlDestino
+                    ? "pointer"
+                    : "default",
                 }}
                 title={slides[currentIndex]?.UrlDestino ? "Ir al enlace" : ""}
               />
@@ -172,13 +188,15 @@ function Slider() {
         </div>
 
         {/* Botón de gestión */}
+        {(!slides.length || imageLoaded[currentIndex]) && (
         <button
           onClick={() => setIsModalOpen(true)}
-          className="absolute top-4 right-4 bg-betterware text-white p-2 rounded-full hover:bg-betterware_claro transition-colors duration-300 z-30 opacity-0 group-hover:opacity-100"
+          className="absolute top-4 right-4 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 z-10"
           title="Gestionar imágenes del slider"
         >
-          <Settings className="w-5 h-5" />
+          <Edit className="w-5 h-5" />
         </button>
+        )}
       </div>
 
       {/* Modal */}
@@ -186,7 +204,8 @@ function Slider() {
 
       <style jsx>{`
         @keyframes gentle-breathing {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.8;
             transform: scale(1);
           }
@@ -197,7 +216,8 @@ function Slider() {
         }
 
         @keyframes wave-gentle {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateX(-100%);
             opacity: 0.3;
           }
@@ -208,7 +228,8 @@ function Slider() {
         }
 
         @keyframes gentle-pulse {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.7;
             transform: scale(1);
           }
@@ -219,7 +240,8 @@ function Slider() {
         }
 
         @keyframes gentle-glow {
-          0%, 100% {
+          0%,
+          100% {
             transform: scale(1);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
           }
@@ -230,7 +252,8 @@ function Slider() {
         }
 
         @keyframes gentle-scale {
-          0%, 100% {
+          0%,
+          100% {
             transform: scale(1);
           }
           50% {
@@ -239,7 +262,8 @@ function Slider() {
         }
 
         @keyframes float-gentle {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) rotate(0deg);
           }
           50% {
@@ -248,7 +272,8 @@ function Slider() {
         }
 
         @keyframes float-gentle-delayed {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) rotate(0deg);
           }
           50% {
@@ -257,7 +282,8 @@ function Slider() {
         }
 
         @keyframes float-gentle-slow {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) rotate(0deg);
           }
           50% {
@@ -266,7 +292,8 @@ function Slider() {
         }
 
         @keyframes fade-pulse {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.5;
           }
           50% {
