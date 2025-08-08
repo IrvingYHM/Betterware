@@ -6,14 +6,18 @@ import { Link } from "react-router-dom";
 import Barra from "../../components/Navegacion/barra";
 // import { API_ENDPOINTS } from "../../service/apirest";
 import { ProductSkeletonGrid } from "./ProductSkeleton";
-import { ChevronLeft, ChevronRight, Package } from "lucide-react";
+import { ChevronLeft, ChevronRight, Package, Tag, Percent } from "lucide-react";
 
 
 const Lentes = () => {
-  const [, setProductos] = useState([]);
+  const [productos, setProductos] = useState([]);
   const [resultadosCategoria, setResultadosCategoria] = useState([]);
   const [productoAgregado] = useState(null); // Nuevo estado para manejar el producto agregado
   const [loading, setLoading] = useState(true);
+  
+  // Estados para filtros
+  const [categorias, setCategorias] = useState([]);
+  const [filtroActivo, setFiltroActivo] = useState("todos"); // "todos", "ofertas", o ID de categoría
   
   // Estados para paginación
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,10 +26,16 @@ const Lentes = () => {
 
   useEffect(() => {
     setLoading(true);
-    obtenerProductos()
-      .then((data) => {
-        setProductos(data);
-        setResultadosCategoria(data); // Inicializar resultadosCategoria con todos los productos
+    
+    // Cargar productos y categorías en paralelo
+    Promise.all([
+      obtenerProductos(),
+      fetch("https://backbetter-production.up.railway.app/categoria/").then(res => res.json())
+    ])
+      .then(([productosData, categoriasData]) => {
+        setProductos(productosData);
+        setResultadosCategoria(productosData);
+        setCategorias(categoriasData);
         setLoading(false);
       })
       .catch((error) => {
@@ -33,6 +43,56 @@ const Lentes = () => {
         setLoading(false);
       });
   }, []);
+
+  // Aplicar filtros cuando cambie el filtro activo
+  useEffect(() => {
+    aplicarFiltro(filtroActivo);
+  }, [filtroActivo, productos]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Función para aplicar filtros
+  const aplicarFiltro = (filtro) => {
+    let productosFiltrados = [];
+
+    if (filtro === "todos") {
+      productosFiltrados = productos;
+    } else if (filtro === "ofertas") {
+      productosFiltrados = productos.filter(producto => {
+        if (!producto.EnOferta || !producto.PrecioOferta) return false;
+        const precioOriginal = parseFloat(producto.Precio) || 0;
+        const precioOferta = parseFloat(producto.PrecioOferta) || 0;
+        return precioOferta < precioOriginal;
+      });
+    } else {
+      // Filtrar por categoría específica
+      productosFiltrados = productos.filter(producto => 
+        producto.IdCategoria.toString() === filtro.toString()
+      );
+    }
+
+    setResultadosCategoria(productosFiltrados);
+    setCurrentPage(1); // Reset página al filtrar
+  };
+
+  // Función para cambiar filtro
+  const cambiarFiltro = (nuevoFiltro) => {
+    setFiltroActivo(nuevoFiltro);
+  };
+
+  // Contar productos por categoría y ofertas
+  const contarProductosPorFiltro = (filtro) => {
+    if (filtro === "todos") return productos.length;
+    if (filtro === "ofertas") {
+      return productos.filter(producto => {
+        if (!producto.EnOferta || !producto.PrecioOferta) return false;
+        const precioOriginal = parseFloat(producto.Precio) || 0;
+        const precioOferta = parseFloat(producto.PrecioOferta) || 0;
+        return precioOferta < precioOriginal;
+      }).length;
+    }
+    return productos.filter(producto => 
+      producto.IdCategoria.toString() === filtro.toString()
+    ).length;
+  };
 
   // Lógica de paginación
   const totalProducts = resultadosCategoria.length;
@@ -70,8 +130,115 @@ const Lentes = () => {
             </p>
           )}
         </div>
+
+        {/* Filtros Minimalistas */}
+        <div className="max-w-6xl mx-auto mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-gray-50 px-4 py-2 rounded border">
+            
+            {/* Título simple */}
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-medium text-gray-700">Productos</h2>
+              <span className="text-xs text-teal-600 font-semibold">({totalProducts})</span>
+              {filtroActivo !== "todos" && (
+                <span className="text-xs text-gray-500">
+                  • {filtroActivo === "ofertas" 
+                    ? "Ofertas" 
+                    : categorias.find(c => c.IdCategoria.toString() === filtroActivo)?.NombreCategoria}
+                </span>
+              )}
+            </div>
+
+            {/* Filtros como links simples */}
+            <div className="flex items-center gap-4 text-xs">
+              <button
+                onClick={() => cambiarFiltro("todos")}
+                className={`${
+                  filtroActivo === "todos"
+                    ? "text-teal-600 font-semibold underline"
+                    : "text-gray-600 hover:text-teal-600"
+                } transition-colors`}
+              >
+                Todos
+              </button>
+
+              <button
+                onClick={() => cambiarFiltro("ofertas")}
+                className={`${
+                  filtroActivo === "ofertas"
+                    ? "text-red-600 font-semibold underline"
+                    : "text-gray-600 hover:text-red-600"
+                } transition-colors`}
+              >
+                Ofertas ({contarProductosPorFiltro("ofertas")})
+              </button>
+
+              {/* Dropdown simple para categorías */}
+              <select
+                value={filtroActivo}
+                onChange={(e) => cambiarFiltro(e.target.value)}
+                className="text-xs bg-transparent border-none text-gray-600 hover:text-teal-600 cursor-pointer focus:outline-none"
+              >
+                <option value="" disabled>Categorías...</option>
+                {categorias.map((categoria) => (
+                  <option
+                    key={categoria.IdCategoria}
+                    value={categoria.IdCategoria.toString()}
+                  >
+                    {categoria.NombreCategoria} ({contarProductosPorFiltro(categoria.IdCategoria.toString())})
+                  </option>
+                ))}
+              </select>
+
+              {filtroActivo !== "todos" && (
+                <button
+                  onClick={() => cambiarFiltro("todos")}
+                  className="text-gray-400 hover:text-red-500 transition-colors"
+                  title="Limpiar filtro"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
         {loading ? (
           <ProductSkeletonGrid count={12} />
+        ) : totalProducts === 0 ? (
+          <div className="max-w-2xl mx-auto text-center py-16">
+            <div className="bg-white rounded-2xl shadow-lg p-12 border border-gray-200">
+              {filtroActivo === "ofertas" ? (
+                <>
+                  <Percent className="w-16 h-16 text-red-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No hay ofertas disponibles</h3>
+                  <p className="text-gray-600 mb-6">
+                    Actualmente no tenemos productos en oferta. Te invitamos a explorar nuestro catálogo completo.
+                  </p>
+                </>
+              ) : filtroActivo !== "todos" ? (
+                <>
+                  <Tag className="w-16 h-16 text-blue-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No hay productos en esta categoría</h3>
+                  <p className="text-gray-600 mb-6">
+                    No encontramos productos en la categoría seleccionada. Prueba con otra categoría o explora todos nuestros productos.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No hay productos disponibles</h3>
+                  <p className="text-gray-600 mb-6">
+                    Actualmente no tenemos productos disponibles. Vuelve pronto para ver nuestras novedades.
+                  </p>
+                </>
+              )}
+              <button
+                onClick={() => cambiarFiltro("todos")}
+                className="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
+              >
+                Ver todos los productos
+              </button>
+            </div>
+          </div>
         ) : (
           <>
             <div className="flex flex-row flex-wrap justify-center gap-6 mt-8">
