@@ -10,12 +10,7 @@ function Busqueda({ busqueda, setBusqueda, handleSearch }) {
     }
   };
 
-  useEffect(() => {
-    // Ejecuta la búsqueda cada vez que el estado 'busqueda' cambie, pero no borra el texto
-    if (busqueda && busqueda.trim() !== "") {
-      handleSearch();
-    }
-  }, [busqueda, handleSearch]);
+  // Eliminado useEffect para búsqueda automática - solo búsqueda manual
 
   const startListening = () => {
     const SpeechRecognition =

@@ -48,7 +48,10 @@ function parseJwt(token) {
 }
 
 function Barra() {
-  const [busqueda, setBusqueda] = useState("");
+  // Inicializar la búsqueda desde sessionStorage si existe
+  const [busqueda, setBusqueda] = useState(() => {
+    return sessionStorage.getItem('terminoBusqueda') || "";
+  });
   const [menuVisible, setMenuVisible] = useState(false);
   const location = useLocation();
   const [usuarioLogueado, setUsuarioLogueado] = useState(false);
@@ -130,6 +133,21 @@ function Barra() {
     localStorage.removeItem("token");
     setUserType(null);
     setUsuarioLogueado(false);
+    // Limpiar también el término de búsqueda al cerrar sesión
+    sessionStorage.removeItem('terminoBusqueda');
+    setBusqueda("");
+  };
+
+  // Función para limpiar la búsqueda cuando sea necesario
+  const clearSearch = () => {
+    setBusqueda("");
+    sessionStorage.removeItem('terminoBusqueda');
+  };
+
+  // Función personalizada para actualizar búsqueda y sessionStorage
+  const updateBusqueda = (valor) => {
+    setBusqueda(valor);
+    sessionStorage.setItem('terminoBusqueda', valor);
   };
 
   const handleSearch = async () => {
@@ -179,7 +197,7 @@ function Barra() {
           <div className="flex-1 max-w-none">
             <Busqueda
               busqueda={busqueda}
-              setBusqueda={setBusqueda}
+              setBusqueda={updateBusqueda}
               handleSearch={handleSearch}
             />
           </div>
@@ -203,7 +221,7 @@ function Barra() {
             <div className="flex items-center justify-center">
               <Busqueda
                 busqueda={busqueda}
-                setBusqueda={setBusqueda}
+                setBusqueda={updateBusqueda}
                 handleSearch={handleSearch}
               />
             </div>
