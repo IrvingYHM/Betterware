@@ -76,7 +76,7 @@ function Slider() {
     <>
       <div className="max-w-[1250px] w-full m-auto relative group z-0">
         {/* Container de imagen con skeleton individual */}
-        <div className="relative w-full h-[460px] rounded-2xl overflow-hidden">
+        <div className="relative w-full lg:max-h-[460px] rounded-2xl overflow-hidden">
           {/* Skeleton overlay - se muestra si no hay slides o la imagen actual no se ha cargado */}
           {(!slides.length || !imageLoaded[currentIndex]) && (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 animate-gentle-breathing z-20">
@@ -189,13 +189,13 @@ function Slider() {
 
         {/* Botón de gestión */}
         {(!slides.length || imageLoaded[currentIndex]) && (
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="absolute top-4 right-4 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 z-10"
-          title="Gestionar imágenes del slider"
-        >
-          <Edit className="w-5 h-5" />
-        </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="absolute top-4 right-4 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 z-10"
+            title="Gestionar imágenes del slider"
+          >
+            <Edit className="w-5 h-5" />
+          </button>
         )}
       </div>
 

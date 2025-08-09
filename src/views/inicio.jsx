@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Slider from "../home/slider";
+import Slider from "./home/slider";
 import Fot from "../components/Footer";
 import Scrool from '../components/scroll';
 import Barra from "../components/Navegacion/barra";
@@ -123,13 +123,13 @@ function App() {
         src="//code.tidio.co/lr3byfcdvywtakcwkxqmh0yvvnggymum.js"
         async
       ></script>
-      <div className="flex flex-col lg:flex-row mt-16 px-4 lg:px-12 gap-6">
-        <div className="w-full lg:w-3/4 my-16 mt-24">
+      <div className="flex flex-col lg:flex-row mt-20 lg:mt-40 px-4 lg:px-12 gap-6">
+        <div className="w-full lg:w-3/4">
           <Slider />
           <br />
 
           {/* Separador de promociones */}
-          <div className="flex items-center justify-center my-12">
+          <div className="flex items-center justify-center mb-4 lg:my-12">
             <div className="h-2 bg-teal-500 flex-1"></div>
             <span className="mx-4 text-2xl md:text-5xl font-bold uppercase tracking-wider">
               Promociones
