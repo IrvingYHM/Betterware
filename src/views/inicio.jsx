@@ -123,13 +123,12 @@ function App() {
         src="//code.tidio.co/lr3byfcdvywtakcwkxqmh0yvvnggymum.js"
         async
       ></script>
-      <div className="flex flex-col lg:flex-row mt-20 lg:mt-40 px-4 lg:px-12 gap-6">
+      <div className="flex flex-col lg:flex-row mt-20 lg:mt-[150px] px-4 lg:px-12 gap-6">
         <div className="w-full lg:w-3/4">
           <Slider />
-          <br />
 
           {/* Separador de promociones */}
-          <div className="flex items-center justify-center mb-4 lg:my-12">
+          <div className="flex items-center justify-center my-4 lg:mb-12 lg:mt-8">
             <div className="h-2 bg-teal-500 flex-1"></div>
             <span className="mx-4 text-2xl md:text-5xl font-bold uppercase tracking-wider">
               Promociones
@@ -188,7 +187,7 @@ function App() {
 
                             <div className="px-3 py-3">
                               <Link to={`/productoDetalle/${producto.IdProducto}`}>
-                                <h3 className="font-bold mb-2 hover:text-tealbg-teal-500 transition-colors duration-200 line-clamp-2 h-8 sm:h-10 lg:h-12">
+                                <h3 className="font-bold mb-2 hover:text-teal-500 transition-colors duration-200 line-clamp-2 h-8 sm:h-10 lg:h-12">
                                   {producto.vchNombreProducto}
                                 </h3>
                               </Link>
@@ -223,14 +222,14 @@ function App() {
                       className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 bg-white/90 hover:bg-white shadow-lg rounded-full p-2 transition-all duration-200 z-10 hover:scale-110"
                       aria-label="Anterior"
                     >
-                      <ChevronLeft className="w-6 h-6 text-tealbg-teal-500" />
+                      <ChevronLeft className="w-6 h-6" />
                     </button>
                     <button
                       onClick={nextSlide}
                       className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 bg-white/90 hover:bg-white shadow-lg rounded-full p-2 transition-all duration-200 z-10 hover:scale-110"
                       aria-label="Siguiente"
                     >
-                      <ChevronRight className="w-6 h-6 text-tealbg-teal-500" />
+                      <ChevronRight className="w-6 h-6" />
                     </button>
                   </>
                 )}
@@ -258,7 +257,7 @@ function App() {
               <div className="flex justify-center mt-8">
                 <Link 
                   to="/productos?filter=promociones" 
-                  className="bg-gradient-to-r from-teal-400 to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border-2 border-tealbg-teal-500"
+                  className="bg-gradient-to-r from-teal-400 to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border-2 border-teltext-teal-500"
                 >
                   Ver todas las promociones ({promociones.length} ofertas disponibles)
                 </Link>
@@ -276,7 +275,7 @@ function App() {
                   </p>
                   <Link 
                     to="/productos" 
-                    className="inline-block bg-gradient-to-r from-tealbg-teal-500 to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg border border-tealbg-teal-500"
+                    className="inline-block bg-gradient-to-r from-teltext-teal-500 to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg border border-teltext-teal-500"
                   >
                     Ver todos los productos
                   </Link>
