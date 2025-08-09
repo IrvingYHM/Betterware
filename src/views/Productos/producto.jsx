@@ -2,7 +2,7 @@ import Fot from "../../components/Footer";
 import { useEffect, useState } from "react";
 /* import lentes from "../../img/lentes2.png"; */
 import { obtenerProductos } from "./Api";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Barra from "../../components/Navegacion/barra";
 // import { API_ENDPOINTS } from "../../service/apirest";
 import { ProductSkeletonGrid } from "./ProductSkeleton";
@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight, Package, Tag, Percent } from "lucide-react";
 
 
 const Lentes = () => {
+  const location = useLocation();
   const [productos, setProductos] = useState([]);
   const [resultadosCategoria, setResultadosCategoria] = useState([]);
   const [productoAgregado] = useState(null); // Nuevo estado para manejar el producto agregado
@@ -36,13 +37,21 @@ const Lentes = () => {
         setProductos(productosData);
         setResultadosCategoria(productosData);
         setCategorias(categoriasData);
+        
+        // Verificar si hay parámetros de filtro en la URL
+        const urlParams = new URLSearchParams(location.search);
+        const filtroParam = urlParams.get('filter');
+        if (filtroParam === 'promociones') {
+          setFiltroActivo('promociones');
+        }
+        
         setLoading(false);
       })
       .catch((error) => {
         console.log(error);
         setLoading(false);
       });
-  }, []);
+  }, [location.search]);
 
   // Aplicar filtros cuando cambie el filtro activo
   useEffect(() => {
