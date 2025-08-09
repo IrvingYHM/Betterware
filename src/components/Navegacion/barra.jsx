@@ -255,13 +255,6 @@ function Barra() {
                           Configuración
                         </Link>
                         <Link
-                          to="/ver-cita"
-                          className="w-full px-4 py-2 hover:bg-gray-200 flex columns-2"
-                        >
-                          <FaRegCalendarAlt size={24} className="mr-2" />
-                          Citas
-                        </Link>
-                        <Link
                           to="/Pedidos"
                           className="w-full px-4 py-2 hover:bg-gray-200 flex columns-2"
                         >

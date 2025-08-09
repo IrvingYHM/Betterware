@@ -131,7 +131,7 @@ const Lentes = () => {
   return (
     <div className="flex-center">
       <Barra />
-      <div className="mt-40 mb-10">
+      <div className="mt-20 lg:mt-40 mb-10">
         <div>
           {productoAgregado && ( // Muestra el mensaje si productoAgregado no es null
             <p className="text-green-500">

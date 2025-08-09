@@ -47,7 +47,7 @@ function Catalogos() {
       <Barra />
       <div className="min-h-screen mt-24 lg:mt-40">
         {/* Content Section */}
-        <div className="px-6 pb-16">
+        <div className="px-6 mb-8">
           <div className="max-w-7xl mx-auto">
             {loading ? (
               <div className="flex items-center justify-center py-20">
