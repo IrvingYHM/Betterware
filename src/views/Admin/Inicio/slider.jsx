@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
-import { Edit } from "lucide-react";
+import { Edit, Plus } from "lucide-react";
 import SliderForm from "./SliderForm";
 
 function Slider() {
@@ -9,6 +9,7 @@ function Slider() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState({});
+  const [modalMode, setModalMode] = useState('list'); // 'list' for management, 'add' for quick add
 
   // Traer las imágenes del slider desde tu API
   useEffect(() => {
@@ -76,7 +77,7 @@ function Slider() {
     <>
       <div className="max-w-[1250px] w-full m-auto relative group z-0">
         {/* Container de imagen con skeleton individual */}
-        <div className="relative w-full lg:max-h-[460px] rounded-2xl overflow-hidden">
+        <div className="relative w-full lg:max-h-[480px] rounded-2xl overflow-hidden">
           {/* Skeleton overlay - se muestra si no hay slides o la imagen actual no se ha cargado */}
           {(!slides.length || !imageLoaded[currentIndex]) && (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 animate-gentle-breathing z-20">
@@ -187,20 +188,88 @@ function Slider() {
           ))}
         </div>
 
-        {/* Botón de gestión */}
-        {(!slides.length || imageLoaded[currentIndex]) && (
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="absolute top-4 right-4 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 z-10"
-            title="Gestionar imágenes del slider"
-          >
-            <Edit className="w-5 h-5" />
-          </button>
+        {/* Estado vacío cuando no hay slides */}
+        {slides.length === 0 && !loading && (
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
+            <div className="text-center p-8">
+              <div className="w-24 h-24 bg-gradient-to-br from-betterware/20 to-betterware/40 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Plus className="w-12 h-12 text-betterware" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">Slider Vacío</h3>
+              <p className="text-gray-600 mb-6 max-w-md">
+                No hay imágenes en el slider principal. Agrega la primera imagen para comenzar a mostrar contenido a tus visitantes.
+              </p>
+              <button
+                onClick={() => {
+                  setModalMode('add');
+                  setIsModalOpen(true);
+                }}
+                className="inline-flex items-center px-6 py-3 bg-betterware text-white rounded-xl font-semibold hover:bg-betterware_claro transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Agregar Primera Imagen
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Botones de administración */}
+        {slides.length > 0 && (!loading || imageLoaded[currentIndex]) && (
+          <div className="absolute top-4 right-4 flex space-x-2 z-10">
+            {/* Botón para agregar nueva imagen */}
+            <button
+              onClick={() => {
+                setModalMode('add');
+                setIsModalOpen(true);
+              }}
+              className="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 group"
+              title="Agregar nueva imagen al slider"
+            >
+              <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            </button>
+            
+            {/* Botón de gestión completa */}
+            <button
+              onClick={() => {
+                setModalMode('list');
+                setIsModalOpen(true);
+              }}
+              className="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 group"
+              title="Gestionar todas las imágenes del slider"
+            >
+              <Edit className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            </button>
+          </div>
         )}
       </div>
 
       {/* Modal */}
-      <SliderForm isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <SliderForm 
+        isOpen={isModalOpen}
+        initialMode={modalMode}
+        onClose={() => {
+          setIsModalOpen(false);
+          setModalMode('list');
+          // Refresh slider images when modal closes
+          setTimeout(() => {
+            async function fetchSliderImages() {
+              try {
+                setLoading(true);
+                const res = await fetch(
+                  "https://backbetter-production.up.railway.app/imagenes/filtrar/slider"
+                );
+                const data = await res.json();
+                setSlides(data);
+                setLoading(false);
+              } catch (error) {
+                console.error("Error al obtener imágenes del slider:", error);
+                setLoading(false);
+              }
+            }
+            fetchSliderImages();
+          }, 500);
+        }} 
+      />
 
       <style jsx>{`
         @keyframes gentle-breathing {

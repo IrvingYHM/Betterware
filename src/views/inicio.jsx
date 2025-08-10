@@ -158,11 +158,11 @@ function App() {
                       const descuento = calcularDescuento(precioOriginal, precioOferta);
 
                       return (
-                        <div 
-                          key={`${producto.IdProducto}-${index}`} 
+                        <div
+                          key={`${producto.IdProducto}-${index}`}
                           className="flex-shrink-0 px-2"
-                          style={{ 
-                            width: `${100 / promociones.length}%`
+                          style={{
+                            width: `${100 / promociones.length}%`,
                           }}
                         >
                           <div className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 relative group transform hover:-translate-y-1">
@@ -170,12 +170,18 @@ function App() {
                             <div className="absolute top-2 right-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-1 rounded-full text-xs font-bold z-10 shadow-lg">
                               -{descuento}%
                             </div>
-                            
-                            <Link to={`/productoDetalle/${producto.IdProducto}`}>
+
+                            <Link
+                              to={`/productoDetalle/${producto.IdProducto}`}
+                              className=" hover:text-teal-500 "
+                            >
                               <div className="relative overflow-hidden">
-                                <img 
-                                  className="w-full h-32 sm:h-40 md:h-44 lg:h-40 xl:h-44 object-cover group-hover:scale-105 transition-transform duration-300" 
-                                  src={producto.vchNomImagen || "/placeholder-image.png"} 
+                                <img
+                                  className="w-full h-32 sm:h-40 md:h-44 lg:h-40 xl:h-44 object-cover group-hover:scale-105 transition-transform duration-300"
+                                  src={
+                                    producto.vchNomImagen ||
+                                    "/placeholder-image.png"
+                                  }
                                   alt={producto.vchNombreProducto}
                                   onError={(e) => {
                                     e.target.src = "/placeholder-image.png";
@@ -183,30 +189,29 @@ function App() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                               </div>
-                            </Link>
 
-                            <div className="px-3 py-3">
-                              <Link to={`/productoDetalle/${producto.IdProducto}`}>
-                                <h3 className="font-bold mb-2 hover:text-teal-500 transition-colors duration-200 line-clamp-2 h-8 sm:h-10 lg:h-12">
+                              <div className="p-3">
+                                <h3 className="font-bold mb-2transition-colors duration-200 line-clamp-2 h-8 sm:h-10 lg:h-12">
                                   {producto.vchNombreProducto}
                                 </h3>
-                              </Link>
-                              
-                              {/* Precios */}
-                              <div className="space-y-1">
-                                <div className="flex items-center gap-1 flex-wrap">
-                                  <span className="font-bold text-green-600">
-                                    ${precioOferta.toFixed(2)}
-                                  </span>
-                                  <span className="text-gray-500 line-through">
-                                    ${precioOriginal.toFixed(2)}
-                                  </span>
-                                </div>
-                                <div className="text-green-600 font-bold bg-green-50 px-2 py-1 rounded text-center">
-                                  Ahorras ${(precioOriginal - precioOferta).toFixed(2)}
+
+                                {/* Precios */}
+                                <div className="space-y-1">
+                                  <div className="flex items-center gap-1 flex-wrap">
+                                    <span className="font-bold text-green-600">
+                                      ${precioOferta.toFixed(2)}
+                                    </span>
+                                    <span className="text-gray-500 line-through">
+                                      ${precioOriginal.toFixed(2)}
+                                    </span>
+                                  </div>
+                                  <div className="text-green-600 font-bold bg-green-50 px-2 py-1 rounded text-center">
+                                    Ahorras $
+                                    {(precioOriginal - precioOferta).toFixed(2)}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
+                            </Link>
                           </div>
                         </div>
                       );

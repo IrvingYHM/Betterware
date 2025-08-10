@@ -119,7 +119,6 @@ function inicioAdmin() {
       <div className="flex flex-col lg:flex-row mt-6 px-4 lg:px-12 gap-6">
         <div className="w-full lg:w-3/4">
           <Slider />
-          <br />
 
           {/* Separador de promociones */}
           <div className="flex items-center justify-center my-12">

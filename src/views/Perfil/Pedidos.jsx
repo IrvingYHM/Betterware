@@ -9,10 +9,10 @@ const OrderHistory = () => {
 
   return (
     <div>
-      <section className="py-24 relative">
+      <section className="mt-20 lg:mt-36 relative">
         <Barra/>
         
-        <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mb-8">
           <h2 className="font-manrope font-bold text-3xl leading-10 mb-9 text-center">Historial de órdenes</h2>
 
           <div className="flex sm:flex-col lg:flex-row sm:items-center justify-between">

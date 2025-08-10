@@ -173,7 +173,7 @@ const Lentes = () => {
                 className={`${
                   filtroActivo === "todos"
                     ? "bg-teal-500 text-white px-3 py-1.5 rounded-full font-semibold shadow-md transform scale-105"
-                    : "text-gray-600 hover:text-teal-600 hover:bg-teal-50 px-2 py-1 rounded-full"
+                    : "hover:text-teal-700 hover:bg-teal-100 px-2 py-1 rounded-full"
                 } transition-all duration-200 ease-in-out`}
               >
                 ✨ Todos
@@ -184,7 +184,7 @@ const Lentes = () => {
                 className={`${
                   filtroActivo === "promociones"
                     ? "bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1.5 rounded-full font-semibold shadow-md transform scale-105"
-                    : "text-gray-600 hover:text-red-600 hover:bg-red-50 px-2 py-1 rounded-full"
+                    : "hover:text-red-600 hover:bg-red-50 px-2 py-1 rounded-full"
                 } transition-all duration-200 ease-in-out`}
               >
                 🔥 Promociones ({contarProductosPorFiltro("promociones")})
@@ -199,7 +199,7 @@ const Lentes = () => {
                     (c) => c.IdCategoria.toString() === filtroActivo
                   )
                     ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold shadow-md"
-                    : "text-gray-600 hover:border-blue-400 hover:shadow-sm"
+                    : "hover:border-blue-400 hover:shadow-sm"
                 }`}
               >
                 <option value="" disabled>
