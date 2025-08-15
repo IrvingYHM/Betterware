@@ -70,7 +70,7 @@ function ProductsList() {
     }));
   };
 
-  // Filtrar productos por búsqueda y categoría
+  // Filtrar productos por búsqueda y categoría/promociones
   const filteredProductos = productos.filter((producto) => {
     const matchesSearch = producto.vchNombreProducto
       .toLowerCase()
@@ -79,8 +79,14 @@ function ProductsList() {
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
     
-    const matchesCategory = selectedCategory === "" || 
-      producto.IdCategoria.toString() === selectedCategory;
+    let matchesCategory = true;
+    if (selectedCategory === "") {
+      matchesCategory = true; // Todas las categorías
+    } else if (selectedCategory === "promociones") {
+      matchesCategory = producto.EnOferta && producto.PrecioOferta; // Solo promociones
+    } else {
+      matchesCategory = producto.IdCategoria.toString() === selectedCategory; // Categoría específica
+    }
     
     return matchesSearch && matchesCategory;
   });
@@ -221,6 +227,7 @@ function ProductsList() {
                   className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 appearance-none"
                 >
                   <option value="">Todas las categorías</option>
+                  <option value="promociones">Promociones</option>
                   {listaCategoria.map((categoria) => (
                     <option key={categoria.IdCategoria} value={categoria.IdCategoria}>
                       {categoria.NombreCategoria}
@@ -286,7 +293,7 @@ function ProductsList() {
                   key={producto.IdProducto}
                   className="w-72 bg-white rounded-xl shadow-md flex flex-col justify-between"
                 >
-                  <div className="relative h-72 w-full rounded-t overflow-hidden">
+                  <div className="relative h-72 w-full rounded-t-xl overflow-hidden">
                     <img
                       src={producto.vchNomImagen}
                       alt={producto.vchNombreProducto}

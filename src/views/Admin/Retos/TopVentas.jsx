@@ -42,6 +42,7 @@ function TopVendedorForm({
   const [{ month, year }] = useState(obtenermesAnteriorYaño());
   const [editandoId, setEditandoId] = useState(null);
   const [valorEditando, setValorEditando] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   useEffect(() => {
     axios
@@ -163,19 +164,20 @@ function TopVendedorForm({
     }
   };
 
-  const handleDelete = async (vendedorId, nombreCompleto) => {
-    const confirmDelete = window.confirm(
-      `¿Estás seguro de eliminar el registro de ${nombreCompleto} del top de ventas?`
-    );
-    
-    if (!confirmDelete) return;
+  const handleDelete = (vendedorId, nombreCompleto) => {
+    setDeleteConfirm({ vendedorId, nombreCompleto });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirm) return;
 
     try {
       await axios.patch(
-        `https://backbetter-production.up.railway.app/top-vendedor/eliminar/${vendedorId}`
+        `https://backbetter-production.up.railway.app/top-vendedor/eliminar/${deleteConfirm.vendedorId}`
       );
       
       toast.success("Registro eliminado exitosamente");
+      setDeleteConfirm(null);
       await refreshTopVendedores();
     } catch (error) {
       if (error.response?.data?.message) {
@@ -184,6 +186,10 @@ function TopVendedorForm({
         toast.error("Error al eliminar el registro");
       }
     }
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirm(null);
   };
 
   const handleBackClick = () => {
@@ -437,6 +443,41 @@ function TopVendedorForm({
           limit={1}
           className="toast-container"
         />
+      )}
+      
+      {/* Modal de confirmación personalizada */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl border">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Trash2 className="w-8 h-8 text-red-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                ¿Eliminar del Top de Ventas?
+              </h3>
+              <p className="text-gray-600 mb-6">
+                ¿Estás seguro de eliminar el registro de <span className="font-semibold">{deleteConfirm.nombreCompleto}</span> del top de ventas?
+                <br />
+                <span className="text-sm text-red-600 mt-2 block">Esta acción no se puede deshacer.</span>
+              </p>
+              <div className="flex space-x-3">
+                <button
+                  onClick={cancelDelete}
+                  className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-xl transition-colors duration-200"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-colors duration-200"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

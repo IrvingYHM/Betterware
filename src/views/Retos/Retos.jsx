@@ -150,7 +150,7 @@ function Retos() {
               {React.createElement(icon, { className: "w-5 h-5 text-white" })}
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">
+              <h2 className="text-lg font-bold">
                 Top {tipo}
               </h2>
               <p className="text-sm text-gray-600">{mes} {año}</p>
@@ -183,7 +183,7 @@ function Retos() {
                         {isTop3 && index === 0 ? <Crown className="w-4 h-4" /> : `#${index + 1}`}
                       </span>
                       <div>
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-semibold">
                           {item.empleado?.vchNombre} {item.empleado?.vchAPaterno} {item.empleado?.vchAMaterno}
                         </p>
                       </div>
@@ -233,7 +233,7 @@ function Retos() {
               <Target className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">{titulo}</h2>
+              <h2 className="text-lg font-bold">{titulo}</h2>
             </div>
           </div>
 
@@ -285,7 +285,7 @@ function Retos() {
             >
               <div className="bg-white rounded-2xl p-4 shadow-2xl">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold text-gray-900 flex items-center">
+                  <h3 className="text-lg font-bold flex items-center">
                     <Crown className="w-5 h-5 mr-2 text-yellow-500" />
                     Ganadores del Reto
                   </h3>
@@ -310,13 +310,13 @@ function Retos() {
   };
 
   return (
-    <div className="mt-36">
+    <div className="mt-24 lg:mt-40">
       <Barra/>
-      <div className="min-h-screen bg-gradient-to-br mb-6">
+      <div className="min-h-screen bg-gradient-to-br mb-8">
         <div className="max-w-7xl mx-auto space-y-8">
           {/* Ventas Section */}
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200">
-            <div className="flex justify-center space-x-3 mb-6">
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl px-6 pt-3 pb-6 border border-gray-200">
+            <div className="flex justify-center space-x-3 mb-3">
               <div
                 className="w-8 h-8 rounded-xl flex items-center justify-center"
                 style={{
@@ -325,7 +325,7 @@ function Retos() {
               >
                 <TrendingUp className="w-4 h-4 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold">
                 Retos de Ventas
               </h2>
             </div>
@@ -342,8 +342,8 @@ function Retos() {
           </div>
 
           {/* Afiliaciones Section */}
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200">
-            <div className="flex justify-center space-x-3 mb-6">
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl px-6 pb-6 pt-3 border border-gray-200">
+            <div className="flex justify-center space-x-3 mb-3">
               <div
                 className="w-8 h-8 rounded-xl flex items-center justify-center"
                 style={{
@@ -352,7 +352,7 @@ function Retos() {
               >
                 <Users className="w-4 h-4 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold">
                 Retos de Afiliaciones
               </h2>
             </div>

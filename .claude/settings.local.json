@@ -8,7 +8,9 @@
       "WebFetch(domain:backbetter-production.up.railway.app)",
       "Bash(mv:*)",
       "Bash(npm run dev:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(curl:*)",
+      "Bash(npm install:*)"
     ],
     "deny": []
   }

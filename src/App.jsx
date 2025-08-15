@@ -58,6 +58,7 @@ import DetalleProducto from "./views/Productos/DetalleProducto";
 import VerDireccion from './views/Perfil/verDireccion'
 import CambiarContraseñaPerfil from './views/Perfil/CambiarContra'
 import { AuthProvider } from "./views/AuthContext";
+import { PedidosProvider } from "./context/PedidosContext";
 import AcercaDe from './views/Footer/AcercaDe'
 import Matematicas from './views/Calculadora/Mate';
 import Matematicas2 from './views/Calculadora/Matematicas';
@@ -69,6 +70,9 @@ import AgEmpleado from './views/Admin/Empleados/Registro/RegistroPage';
 import EditarEmpleado from './views/Admin/Empleados/editarEmpleado';
 import CambiarContra from './views/Perfil/cambioCon'
 import Pedidos from './views/Perfil/Pedidos';
+import MisPedidos from './views/MisPedidos';
+import CheckoutPedido from './views/Productos/CheckoutPedido';
+import GestionPedidos from './views/Admin/Pedidos/GestionPedidos';
 import PaginaSuccess from './views/Productos/SuccessPage'//cuando se realiza el pago de mercadopago
 import Stripe from './views/Metodopago/stripe'
 
@@ -94,6 +98,7 @@ function App() {
 
         <CartProvider>
           <AuthProvider>
+            <PedidosProvider>
             <Routes>
               <Route path="/" element={<Inicio />} />
               <Route path="/inicio" element={<Inicio />} />
@@ -194,6 +199,8 @@ function App() {
               />
               <Route path="/CambiarContra" element={<CambiarContra />} />
               <Route path="/Pedidos" element={<Pedidos />} />
+              <Route path="/mis-pedidos" element={<RutaProtegida element={<MisPedidos />} />} />
+              <Route path="/checkout-pedido" element={<RutaProtegida element={<CheckoutPedido />} />} />
               <Route path="/PaginaSuccess" element={<PaginaSuccess />} />
 
               {/*Rutas para Admin  */}
@@ -206,6 +213,7 @@ function App() {
               <Route path="/ClientesAd" element={<ClienteAd />} />
               <Route path="/AfiliadosAd" element={<AfiliadosAd />} />
               <Route path="/AgEmpleado" element={<AgEmpleado />} />
+              <Route path="/GestionPedidos" element={<GestionPedidos />} />
               <Route path="/inicioAd" element={<InicioAd />} />
               <Route path="/editarEmpleado/:id" element={<EditarEmpleado />} />
               <Route path="/CatalogosAd" element={<CatalogosAd />} />
@@ -225,6 +233,7 @@ function App() {
 
               <Route path="/Opcion" element={<Opcion />} />
             </Routes>
+            </PedidosProvider>
           </AuthProvider>
         </CartProvider>
       </BrowserRouter>

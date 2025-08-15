@@ -10,6 +10,8 @@ function GestionCategorias({ onBack, integratedMode = false }) {
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [categoriaParaEliminar, setCategoriaParaEliminar] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     NombreCategoria: ""
   });
@@ -57,12 +59,19 @@ function GestionCategorias({ onBack, integratedMode = false }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Prevenir múltiples envíos
+    if (submitting) {
+      return;
+    }
+    
     if (!formData.NombreCategoria.trim()) {
       toast.error("El nombre de la categoría es requerido");
       return;
     }
 
     try {
+      setSubmitting(true);
+      
       const url = editingCategory 
         ? `${API_ENDPOINTS.categorias.update}/${editingCategory.IdCategoria}`
         : API_ENDPOINTS.categorias.create;
@@ -92,6 +101,8 @@ function GestionCategorias({ onBack, integratedMode = false }) {
     } catch (error) {
       console.error("Error:", error);
       toast.error("Error al procesar la solicitud");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -103,29 +114,129 @@ function GestionCategorias({ onBack, integratedMode = false }) {
     setShowAddForm(true);
   };
 
-  const handleDelete = async (id, nombreCategoria) => {
+  // Confirmar eliminación con toast personalizado
+  const confirmarEliminacion = async (categoria) => {
     try {
       // Primero verificar si la categoría tiene productos asociados
-      const checkResponse = await fetch(`${API_ENDPOINTS.categorias.checkProducts}/${id}`);
+      const checkResponse = await fetch(`${API_ENDPOINTS.categorias.checkProducts}/${categoria.IdCategoria}`);
       if (!checkResponse.ok) {
         throw new Error("Error al verificar la categoría");
       }
 
       const checkData = await checkResponse.json();
       
-      // Si la categoría tiene productos, no permitir eliminarla
+      // Si la categoría tiene productos, mostrar mensaje de error y no continuar
       if (!checkData.canDelete) {
-        toast.error(`No se puede eliminar la categoría "${nombreCategoria}" porque tiene ${checkData.productCount} producto(s) asociado(s). Primero debes reasignar o eliminar los productos.`);
+        toast.error(
+          <div className="flex flex-col items-center text-center gap-4 p-2">
+            {/* Icono de error */}
+            <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+            
+            {/* Mensaje de error */}
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold text-red-900">No se puede eliminar</h3>
+              <p className="text-sm text-gray-700">
+                La categoría <span className="font-semibold">"{categoria.NombreCategoria}"</span> tiene
+              </p>
+              <p className="text-sm font-semibold text-red-800 bg-red-100 px-3 py-1 rounded-lg">
+                {checkData.productCount} producto{checkData.productCount !== 1 ? 's' : ''} asociado{checkData.productCount !== 1 ? 's' : ''}
+              </p>
+              <p className="text-xs text-gray-600">
+                Primero debes reasignar o eliminar los productos de esta categoría
+              </p>
+            </div>
+            
+            {/* Botón de cerrar */}
+            <div className="flex justify-center w-full">
+              <button
+                onClick={() => toast.dismiss()}
+                className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg"
+              >
+                Entendido
+              </button>
+            </div>
+          </div>,
+          {
+            position: "top-center",
+            autoClose: false,
+            closeOnClick: false,
+            draggable: false,
+            closeButton: false,
+            className: "toast-confirmation"
+          }
+        );
         return;
       }
 
-      // Solo pedir confirmación si la categoría está vacía
-      const confirmMessage = `¿Estás seguro de que quieres eliminar la categoría "${nombreCategoria}"?`;
-      if (!window.confirm(confirmMessage)) {
-        return;
-      }
+      // Si la categoría está vacía, mostrar confirmación de eliminación
+      setCategoriaParaEliminar(categoria);
+      toast.info(
+        <div className="flex flex-col items-center text-center gap-4 p-2">
+          {/* Icono de advertencia */}
+          <div className="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-full">
+            <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          
+          {/* Mensaje principal */}
+          <div className="space-y-2">
+            <h3 className="text-lg font-bold text-gray-900">¿Estás seguro?</h3>
+            <p className="text-sm text-gray-600">
+              ¿Realmente deseas eliminar la categoría
+            </p>
+            <p className="text-sm font-semibold text-gray-800 bg-purple-100 px-3 py-1 rounded-lg">
+              "{categoria.NombreCategoria}"
+            </p>
+            <p className="text-xs text-orange-600">
+              Esta acción no se puede deshacer
+            </p>
+          </div>
+          
+          {/* Botones centrados */}
+          <div className="flex gap-3 justify-center w-full">
+            <button
+              onClick={() => {
+                eliminarCategoria(categoria.IdCategoria, categoria.NombreCategoria);
+                toast.dismiss();
+              }}
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg"
+            >
+              Sí, Eliminar
+            </button>
+            <button
+              onClick={() => {
+                setCategoriaParaEliminar(null);
+                toast.dismiss();
+              }}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-lg font-semibold transition-colors shadow-md hover:shadow-lg"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>,
+        {
+          position: "top-center",
+          autoClose: false,
+          closeOnClick: false,
+          draggable: false,
+          closeButton: false,
+          className: "toast-confirmation"
+        }
+      );
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error al verificar la categoría");
+    }
+  };
 
-      // Proceder con la eliminación
+  const eliminarCategoria = async (id, nombreCategoria) => {
+    try {
+      // Proceder directamente con la eliminación (la verificación ya se hizo en confirmarEliminacion)
       const deleteResponse = await fetch(`${API_ENDPOINTS.categorias.delete}/${id}`, {
         method: "DELETE",
       });
@@ -146,10 +257,17 @@ function GestionCategorias({ onBack, integratedMode = false }) {
     }
   };
 
+  // Mantener la función original por compatibilidad (pero ya no se usa)
+  const handleDelete = async (id, nombreCategoria) => {
+    // Esta función ya no se usa, pero la mantengo por si acaso
+    return;
+  };
+
   const resetForm = () => {
     setFormData({ NombreCategoria: "" });
     setEditingCategory(null);
     setShowAddForm(false);
+    setSubmitting(false);
   };
 
   if (loading) {
@@ -201,7 +319,12 @@ function GestionCategorias({ onBack, integratedMode = false }) {
 
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl font-semibold transition-all duration-300"
+            disabled={submitting}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all duration-300 ${
+              submitting 
+                ? "bg-purple-400 text-white cursor-not-allowed" 
+                : "bg-purple-600 hover:bg-purple-700 text-white"
+            }`}
           >
             <Plus className="w-5 h-5" />
             Nueva Categoría
@@ -235,7 +358,12 @@ function GestionCategorias({ onBack, integratedMode = false }) {
                 onChange={(e) =>
                   setFormData({ ...formData, NombreCategoria: e.target.value })
                 }
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                disabled={submitting}
+                className={`w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                  submitting 
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                    : "bg-gray-50"
+                }`}
                 placeholder="Ej: Electrónicos, Ropa, Hogar..."
                 required
               />
@@ -244,15 +372,34 @@ function GestionCategorias({ onBack, integratedMode = false }) {
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
+                disabled={submitting}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  submitting 
+                    ? "bg-purple-400 cursor-not-allowed" 
+                    : "bg-purple-600 hover:bg-purple-700"
+                } text-white`}
               >
-                <Save className="w-5 h-5" />
-                {editingCategory ? "Actualizar" : "Crear"} Categoría
+                {submitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    {editingCategory ? "Actualizando..." : "Creando..."}
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-5 h-5" />
+                    {editingCategory ? "Actualizar" : "Crear"} Categoría
+                  </>
+                )}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition-all duration-300"
+                disabled={submitting}
+                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  submitting 
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed" 
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                }`}
               >
                 Cancelar
               </button>
@@ -350,26 +497,28 @@ function GestionCategorias({ onBack, integratedMode = false }) {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => handleEdit(categoria)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            title="Editar categoría"
+                            disabled={submitting}
+                            className={`p-2 rounded-lg transition-colors ${
+                              submitting 
+                                ? "text-gray-400 cursor-not-allowed bg-gray-100" 
+                                : "text-blue-600 hover:bg-blue-50"
+                            }`}
+                            title={submitting ? "Operación en curso..." : "Editar categoría"}
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() =>
-                              handleDelete(
-                                categoria.IdCategoria,
-                                categoria.NombreCategoria
-                              )
-                            }
-                            disabled={!productInfo.canDelete}
+                            onClick={() => confirmarEliminacion(categoria)}
+                            disabled={!productInfo.canDelete || submitting}
                             className={`p-2 rounded-lg transition-colors ${
-                              productInfo.canDelete
-                                ? "text-red-600 hover:bg-red-50"
-                                : "text-gray-400 cursor-not-allowed bg-gray-100"
+                              !productInfo.canDelete || submitting
+                                ? "text-gray-400 cursor-not-allowed bg-gray-100"
+                                : "text-red-600 hover:bg-red-50"
                             }`}
                             title={
-                              productInfo.canDelete
+                              submitting
+                                ? "Operación en curso..."
+                                : productInfo.canDelete
                                 ? "Eliminar categoría"
                                 : "No se puede eliminar: tiene productos asociados"
                             }
@@ -399,6 +548,31 @@ function GestionCategorias({ onBack, integratedMode = false }) {
         limit={1}
         className="toast-container"
       />
+      
+      <style jsx>{`
+        .toast-confirmation .Toastify__toast {
+          background: white;
+          color: #374151;
+          border: 1px solid #e5e7eb;
+          border-radius: 16px;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          min-width: 400px;
+          padding: 20px;
+        }
+        .toast-confirmation .Toastify__toast-body {
+          padding: 0;
+          margin: 0;
+        }
+        .toast-confirmation .Toastify__toast-icon {
+          display: none;
+        }
+        @media (max-width: 480px) {
+          .toast-confirmation .Toastify__toast {
+            min-width: 320px;
+            margin: 0 10px;
+          }
+        }
+      `}</style>
     </div>
   );
 }

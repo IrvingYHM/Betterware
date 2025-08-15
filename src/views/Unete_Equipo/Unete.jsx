@@ -59,7 +59,7 @@ function Unete() {
         // Skeleton solo para el contenido principal, manteniendo barra y footer
         <>
           {/* Hero Section Skeleton */}
-          <section className="relative w-full h-[550px] mt-32 bg-gradient-to-br from-slate-100 via-gray-100 to-blue-50 overflow-hidden">
+          <section className="relative w-full lg:h-[550px] mt-10 lg:mt-32 bg-gradient-to-br from-slate-100 via-gray-100 to-blue-50 overflow-hidden">
             {/* Enhanced Background without shimmer - using breathing animation */}
             <div className="w-full h-full bg-gradient-to-br from-teal-100/30 via-cyan-100/40 to-blue-100/30 animate-gentle-breathing relative">
               {/* Subtle floating particles */}
@@ -109,7 +109,7 @@ function Unete() {
           </section>
 
           {/* Enhanced Benefits Section Skeleton */}
-          <section className="py-16 px-4 flex justify-center">
+          <section className="py-10 px-4 flex justify-center">
             <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl shadow-2xl p-10 max-w-3xl w-full border border-cyan-100/30 relative overflow-hidden">
               {/* Subtle background decoration */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-teal-50/40 to-transparent rounded-bl-full"></div>
@@ -291,7 +291,7 @@ function Unete() {
       ) : (
         // Contenido normal cuando ya no está cargando
         <>
-          <section className="relative w-full h-[550px] mt-32">
+          <section className="relative w-full lg:h-[550px] mt-10 lg:mt-32">
             <img
               src={currentImage}
               alt="Equipo Betterware"
@@ -300,27 +300,27 @@ function Unete() {
             <div className="absolute inset-0 bg-black/40" />
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
               <h1
-                className="text-4xl md:text-5xl font-extrabold mb-4"
+                className="text-3xl md:text-5xl font-extrabold lg:mb-4"
                 style={{ color: currentTitleColor }}
               >
                 {currentTitle}
               </h1>
               <p
-                className="text-lg md:text-xl mb-6 max-w-2xl"
+                className="text-lg md:text-xl mb-4 lg:mb-6 max-w-2xl"
                 style={{ color: currentSubtitleColor }}
               >
                 {currentSubtitle}
               </p>
               <Link
                 to="/AgEmpleado"
-                className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300"
+                className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 lg:py-3 px-3 lg:px-8 rounded-full lg:text-lg transition duration-300"
               >
                 {currentButtonText}
               </Link>
             </div>
           </section>
 
-          <section className="py-16 px-4 flex justify-center">
+          <section className="py-10 px-4 flex justify-center">
             <div className="bg-cyan-100 rounded-2xl shadow-2xl p-10 max-w-3xl w-full">
               <h2 className="text-3xl font-bold text-center text-teal-700 mb-2">
                 Afíliate como Asociado
