@@ -271,7 +271,7 @@ function Slider() {
         }} 
       />
 
-      <style jsx>{`
+      <style jsx="true">{`
         @keyframes gentle-breathing {
           0%,
           100% {

@@ -262,9 +262,9 @@ function App() {
               <div className="flex justify-center mt-8">
                 <Link 
                   to="/productos?filter=promociones" 
-                  className="bg-gradient-to-r from-teal-400 to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border-2 border-teltext-teal-500"
+                  className="bg-gradient-to-r from-teal-400 to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border-2 border-teal-500"
                 >
-                  Ver todas las promociones ({promociones.length} ofertas disponibles)
+                  Ver todas las promociones
                 </Link>
               </div>
             </>
@@ -280,7 +280,7 @@ function App() {
                   </p>
                   <Link 
                     to="/productos" 
-                    className="inline-block bg-gradient-to-r from-teltext-teal-500 to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg border border-teltext-teal-500"
+                    className="inline-block bg-gradient-to-r from-teal-500 to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg border border-teal-500"
                   >
                     Ver todos los productos
                   </Link>

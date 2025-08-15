@@ -209,6 +209,7 @@ const Lentes = () => {
                   <option
                     key={categoria.IdCategoria}
                     value={categoria.IdCategoria.toString()}
+                    className="text-black"
                   >
                     {categoria.NombreCategoria} (
                     {contarProductosPorFiltro(categoria.IdCategoria.toString())}

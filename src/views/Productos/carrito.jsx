@@ -476,12 +476,24 @@ const Carrito = () => {
               </div>
             </div>
             <button
-              onClick={handlePayment}
-              disabled={detalleCarritoAgrupado.length === 0 || loading}
+              onClick={() => window.location.href = '/checkout-pedido'}
+              disabled={detalleCarritoAgrupado.length === 0}
               className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Procesando..." : `Pagar $${total.toFixed(2)}`}
+              {`Realizar Pedido - $${total.toFixed(2)}`}
             </button>
+            
+            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+              <div className="flex items-start">
+                <span className="text-yellow-500 mr-2">💡</span>
+                <div className="text-xs text-yellow-800">
+                  <p className="font-medium mb-1">Pago contra entrega:</p>
+                  <p>• El admin se contactará contigo para confirmar tu pedido</p>
+                  <p>• Realizarás el depósito cuando te lo indique</p>
+                  <p>• Tu pedido será enviado una vez confirmado el pago</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

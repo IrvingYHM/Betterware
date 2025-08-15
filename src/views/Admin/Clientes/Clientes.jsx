@@ -26,14 +26,22 @@ function Clientes() {
       .then((response) => {
         if (!response.ok) {
           toast.error("Error al obtener los clientes");
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
       })
       .then((data) => {
-        setClientes(data);
+        // Ensure data is an array
+        if (Array.isArray(data)) {
+          setClientes(data);
+        } else {
+          setClientes([]);
+          toast.error("Formato de datos incorrecto");
+        }
       })
       .catch((error) => {
         console.log(error);
+        setClientes([]); // Ensure clientes is always an array
         toast.error("Error de conexión al servidor");
       })
       .finally(() => {
@@ -42,14 +50,14 @@ function Clientes() {
   }, []);
 
   // Filter clients based on search term
-  const filteredClientes = clientes.filter(
+  const filteredClientes = Array.isArray(clientes) ? clientes.filter(
     (cliente) =>
-      `${cliente.vchNomCliente} ${cliente.vchAPaterno} ${cliente.vchAMaterno}`
+      `${cliente.vchNomCliente || ''} ${cliente.vchAPaterno || ''} ${cliente.vchAMaterno || ''}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
-      cliente.vchCorreo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cliente.vchTelefono.includes(searchTerm)
-  );
+      (cliente.vchCorreo || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (cliente.vchTelefono || '').includes(searchTerm)
+  ) : [];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-6">

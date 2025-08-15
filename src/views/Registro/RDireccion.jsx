@@ -4,6 +4,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { RegistroContext } from "./RegistroContext";
 import fetchIdCliente from "./getId_Cliente";
 import { toast, ToastContainer } from "react-toastify"; // Importa ToastContainer
+import { API_BASE_URL } from "../../service/apirest";
 
 const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
   const { state, dispatch } = useContext(RegistroContext);
@@ -92,7 +93,7 @@ const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
     // Envía los datos al servidor
     try {
       const response = await fetch(
-        "https://backopt-production.up.railway.app/direcciones-clientes/",
+        `${API_BASE_URL}/direcciones-clientes/`,
         {
           method: "POST",
           headers: {
