@@ -9,50 +9,71 @@ const RContraseña = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
   const { state, dispatch } = useContext(RegistroContext);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirPass, setShowConfirPass] = useState(false);
+  const [passwordChecklistValid, setPasswordChecklistValid] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
-  } = useForm();
+    setValue,
+  } = useForm({
+    defaultValues: { vchPassword: state.contrasena },
+    mode: "onChange"
+  });
 
-  // Contrasña y confirmación locales para PasswordChecklist
   const vchPassword = watch("vchPassword", "");
   const passwordConf = watch("vchPasswordConf", "");
 
-  const [passwordChecklistValid, setPasswordChecklistValid] = useState(false);
-
-  // Guarda sólo este paso en el contexto
-  const handleInfoChange = (info) => {
-    dispatch({ type: "UPDATE_CONTRASEÑA", payload: info });
-  };
-
   useEffect(() => {
     setMaxWidth("md");
-    const isValid = Object.keys(errors).length === 0 && passwordChecklistValid;
+    
+    // Cargar datos persistidos del contexto
+    if (state.contrasena) {
+      setValue("vchPassword", state.contrasena);
+    }
+  }, [state.contrasena, setValue, setMaxWidth]);
+
+  // Evaluar validación inicial inmediatamente
+  useEffect(() => {
+    const currentPassword = watch("vchPassword");
+    const currentPasswordConf = watch("vchPasswordConf");
+    
+    const isValid = Object.keys(errors).length === 0 && 
+                   passwordChecklistValid && 
+                   currentPassword && 
+                   currentPasswordConf;
+    
     if (typeof onValidationChange === "function") {
       onValidationChange(isValid);
     }
-  }, [errors, onValidationChange, passwordChecklistValid, setMaxWidth]);
+  }, []);
+
+  useEffect(() => {
+    const isValid = Object.keys(errors).length === 0 && 
+                   passwordChecklistValid && 
+                   vchPassword && 
+                   passwordConf;
+    
+    if (typeof onValidationChange === "function") {
+      onValidationChange(isValid);
+    }
+  }, [errors, onValidationChange, passwordChecklistValid, vchPassword, passwordConf]);
 
   const onSubmit = async (data) => {
-    // Solo guarda la info relevante de este paso
-    handleInfoChange({
-      vchPassword: data.vchPassword,
+    dispatch({ 
+      type: "UPDATE_CONTRASEÑA", 
+      payload: data.vchPassword 
     });
 
-    // Junta toda la info de los tres pasos
     const infoCompleta = {
       ...state.info,
       ...state.correo,
       vchPassword: data.vchPassword,
     };
 
-    console.log("Datos a enviar:", infoCompleta); // Revisa que esté el vchCURP aquí
+    console.log("Datos a enviar:", infoCompleta);
 
-    // Solo envía aquí si este es el último paso,
-    // si no, solo usa onNext()
     try {
       const response = await fetch(
         "https://backbetter-production.up.railway.app/empleados/crear",
@@ -63,19 +84,25 @@ const RContraseña = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
         }
       );
       const responseData = await response.json();
-      // Maneja respuesta
-      onNext();
+      
+      if (response.ok) {
+        onNext();
+      } else {
+        console.error("Error en la respuesta del servidor:", responseData);
+        alert("Error al registrar el afiliado. Por favor, intente nuevamente.");
+      }
     } catch (error) {
       console.error("Error al enviar los datos a la API:", error);
+      alert("Error de conexión. Por favor, verifique su conexión a internet.");
     }
   };
 
   return (
-    <div className="pt-24 text-center rounded-lg shadow-md overflow-hidden">
+    <div className="pt-3 text-center rounded-lg shadow-md overflow-hidden">
       <div className="container ml-auto mr-auto">
         <div className="bg-white px-12">
           <p className="sm:text-2xl md:text-base lg:text-2xl text-cyan-950 font-bold mb-4">
-            Formulario de contraseña del contacto
+            Formulario de contraseña del afiliado
           </p>
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1">
             <div className="mb-4 relative">
@@ -93,8 +120,13 @@ const RContraseña = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
                   required: "El campo es requerido",
                   minLength: { value: 8, message: "Mínimo 8 caracteres" },
                   maxLength: { value: 16, message: "Máximo 16 caracteres" },
-                  // Puedes agregar reglas aquí, pero PasswordChecklist ya valida visualmente
                 })}
+                onChange={(e) => {
+                  dispatch({
+                    type: "UPDATE_CONTRASEÑA",
+                    payload: e.target.value
+                  });
+                }}
                 className="mt-1 p-2 border rounded-md w-full"
                 autoComplete="new-password"
               />
@@ -107,7 +139,7 @@ const RContraseña = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
               </button>
               {errors.vchPassword && (
                 <span className="text-red-500 text-sm mt-1">
-                  {errors.vchPassword.message}
+                  *{errors.vchPassword.message}
                 </span>
               )}
             </div>
@@ -140,7 +172,7 @@ const RContraseña = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
               </button>
               {errors.vchPasswordConf && (
                 <span className="text-red-500 text-sm mt-1">
-                  {errors.vchPasswordConf.message}
+                  *{errors.vchPasswordConf.message}
                 </span>
               )}
             </div>
@@ -180,7 +212,14 @@ const RContraseña = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
               </button>
               <button
                 type="submit"
-                className="bg-blue-700 border border-black hover:bg-blue-600 text-white rounded-lg font-bold flex px-4 py-2 my-5 justify-center mx-auto items-center"
+                className={`border border-black rounded-lg font-bold flex px-4 py-2 my-5 justify-center mx-auto items-center ${
+                  Object.keys(errors).length === 0 &&
+                  passwordChecklistValid &&
+                  vchPassword &&
+                  passwordConf
+                    ? 'bg-teal-600 hover:bg-teal-700 text-white' 
+                    : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                }`}
                 disabled={
                   !(
                     Object.keys(errors).length === 0 &&

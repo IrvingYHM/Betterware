@@ -1,61 +1,94 @@
 import { useForm } from "react-hook-form";
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { RegistroContext } from "./RegistroContext";
 
-const RCorreo = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
+const RCorreo = ({ onNext, onBack, onValidationChange = () => {}, setMaxWidth }) => {
   const { state, dispatch } = useContext(RegistroContext);
   const [isValid, setIsValid] = useState(false);
-
-  // Mezcla los valores para no perder el otro campo
-  const handleInfoChange = (info) => {
-    dispatch({ type: "UPDATE_RCORREO", payload: { ...state.correo, ...info } });
-  };
+  const hydratedRef = useRef(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    watch,
+    setValue,
+    getValues,
+  } = useForm({
+    defaultValues: state.correo,
+    mode: "onChange",
+  });
 
-  const onSubmit = async (data) => {
-    if (Object.keys(errors).length === 0) {
-      handleInfoChange(data); // data tiene ambos campos
-      onNext();
-    }
-  };
-
+  // 1) Fijar ancho solo una vez
   useEffect(() => {
     setMaxWidth("md");
-    setIsValid(Object.keys(errors).length === 0);
-    if (typeof onValidationChange === "function") {
-      onValidationChange(Object.keys(errors).length === 0);
+  }, [setMaxWidth]);
+
+  // 2) Hidratar desde el contexto SOLO UNA VEZ
+  useEffect(() => {
+    if (hydratedRef.current) return;
+    if (state.correo && typeof state.correo === "object") {
+      Object.entries(state.correo).forEach(([k, v]) => setValue(k, v));
     }
-  }, [errors, onValidationChange]);
+    hydratedRef.current = true;
+  }, [state.correo, setValue]);
+
+  // 3) Suscripción única: actualiza contexto (si cambia) + valida
+  useEffect(() => {
+    const computeValid = (values) => {
+      const hasRequired = values.vchCorreo && values.vchTelefono;
+      return hasRequired && Object.keys(errors).length === 0;
+    };
+
+    // Validez inicial
+    const initialValues = getValues();
+    const initialValid = computeValid(initialValues);
+    setIsValid(initialValid);
+    onValidationChange(initialValid);
+
+    const sub = watch((values) => {
+      // a) Evitar writes redundantes al contexto
+      const changed =
+        JSON.stringify(state.correo || {}) !== JSON.stringify(values || {});
+      if (changed) {
+        dispatch({ type: "UPDATE_RCORREO", payload: values });
+      }
+
+      // b) Recalcular validez
+      const validNow = computeValid(values);
+      if (validNow !== isValid) {
+        setIsValid(validNow);
+        onValidationChange(validNow);
+      }
+    });
+
+    return () => sub.unsubscribe();
+    // Notar: no incluimos state.correo/isValid en deps para no re-suscribir en cada cambio
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch, getValues, dispatch, errors, onValidationChange]);
+
+  const onSubmit = (data) => {
+    dispatch({ type: "UPDATE_RCORREO", payload: data });
+    onNext();
+  };
 
   return (
-    <div className="pt-24 text-center rounded-lg shadow-md overflow-hidden">
+    <div className="pt-3 text-center rounded-lg shadow-md overflow-hidden">
       <div className="container ml-auto mr-auto">
         <div className="bg-white px-12">
           <p className="sm:text-2xl md:text-base lg:text-2xl text-cyan-950 font-bold mb-4">
-            Formulario de correo electrónico del contacto
+            Formulario de correo electrónico del afiliado
           </p>
+
           <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1">
             {/* Correo */}
             <div className="mb-4">
-              <label
-                htmlFor="vchCorreo"
-                className="block text-gray-800 text-left font-bold"
-              >
+              <label htmlFor="vchCorreo" className="block text-gray-800 text-left font-bold">
                 Correo electrónico:
               </label>
               <input
                 type="email"
                 id="vchCorreo"
-                name="vchCorreo"
-                onChange={(e) =>
-                  handleInfoChange({ vchCorreo: e.target.value })
-                }
-                required
                 {...register("vchCorreo", {
                   required: { value: true, message: "El campo es requerido" },
                   pattern: {
@@ -75,48 +108,23 @@ const RCorreo = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
 
             {/* Teléfono */}
             <div className="mb-4">
-              <label
-                htmlFor="vchTelefono"
-                className="block text-gray-800 text-left font-bold"
-              >
+              <label htmlFor="vchTelefono" className="block text-gray-800 text-left font-bold">
                 Número de teléfono:
               </label>
               <input
                 type="tel"
                 id="vchTelefono"
-                name="vchTelefono"
-                onChange={(e) =>
-                  handleInfoChange({
-                    vchTelefono: e.target.value.replace(/[^\d]/g, ""),
-                  })
-                }
                 onKeyDown={(e) => {
-                  // Permite números y teclas de edición
-                  if (
-                    !/\d/.test(e.key) &&
-                    ![
-                      "Backspace",
-                      "Delete",
-                      "ArrowLeft",
-                      "ArrowRight",
-                      "Tab",
-                    ].includes(e.key)
-                  ) {
+                  if (!/\d/.test(e.key) && !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)) {
                     e.preventDefault();
                   }
                 }}
-                required
                 maxLength={10}
                 {...register("vchTelefono", {
                   required: { value: true, message: "El campo es requerido" },
-                  minLength: {
-                    value: 10,
-                    message: "El teléfono debe tener al menos 10 dígitos",
-                  },
-                  pattern: {
-                    value: /^[0-9]+$/,
-                    message: "Solo se permiten números",
-                  },
+                  minLength: { value: 10, message: "El teléfono debe tener al menos 10 dígitos" },
+                  pattern: { value: /^[0-9]+$/, message: "Solo se permiten números" },
+                  setValueAs: (v) => (v ? v.replace(/[^\d]/g, "") : ""),
                 })}
                 className="mt-1 p-2 border rounded-md w-full"
                 placeholder="Número de teléfono"
@@ -138,7 +146,9 @@ const RCorreo = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
               </button>
               <button
                 type="submit"
-                className="bg-blue-700 border border-black hover:bg-blue-600 text-white rounded-lg font-bold flex px-4 py-2 my-5 justify-center mx-auto items-center"
+                className={`border border-black rounded-lg font-bold flex px-4 py-2 my-5 justify-center mx-auto items-center ${
+                  isValid ? "bg-teal-600 hover:bg-teal-700 text-white" : "bg-gray-400 text-gray-600 cursor-not-allowed"
+                }`}
                 disabled={!isValid}
               >
                 Siguiente
