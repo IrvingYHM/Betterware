@@ -1,16 +1,16 @@
-import { useNavigate } from "react-router-dom"; // Importa useHistory para manejar la redirección
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { RegistroContext } from "./RegistroContext";
 import fetchIdCliente from "./getId_Cliente";
-import { toast, ToastContainer } from "react-toastify"; // Importa ToastContainer
+import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 
 const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
   const { state, dispatch } = useContext(RegistroContext);
   const [previousPostalCod, setPreviousPostalCod] = useState("");
   const [locationInfo, setLocationInfo] = useState(null);
-  const [numExtValue, setNumExtValue] = useState(""); // Estado local del valor del input NumExt
+  const [numExtValue, setNumExtValue] = useState("");
   const [sinNumChecked, setSinNumChecked] = useState(false);
   const [idCliente, setIdCliente] = useState(null);
   const [referenciaLength, setReferenciaLength] = useState(0);
@@ -20,11 +20,46 @@ const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    watch,
+    setValue,
+  } = useForm({
+    defaultValues: state.direccion,
+    mode: "onChange"
+  });
 
-  const handleInfoChange = (info) => {
-    dispatch({ type: "UPDATE_RDIRECCION", payload: info });
-  };
+  useEffect(() => {
+    // No establecer maxWidth aquí ya que se controla desde RegistroPage
+    
+    // Cargar datos persistidos del contexto
+    if (state.direccion) {
+      Object.keys(state.direccion).forEach(key => {
+        setValue(key, state.direccion[key]);
+      });
+      setNumExtValue(state.direccion.NumExt || "");
+      setReferenciaLength((state.direccion.Referencia || "").length);
+    }
+
+    // Obtener el IdCliente
+    const obtenerIdCliente = async () => {
+      const id = await fetchIdCliente(state.correo.vchCorreo);
+      if (id) {
+        setIdCliente(id);
+      }
+    };
+    obtenerIdCliente();
+  }, [state.direccion, state.correo.vchCorreo, setValue, setMaxWidth]);
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      // Actualizar contexto en tiempo real
+      dispatch({
+        type: "UPDATE_DIRECCION",
+        payload: { ...value, NumExt: numExtValue }
+      });
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch, dispatch, numExtValue]);
 
   const fetchLocationData = async (codPostal) => {
     const url = `https://mexico-zip-codes3.p.rapidapi.com/${codPostal}`;
@@ -49,48 +84,35 @@ const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
 
   const handlePostalCodeUp = (e) => {
     const value = e.target.value.replace(/[^\d]/g, "");
-    handleInfoChange({ CP: value });
+    setValue("CP", value);
+    
     if (value.length === 5 && value !== previousPostalCod) {
       fetchLocationData(value);
       setPreviousPostalCod(value);
     }
   };
 
-  useEffect(() => {
-    setMaxWidth("3xl"); //Tamaño maximo del formulario
-
-    // Obtener el IdCliente utilizando la función fetchIdCliente
-    const obtenerIdCliente = async () => {
-      const id = await fetchIdCliente(state.info.vchCorreo);
-      if (id) {
-        setIdCliente(id);
-      }
-    };
-    obtenerIdCliente();
-  }, [locationInfo, state.info.vchCorreo]);
-
-  // Manejar la función onSubmit del formulario
-  const handleFormSubmit = (formData) => {
-    onSubmit(formData); // Llama a la función onSubmit con los datos del formulario
-  };
-
   const handleCheckboxChange = (e) => {
     const isChecked = e.target.checked;
     setSinNumChecked(isChecked);
-    if (isChecked) {
-      setNumExtValue("S/N"); // Actualizar el valor del input a "S/N" si se marca el checkbox
-    } else {
-      setNumExtValue(""); // Limpiar el valor del input si se desmarca el checkbox
-    }
+    const newValue = isChecked ? "S/N" : "";
+    setNumExtValue(newValue);
+    setValue("NumExt", newValue);
   };
 
   const handleReferenciaChange = (e) => {
     const value = e.target.value;
-    setReferenciaLength(value.length); // Actualizar el estado con la longitud actual del texto en referencia
+    setReferenciaLength(value.length);
+  };
+
+  const handleNumExtChange = (e) => {
+    if (!sinNumChecked) {
+      const value = e.target.value;
+      setNumExtValue(value);
+    }
   };
 
   const onSubmit = async (data) => {
-    // Envía los datos al servidor
     try {
       const response = await fetch(
         "https://backopt-production.up.railway.app/direcciones-clientes/",
@@ -108,17 +130,16 @@ const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
             NumExt: numExtValue,
             NumInt: data.NumInt,
             Referencia: data.Referencia,
-            IdCliente: idCliente, // Reemplaza "tu_id_cliente" con el valor correcto
+            IdCliente: idCliente,
           }),
         }
       );
 
       if (response.ok) {
-        // Realiza alguna acción si la solicitud fue exitosa (por ejemplo, redirigir al usuario)
-        toast.success("El registro se completo exitosamente");
+        toast.success("El registro se completó exitosamente");
         setTimeout(() => {
-          navigate("/inicioS"); // Redirige al usuario a la página de inicio de sesión
-        }, 5000);
+          navigate("/inicioAd");
+        }, 3000);
       } else {
         toast.error("Hubo un error al guardar los datos");
       }
@@ -129,13 +150,13 @@ const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
 
   return (
     <>
-      <div className="pt-24 text-center rounded-lg shadow-md overflow-hidden">
+      <div className="pt-3 text-center rounded-lg shadow-md overflow-hidden">
         <div className="container ml-auto mr-auto">
           <div className="bg-white px-12">
             <p className="sm:text-2xl md:text-base lg:text-2xl text-cyan-950 font-bold mb-4">
-              Formulario de direccion del contacto
+              Formulario de direccion del afiliado
             </p>
-            <form onSubmit={handleSubmit(handleFormSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid grid-cols-2 gap-x-14">
                 <div className="mb-4">
                   <label htmlFor="" className="block text-left font-bold">
@@ -247,8 +268,8 @@ const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
                     placeholder="Numero exterior"
                     {...register("NumExt")}
                     value={numExtValue}
-                    onChange={(e) => setNumExtValue(e.target.value)}
-                    readOnly={numExtValue === "S/N"} // Deshabilitar el input si el valor es "S/N"
+                    onChange={handleNumExtChange}
+                    readOnly={numExtValue === "S/N"}
                   />
 
                   {/* Checkbox para indicar "Sin número" */}
@@ -264,7 +285,7 @@ const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
                       id="withoutNumber"
                       name="withoutNumber"
                       className="ml-1"
-                      checked={numExtValue === "S/N"} // Marcar el checkbox si el valor del input es "S/N"
+                      checked={numExtValue === "S/N"}
                       onChange={handleCheckboxChange}
                     />
                   </div>
@@ -313,14 +334,14 @@ const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
                 </button>
                 <Link
                   to="/inicioAd"
-                  className="bg-blue-700 border border-black hover:bg-blue-600 text-white rounded-lg font-bold flex px-4 py-2 my-5 justify-center mx-auto items-center"
+                  className="bg-teal-600 border border-black hover:bg-teal-700 text-white rounded-lg font-bold flex px-4 py-2 my-5 justify-center mx-auto items-center"
                   disabled={Object.keys(errors).length > 0}
                 >
                   Omitir
                 </Link>
                 <button
                   type="submit"
-                  className="bg-blue-700 border border-black hover:bg-blue-600 text-white rounded-lg font-bold flex px-4 py-2 my-5 justify-center mx-auto items-center"
+                  className="bg-teal-600 border border-black hover:bg-teal-700 text-white rounded-lg font-bold flex px-4 py-2 my-5 justify-center mx-auto items-center"
                   disabled={Object.keys(errors).length > 0}
                 >
                   Enviar
@@ -332,7 +353,7 @@ const RDireccion = ({ onNext, onBack, onValidationChange, setMaxWidth }) => {
       </div>
       <ToastContainer
         position="top-center"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
