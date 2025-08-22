@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Image, Camera } from "lucide-react";
 
 function Slider() {
   const [slides, setSlides] = useState([]);
@@ -71,12 +71,12 @@ function Slider() {
 
   return (
     <>
-      <div className="max-w-[1250px] w-full m-auto relative group z-0">
+      <div className="max-w-[1250px] w-full m-auto relative group">
         {/* Container de imagen con skeleton individual */}
-        <div className="relative w-full lg:max-h-[480px] rounded-2xl overflow-hidden">
+        <div className="relative w-full lg:max-h-[480px] rounded-2xl overflow-hidden bg-gray-100 min-h-[300px] lg:min-h-[480px]">
           {/* Skeleton overlay - se muestra si no hay slides o la imagen actual no se ha cargado */}
           {(!slides.length || !imageLoaded[currentIndex]) && (
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 animate-gentle-breathing z-20">
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-200 via-gray-200 to-gray-300 animate-gentle-breathing z-20">
               {/* Efecto de ondas sutiles */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-wave-gentle"></div>
 
@@ -86,7 +86,7 @@ function Slider() {
               <div className="absolute bottom-20 left-20 w-3 h-3 bg-gradient-to-br from-cyan-200/40 to-cyan-300/40 rounded-full animate-float-gentle-slow"></div>
 
               {/* Indicador de carga central */}
-              <div className="absolute top-4 left-4 flex items-center space-x-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-2">
+              <div className="absolute top-4 left-4 flex items-center space-x-2 bg-black/40 backdrop-blur-sm rounded-full px-4 py-3 shadow-lg">
                 <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce"></div>
                 <div
                   className="w-2 h-2 bg-white/60 rounded-full animate-bounce"
@@ -96,8 +96,10 @@ function Slider() {
                   className="w-2 h-2 bg-white/60 rounded-full animate-bounce"
                   style={{ animationDelay: "0.2s" }}
                 ></div>
-                <span className="text-white/80 text-xs font-medium ml-2">
-                  Cargando imagen...
+                <span className="text-white/90 text-sm font-semibold ml-2 drop-shadow-lg">
+                  {slides.length === 0 && !loading
+                    ? "Sin imágenes disponibles"
+                    : "Cargando imagen..."}
                 </span>
               </div>
 
@@ -150,34 +152,40 @@ function Slider() {
           )}
         </div>
 
-        {/* Flechas */}
-        <div
-          className="absolute rounded-full bg-white/75 p-2 top-1/2 left-0 lg:left-4 transform -translate-y-1/2 cursor-pointer text-white text-3xl z-30 hover:scale-110 transition-all duration-200"
-          onClick={prevSlide}
-        >
-          <ChevronLeft className="text-black w-8 h-8" />
-        </div>
-        <div
-          className="absolute  rounded-full bg-white/75 p-2 top-1/2 right-0 lg:right-4 transform -translate-y-1/2 cursor-pointer text-white text-3xl z-30 hover:scale-110 transition-all duration-200"
-          onClick={nextSlide}
-        >
-          <ChevronRight className="text-black w-8 h-8" />
-        </div>
-
-        {/* Dots */}
-        <div className="flex justify-center absolute bottom-4 left-0 right-0 z-30">
-          {slides.map((_, slideIndex) => (
+        {/* Flechas - Solo mostrar si hay slides */}
+        {slides.length > 1 && (
+          <>
             <div
-              key={slideIndex}
-              onClick={() => goToSlide(slideIndex)}
-              className={`w-3 h-3 mx-2 rounded-full ${
-                currentIndex === slideIndex
-                  ? "bg-blue-600 cursor-pointer"
-                  : "bg-gray-400 cursor-pointer"
-              }`}
-            ></div>
-          ))}
-        </div>
+              className="absolute rounded-full bg-white/75 p-2 top-1/2 left-0 lg:left-4 transform -translate-y-1/2 cursor-pointer text-white text-3xl z-20 hover:scale-110 transition-all duration-200"
+              onClick={prevSlide}
+            >
+              <ChevronLeft className="text-black w-8 h-8" />
+            </div>
+            <div
+              className="absolute rounded-full bg-white/75 p-2 top-1/2 right-0 lg:right-4 transform -translate-y-1/2 cursor-pointer text-white text-3xl z-20 hover:scale-110 transition-all duration-200"
+              onClick={nextSlide}
+            >
+              <ChevronRight className="text-black w-8 h-8" />
+            </div>
+          </>
+        )}
+
+        {/* Dots - Solo mostrar si hay slides */}
+        {slides.length > 0 && (
+          <div className="flex justify-center absolute bottom-4 left-0 right-0 z-20">
+            {slides.map((_, slideIndex) => (
+              <div
+                key={slideIndex}
+                onClick={() => goToSlide(slideIndex)}
+                className={`w-3 h-3 mx-2 rounded-full ${
+                  currentIndex === slideIndex
+                    ? "bg-blue-600 cursor-pointer"
+                    : "bg-gray-400 cursor-pointer"
+                }`}
+              ></div>
+            ))}
+          </div>
+        )}
       </div>
 
       <style jsx>{`

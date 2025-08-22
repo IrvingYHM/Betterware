@@ -252,7 +252,7 @@ function inicioAdmin() {
                   to="/productos?filter=promociones" 
                   className="bg-gradient-to-r from-teal-400 to-blue-600 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 border-2 border-teal-500"
                 >
-                  Ver todas las promociones ({promociones.length} ofertas disponibles)
+                  Ver todas las promociones
                 </Link>
               </div>
             </>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
-import { Edit, Plus } from "lucide-react";
+import { Edit, Plus, Image, Camera } from "lucide-react";
 import SliderForm from "./SliderForm";
 
 function Slider() {
@@ -75,9 +75,9 @@ function Slider() {
 
   return (
     <>
-      <div className="max-w-[1250px] w-full m-auto relative group z-0">
+      <div className="max-w-[1250px] w-full m-auto relative group">
         {/* Container de imagen con skeleton individual */}
-        <div className="relative w-full lg:max-h-[480px] rounded-2xl overflow-hidden">
+        <div className="relative w-full lg:max-h-[480px] rounded-2xl overflow-hidden bg-gray-200 min-h-[300px] lg:min-h-[480px]">
           {/* Skeleton overlay - se muestra si no hay slides o la imagen actual no se ha cargado */}
           {(!slides.length || !imageLoaded[currentIndex]) && (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 animate-gentle-breathing z-20">
@@ -90,7 +90,7 @@ function Slider() {
               <div className="absolute bottom-20 left-20 w-3 h-3 bg-gradient-to-br from-cyan-200/40 to-cyan-300/40 rounded-full animate-float-gentle-slow"></div>
 
               {/* Indicador de carga central */}
-              <div className="absolute top-4 left-4 flex items-center space-x-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-2">
+              <div className="absolute top-4 left-4 flex items-center space-x-2 bg-black/40 backdrop-blur-sm rounded-full px-4 py-3 shadow-lg">
                 <div className="w-2 h-2 bg-white/60 rounded-full animate-bounce"></div>
                 <div
                   className="w-2 h-2 bg-white/60 rounded-full animate-bounce"
@@ -100,8 +100,8 @@ function Slider() {
                   className="w-2 h-2 bg-white/60 rounded-full animate-bounce"
                   style={{ animationDelay: "0.2s" }}
                 ></div>
-                <span className="text-white/80 text-xs font-medium ml-2">
-                  Cargando imagen...
+                <span className="text-white/90 text-sm font-semibold ml-2 drop-shadow-lg">
+                  {slides.length === 0 && !loading ? "Sin imágenes disponibles" : "Cargando imagen..."}
                 </span>
               </div>
 
@@ -159,76 +159,58 @@ function Slider() {
           )}
         </div>
 
-        {/* Flechas */}
-        <div
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer text-white text-3xl z-30"
-          onClick={prevSlide}
-        >
-          <BsChevronCompactLeft />
-        </div>
-        <div
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer text-white text-3xl z-30"
-          onClick={nextSlide}
-        >
-          <BsChevronCompactRight />
-        </div>
-
-        {/* Dots */}
-        <div className="flex justify-center absolute bottom-4 left-0 right-0 z-30">
-          {slides.map((_, slideIndex) => (
+        {/* Flechas - Solo mostrar si hay slides */}
+        {slides.length > 1 && (
+          <>
             <div
-              key={slideIndex}
-              onClick={() => goToSlide(slideIndex)}
-              className={`w-3 h-3 mx-2 rounded-full ${
-                currentIndex === slideIndex
-                  ? "bg-blue-600 cursor-pointer"
-                  : "bg-gray-400 cursor-pointer"
-              }`}
-            ></div>
-          ))}
-        </div>
-
-        {/* Estado vacío cuando no hay slides */}
-        {slides.length === 0 && !loading && (
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
-            <div className="text-center p-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-betterware/20 to-betterware/40 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Plus className="w-12 h-12 text-betterware" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">Slider Vacío</h3>
-              <p className="text-gray-600 mb-6 max-w-md">
-                No hay imágenes en el slider principal. Agrega la primera imagen para comenzar a mostrar contenido a tus visitantes.
-              </p>
-              <button
-                onClick={() => {
-                  setModalMode('add');
-                  setIsModalOpen(true);
-                }}
-                className="inline-flex items-center px-6 py-3 bg-betterware text-white rounded-xl font-semibold hover:bg-betterware_claro transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Agregar Primera Imagen
-              </button>
+              className="absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer text-white text-3xl z-20"
+              onClick={prevSlide}
+            >
+              <BsChevronCompactLeft />
             </div>
+            <div
+              className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer text-white text-3xl z-20"
+              onClick={nextSlide}
+            >
+              <BsChevronCompactRight />
+            </div>
+          </>
+        )}
+
+        {/* Dots - Solo mostrar si hay slides */}
+        {slides.length > 0 && (
+          <div className="flex justify-center absolute bottom-4 left-0 right-0 z-20">
+            {slides.map((_, slideIndex) => (
+              <div
+                key={slideIndex}
+                onClick={() => goToSlide(slideIndex)}
+                className={`w-3 h-3 mx-2 rounded-full ${
+                  currentIndex === slideIndex
+                    ? "bg-blue-600 cursor-pointer"
+                    : "bg-gray-400 cursor-pointer"
+                }`}
+              ></div>
+            ))}
           </div>
         )}
 
-        {/* Botones de administración */}
-        {slides.length > 0 && (!loading || imageLoaded[currentIndex]) && (
-          <div className="absolute top-4 right-4 flex space-x-2 z-10">
-            {/* Botón para agregar nueva imagen */}
-            <button
-              onClick={() => {
-                setModalMode('add');
-                setIsModalOpen(true);
-              }}
-              className="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 group"
-              title="Agregar nueva imagen al slider"
-            >
-              <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            </button>
-            
-            {/* Botón de gestión completa */}
+
+        {/* Botones de administración - Siempre visibles */}
+        <div className="absolute top-4 right-4 flex space-x-2 z-20">
+          {/* Botón para agregar nueva imagen */}
+          <button
+            onClick={() => {
+              setModalMode('add');
+              setIsModalOpen(true);
+            }}
+            className="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 group"
+            title="Agregar nueva imagen al slider"
+          >
+            <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
+          </button>
+          
+          {/* Botón de gestión completa - Solo si hay slides */}
+          {slides.length > 0 && (
             <button
               onClick={() => {
                 setModalMode('list');
@@ -239,8 +221,8 @@ function Slider() {
             >
               <Edit className="w-5 h-5 group-hover:scale-110 transition-transform" />
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Modal */}
