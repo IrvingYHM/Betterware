@@ -1,6 +1,5 @@
 import React from 'react';
 import { BsChevronCompactLeft, BsChevronCompactRight } from "react-icons/bs";
-import { Settings } from "lucide-react";
 
 const SliderSkeleton = ({ isAdmin = false }) => {
   return (
@@ -65,13 +64,6 @@ const SliderSkeleton = ({ isAdmin = false }) => {
           ></div>
         ))}
       </div>
-
-      {/* Botón de gestión skeleton (solo para admin) */}
-      {isAdmin && (
-        <div className="absolute top-4 right-4 bg-gradient-to-br from-blue-400/60 to-blue-500/60 p-2 rounded-full animate-gentle-scale z-10 shadow-lg">
-          <Settings className="w-5 h-5 text-white/80 animate-fade-pulse" />
-        </div>
-      )}
 
       <style jsx>{`
         @keyframes gentle-breathing {
